@@ -44,7 +44,6 @@ try {
 } catch (Throwable $e) {
     MakeClasses::$injector->getService(Logger::class)->critical($e->getMessage());
     MakeClasses::stopServices();
-    stopSTD();
     throw $e;
 }
 

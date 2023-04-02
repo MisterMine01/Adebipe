@@ -9,6 +9,10 @@ use Api\Services\Interfaces\StarterServiceInterface;
  */
 class Dotenv implements StarterServiceInterface
 {
+    /**
+     * all environment variables from the .env file
+     * @var array<string> $variable
+     */
     private $variable = array();
 
 

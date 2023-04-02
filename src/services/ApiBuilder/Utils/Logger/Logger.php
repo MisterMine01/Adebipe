@@ -24,7 +24,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
             mkdir('logs');
         }
         $this->loglevel = getenv('LOG_LEVEL') ?? 1;
-        $this->logFile = fopen('logs/' . date('Y-m-d-H-i-s') . '.log', 'w');
+        $this->logFile = fopen('logs/' . date('Y-m-d-H-i-s') . '.log', 'wb');
         $this->info('Starting Logger');
     }
 
@@ -60,13 +60,18 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         }
         $call_class = explode('\\', $call_class);
         $call_class = end($call_class);
-        $log_format = "[%s] (%' 7s) %' 15s : %s";
-        $log = sprintf($log_format, date('Y-m-d H:i:s'), $type, $call_class, $message);
-        fwrite($this->logFile, $log . PHP_EOL);
+        $log_format = "[%s] (%' 7s) %' 15s : %s" . PHP_EOL;
+        $log = vsprintf($log_format, array(date('Y-m-d H:i:s'), $type, $call_class, $message));
         if (defined('STDOUT')) {
-            fwrite(STDOUT, $log . PHP_EOL);
+            fwrite(STDOUT, $log);
+            fflush(STDOUT);
         }
+        $log = mb_convert_encoding($log, 'UTF-8');
+        fwrite($this->logFile, $log);
+        fflush($this->logFile);
     }
+
+    private $test = 0;
 
     /**
      * Log a debug message

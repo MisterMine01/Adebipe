@@ -27,6 +27,7 @@ class MakeClasses {
         $container = $injector->create_class(new ReflectionClass(Container::class));
         MakeClasses::$container = $container;
         $injector->addService($container);
+        $injector->addService($injector);
 
         $container->addService($dotenv);
         $container->addService($logger);
@@ -38,17 +39,17 @@ class MakeClasses {
             {
                 continue;
             }
-            $reflection = new ReflectionClass($class);
-            $class = $injector->create_class($reflection);
-            if (in_array($class::class, [
+            if (in_array($class, [
                 Dotenv::class,
                 Logger::class,
                 Injector::class,
                 Container::class
             ])) {
-                $logger->info('Skip service: ' . $class::class);
+                $logger->info('Skip service: ' . $class);
                 continue;
             }
+            $reflection = new ReflectionClass($class);
+            $class = $injector->create_class($reflection);
             if ($reflection->implementsInterface(RegisterServiceInterface::class))
             {
                 $injector->addService($class);

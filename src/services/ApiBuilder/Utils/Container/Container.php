@@ -12,6 +12,10 @@ use Api\Services\Interfaces\StarterServiceInterface;
  */
 class Container implements RegisterServiceInterface
 {
+    /**
+     * all services of the application
+     * @var array<object> $services
+     */
     private array $services = [];
 
     /**

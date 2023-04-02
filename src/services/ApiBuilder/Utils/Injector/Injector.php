@@ -7,7 +7,8 @@ use Api\Services\Interfaces\RegisterServiceInterface;
 class Injector implements RegisterServiceInterface
 {
     /**
-     * @var array
+     * all services can be injected
+     * @var array<RegisterServiceInterface> $services
      */
     private array $services = [];
 
@@ -25,7 +26,7 @@ class Injector implements RegisterServiceInterface
      * 
      * @return void
      */
-    public function addService(object $class): void
+    public function addService(RegisterServiceInterface $class): void
     {
         $this->logger->info('Add service: ' . $class::class);
         $this->services[$class::class] = $class;
@@ -38,7 +39,7 @@ class Injector implements RegisterServiceInterface
      * 
      * @return object The service
      */
-    public function getService(string $name): ?object
+    public function getService(string $name): ?RegisterServiceInterface
     {
         return $this->services[$name];
     }
@@ -87,6 +88,10 @@ class Injector implements RegisterServiceInterface
 
     /**
      * Execute a function with the injected services
+     * 
+     * @param \ReflectionMethod $method The method to execute
+     * @param object|null $class The class of the method
+     * @param array $params The params who can be injected
      */
     public function execute(\ReflectionMethod $method, ?object $class, array $params = []): mixed
     {
@@ -95,11 +100,19 @@ class Injector implements RegisterServiceInterface
         return $method->invokeArgs($class, $params);
     }
 
+    /**
+     * Create a class with the injected services
+     * 
+     * @param \ReflectionClass $class The class to create
+     * @param array $params The params who can be injected
+     * 
+     * @return object The created class
+     */
     public function create_class(\ReflectionClass $class, array $params = []): object
     {
         $constructor = $class->getConstructor();
         if ($constructor === null) {
-            $this->logger->warning('Class ' . $class->getName() . ' has no constructor');
+            $this->logger->debug('Class ' . $class->getName() . ' has no constructor');
             return $class->newInstance();
         }
         if (!$constructor->isPublic()) {
