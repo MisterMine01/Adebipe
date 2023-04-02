@@ -11,13 +11,34 @@ class Dotenv implements StarterServiceInterface
 {
     private $variable = array();
 
+
+    /**
+     * Initialize the environment variables
+     */
+    public function atStart(Logger $logger = null): void
+    {
+        $logger->info('Initialize the environment variables');
+    }
+
+    /**
+     * Nothing to do
+     */
+    public function atEnd(): void
+    {
+    }
+
     /**
      * Load the environment variables
      */
     public function __construct()
     {
-        $this->getEnvFile('.env');
+        if (is_file('.env')) {
+            $this->getEnvFile('.env');
+        }
         $env = getenv('ENV');
+        if ($env === false) {
+            $env = 'dev';
+        }
         if (is_file('.env.' . $env)) {
             $this->getEnvFile('.env.' . $env);
         }

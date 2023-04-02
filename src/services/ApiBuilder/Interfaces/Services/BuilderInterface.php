@@ -7,12 +7,12 @@ namespace Api\Services\Interfaces;
  * 
  * @package Api\Services\Interfaces
  */
-interface BuilderServicesInterface
+interface BuilderServiceInterface
 {
     /**
      * Build the service
      * 
      * @return string The code to add to the build
      */
-    public function build(): string;
+    public function build(string $classCode): ?string;
 }

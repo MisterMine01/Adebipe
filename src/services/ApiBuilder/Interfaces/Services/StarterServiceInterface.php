@@ -7,7 +7,7 @@ namespace Api\Services\Interfaces;
  * 
  * @package Api\Services\Interfaces
  */
-interface ServiceInterface
+interface StarterServiceInterface
 {
     /**
      * Function to run at the start of the application

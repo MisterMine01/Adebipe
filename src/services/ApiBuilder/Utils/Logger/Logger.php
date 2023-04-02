@@ -3,9 +3,9 @@
 namespace Api\Services;
 
 use Api\Services\Interfaces\RegisterServiceInterface;
-use Api\Services\Interfaces\ServiceInterface;
+use Api\Services\Interfaces\StarterServiceInterface;
 
-class Logger implements ServiceInterface, RegisterServiceInterface
+class Logger implements StarterServiceInterface, RegisterServiceInterface
 {
     private $logFile;
     private $loglevel;
@@ -17,25 +17,30 @@ class Logger implements ServiceInterface, RegisterServiceInterface
         'CRITICAL' => 4
     ];
 
-    public function atStart(): void
+
+    public function __construct()
     {
         if (!is_dir('logs')) {
             mkdir('logs');
         }
         $this->loglevel = getenv('LOG_LEVEL') ?? 1;
         $this->logFile = fopen('logs/' . date('Y-m-d-H-i-s') . '.log', 'w');
-        $this->info('Starting application');
+        $this->info('Starting Logger');
+    }
+
+    public function atStart(): void
+    {
     }
 
     public function atEnd(): void
     {
-        $this->info('Stopping application');
+        $this->info('Stopping Logger');
         fclose($this->logFile);
     }
 
     /**
      * Log a message
-     * [Date](Type)Class:Message
+     * [Date] (Type) Class : Message
      * 
      * @param string $type
      * @param string $message
@@ -45,14 +50,22 @@ class Logger implements ServiceInterface, RegisterServiceInterface
         if (!isset($this->loglevels[$type])) {
             throw new \Exception('Invalid log type');
         }
-        if ($this->loglevel <= $this->loglevels[$type]) {
+        if ($this->loglevel > $this->loglevels[$type]) {
             return;
         }
-        $call_class = debug_backtrace()[1]['class'];
+        $trace = debug_backtrace();
+        $call_class = "Main";
+        if (isset($trace[2]['class'])) {
+            $call_class = $trace[2]['class'];
+        }
         $call_class = explode('\\', $call_class);
         $call_class = end($call_class);
-        $log = '[' . date('Y-m-d H:i:s') . '](' . $type . ')' . $call_class . ':' . $message . PHP_EOL;
-        fwrite($this->logFile, $log);
+        $log_format = "[%s] (%' 7s) %' 15s : %s";
+        $log = sprintf($log_format, date('Y-m-d H:i:s'), $type, $call_class, $message);
+        fwrite($this->logFile, $log . PHP_EOL);
+        if (defined('STDOUT')) {
+            fwrite(STDOUT, $log . PHP_EOL);
+        }
     }
 
     /**
@@ -74,7 +87,7 @@ class Logger implements ServiceInterface, RegisterServiceInterface
     {
         $this->log('INFO', $message);
     }
-    
+
     /**
      * Log a warning message
      * 

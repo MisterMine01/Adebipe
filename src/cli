@@ -1,3 +1,53 @@
 #!/bin/env/php
 <?php
 
+
+use Api\Cli\MakeClasses;
+use Api\Services\Logger;
+
+function startSTD(): void
+{
+
+    if (!defined('STDOUT')) {
+        define('STDOUT', fopen('php://stdout', 'w'));
+    }
+
+    if (!defined('STDERR')) {
+        define('STDERR', fopen('php://stderr', 'w'));
+    }
+
+    if (!defined('STDIN')) {
+        define('STDIN', fopen('php://stdin', 'r'));
+    }
+}
+
+startSTD();
+
+function stopSTD(): void
+{
+    fclose(STDOUT);
+    fclose(STDERR);
+    fclose(STDIN);
+}
+
+
+include_once __DIR__ . '/services/Cli/Includer.php';
+include_once __DIR__ . '/services/Cli/MakeClasses.php';
+
+try {
+    $includer = new Api\Cli\Includer();
+
+    $data = $includer->includeList(__DIR__ . '/services');
+    $data2 = $includer->includeList(__DIR__ . '/src');
+
+    MakeClasses::makeClasses(array_merge($data, $data2));
+} catch (Throwable $e) {
+    MakeClasses::$injector->getService(Logger::class)->critical($e->getMessage());
+    MakeClasses::stopServices();
+    stopSTD();
+    throw $e;
+}
+
+MakeClasses::stopServices();
+stopSTD();
+exit(0);
