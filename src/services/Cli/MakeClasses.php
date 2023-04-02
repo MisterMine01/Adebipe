@@ -14,7 +14,7 @@ class MakeClasses {
     public static Injector $injector;
     public static Container $container;
 
-    public static function makeClasses(array $classes): void
+    public static function makeClasses(array $classes): array
     {
         $dotenv = new Dotenv();
         $logger = new Logger();
@@ -34,7 +34,10 @@ class MakeClasses {
         $container->addService($injector);
         $container->addService($container);
 
+        $all_class = array();
         foreach ($classes as $class) {
+            $reflection = new ReflectionClass($class);
+            $all_class[] = $reflection;
             if (strpos($class, 'Api\\Services\\') !== 0)
             {
                 continue;
@@ -48,7 +51,6 @@ class MakeClasses {
                 $logger->info('Skip service: ' . $class);
                 continue;
             }
-            $reflection = new ReflectionClass($class);
             $class = $injector->create_class($reflection);
             if ($reflection->implementsInterface(RegisterServiceInterface::class))
             {
@@ -61,6 +63,7 @@ class MakeClasses {
             }
             $container->addService($class);
         }
+        return $all_class;
     }
 
     public static function stopServices(): void

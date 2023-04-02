@@ -60,8 +60,18 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         }
         $call_class = explode('\\', $call_class);
         $call_class = end($call_class);
-        $log_format = "[%s] (%' 7s) %' 15s : %s" . PHP_EOL;
-        $log = vsprintf($log_format, array(date('Y-m-d H:i:s'), $type, $call_class, $message));
+        $log_format = "[%s] (%' 7s) %' 15s : ";
+        $log = vsprintf($log_format, array(date('Y-m-d H:i:s'), $type, $call_class));
+        if (strpos($message, PHP_EOL) !== false) {
+            $message_line = explode(PHP_EOL, $message);
+            $message = "";
+            foreach ($message_line as $line) {
+                $message .= $line . PHP_EOL . str_repeat(' ', strlen($log));
+            }
+        }
+        $log .= $message . PHP_EOL;
+        
+
         if (defined('STDOUT')) {
             fwrite(STDOUT, $log);
             fflush(STDOUT);

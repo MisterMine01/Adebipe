@@ -1,0 +1,15 @@
+<?php
+
+use Api\Cli\Build;
+use Api\Cli\MakeClasses;
+
+try {
+    include_once __DIR__ . '/services/Cli/Build.php';
+    $build = new Build();
+    $build->build();
+} catch (Throwable $e) {
+    throw $e;
+    MakeClasses::$injector->getService(Logger::class)->critical($e->getMessage());
+    MakeClasses::stopServices();
+    throw $e;
+}

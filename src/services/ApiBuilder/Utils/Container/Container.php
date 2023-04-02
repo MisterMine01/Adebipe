@@ -77,8 +77,7 @@ class Container implements RegisterServiceInterface
                 $services[$name] = $service;
             }
         }
-
-        return $services;
+        return array_reverse($services);
     }
 
     /**

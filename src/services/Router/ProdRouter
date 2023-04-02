@@ -1,0 +1,53 @@
+<?php
+
+namespace Api\Services;
+
+use Api\Router\Annotations\Route;
+use Api\Router\Request;
+use Api\Router\Response;
+
+class Router
+{
+    /**
+     * @var array
+     */
+    private array $routes = "ROUTES GO HERE";
+
+    private Logger $logger;
+
+    public function __construct(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    // CODE OF ROUTES GOES HERE
+
+    public function getResponse(Request $request, Injector $injector): Response
+    {
+        $request->uri = preg_replace('(\/+)', '/', $request->uri);
+        if (is_file("public" . $request->uri)) {
+            $this->logger->info('Get file: ' . $request->uri);
+            return new Response(file_get_contents("public" . $request->uri), 200, [
+                'Content-Type' => mime_content_type("public" . $request->uri)
+            ]);
+        }
+        $this->logger->info('Get response for request: ' . $request->uri);
+        if (!isset($this->routes[$request->uri])) {
+            $this->logger->info('Route not found');
+            return new Response('Not found', 404);
+        }
+        if (!isset($this->routes[$request->uri][$request->method])) {
+            $this->logger->info('Method not allowed');
+            return new Response('Method not allowed', 405);
+        }
+        $route = $this->routes[$request->uri][$request->method];
+        $response = $injector->execute($route, null, [
+            Request::class => $request
+        ]);
+        if (!($response instanceof Response)) {
+            throw new \Exception('Response is not an instance of Response');
+        }
+        return $response;
+
+    }    
+}

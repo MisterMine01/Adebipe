@@ -1,0 +1,14 @@
+<?php
+
+use Api\Cli\MakeClasses;
+use Api\Services\Logger;
+
+try {
+    include_once __DIR__ . '/services/Cli/Router.php';
+    $router = new Api\Cli\Router();
+    $router->run();
+} catch (Throwable $e) {
+    MakeClasses::$injector->getService(Logger::class)->critical($e->getMessage());
+    MakeClasses::stopServices();
+    throw $e;
+}
