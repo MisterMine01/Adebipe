@@ -5,6 +5,7 @@ namespace Api\Services;
 use Api\Router\Annotations\Route;
 use Api\Router\Request;
 use Api\Router\Response;
+use ReflectionMethod;
 
 class Router
 {
@@ -41,7 +42,7 @@ class Router
             return new Response('Method not allowed', 405);
         }
         $route = $this->routes[$request->uri][$request->method];
-        $response = $injector->execute($route, null, [
+        $response = $injector->execute(new ReflectionMethod($this::class . '::' . $route), null, [
             Request::class => $request
         ]);
         if (!($response instanceof Response)) {
