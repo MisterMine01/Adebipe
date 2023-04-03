@@ -13,7 +13,14 @@ class RouterBuild
         $file_code = file_get_contents(__DIR__ . '/ProdRouter');
         $file_code = str_replace("\"ROUTES GO HERE\";", $this->getRoutesCode(), $file_code);
         $file_code = str_replace("// CODE OF ROUTES GOES HERE", $this->getRoutesFuncCode(), $file_code);
+        $file_code = str_replace("\"MIME TYPES GO HERE\";", $this->getMimeCode(), $file_code);
         return $file_code;
+    }
+
+    private function getMimeCode(): string
+    {
+        $mime = json_decode(file_get_contents(__DIR__ . '/mime.json'), true);
+        return var_export($mime, true) . ';';
     }
 
     private function getRoutesCode(): string

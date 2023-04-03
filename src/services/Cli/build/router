@@ -28,5 +28,5 @@ try {
 }
 
 $time_end = microtime(true);
-$Logger->info('Time: ' . ($time_end - $time_start)*1000 . 'ms');
+$Logger->info('Execution time: ' . ($time_end - $time_start)*1000 . 'ms');
 atEnd();

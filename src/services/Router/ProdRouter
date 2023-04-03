@@ -10,12 +10,27 @@ use ReflectionMethod;
 class Router
 {
     /**
+     * All routes of the application
      * @var array
      */
     private array $routes = "ROUTES GO HERE";
 
+    /**
+     * Mime types
+     * @var array
+     */
+    private array $mime = "MIME TYPES GO HERE";
+
+    /**
+     * Logger
+     * @var Logger
+     */
     private Logger $logger;
 
+    /**
+     * Constructor
+     * @param Logger $logger
+     */
     public function __construct(Logger $logger)
     {
         $this->logger = $logger;
@@ -23,13 +38,21 @@ class Router
 
     // CODE OF ROUTES GOES HERE
 
+    /**
+     * Get the response for a request
+     * @param Request $request
+     * @param Injector $injector
+     * @return Response
+     */
     public function getResponse(Request $request, Injector $injector): Response
     {
+        // Remove double slashes
         $request->uri = preg_replace('(\/+)', '/', $request->uri);
         if (is_file("public" . $request->uri)) {
+            // The request is a file
             $this->logger->info('Get file: ' . $request->uri);
             return new Response(file_get_contents("public" . $request->uri), 200, [
-                'Content-Type' => mime_content_type("public" . $request->uri)
+                'Content-Type' => $this->mime[pathinfo("public" . $request->uri, PATHINFO_EXTENSION)]
             ]);
         }
         $this->logger->info('Get response for request: ' . $request->uri);
@@ -41,6 +64,7 @@ class Router
             $this->logger->info('Method not allowed');
             return new Response('Method not allowed', 405);
         }
+        // Execute the route with the injector (the prod router doesn't need the injector but i'm lazy)
         $route = $this->routes[$request->uri][$request->method];
         $response = $injector->execute(new ReflectionMethod($this::class . '::' . $route), null, [
             Request::class => $request

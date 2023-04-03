@@ -14,6 +14,9 @@ class Route {
          * Path of the route
          */
         public string $path,
+        /**
+         * Method of the route
+         */
         public string $method
     ) {}
 }
