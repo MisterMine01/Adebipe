@@ -37,7 +37,7 @@ class Router
         $data2 = $includer->includeList($cwd . '/src');
 
         MakeClasses::makeClasses(array_merge($data, $data2));
-        $logger = MakeClasses::$injector->getService(Logger::class);
+        $logger = MakeClasses::$container->getService(Logger::class);
         $logger->info('Router running');
 
         $request = new Request(
@@ -53,7 +53,7 @@ class Router
             $_SERVER['REMOTE_ADDR']
         );
 
-        $router = MakeClasses::$injector->getService(ServicesRouter::class);
+        $router = MakeClasses::$container->getService(ServicesRouter::class);
 
         $response = $router->getResponse($request, MakeClasses::$injector);
 

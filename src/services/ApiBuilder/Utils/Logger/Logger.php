@@ -81,8 +81,6 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         fflush($this->logFile);
     }
 
-    private $test = 0;
-
     /**
      * Log a debug message
      * 

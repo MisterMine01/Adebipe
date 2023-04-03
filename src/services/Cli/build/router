@@ -1,20 +1,32 @@
 <?php
 
-include_once __DIR__ . '/services/loader.php';
+$time_start = microtime(true);
 
-$request = new \Api\Router\Request(
-    $_SERVER['REQUEST_METHOD'],
-    $_SERVER['REQUEST_URI'],
-    getallheaders(),
-    file_get_contents('php://input'),
-    $_GET,
-    $_FILES,
-    $_COOKIE,
-    $_POST,
-    $_SERVER['SERVER_PORT'],
-    $_SERVER['REMOTE_ADDR']
-);
+try {
 
-$Router->getResponse($request, $Injector)->send();
+    include_once __DIR__ . '/services/loader.php';
 
+    $request = new \Api\Router\Request(
+        $_SERVER['REQUEST_METHOD'],
+        $_SERVER['REQUEST_URI'],
+        getallheaders(),
+        file_get_contents('php://input'),
+        $_GET,
+        $_FILES,
+        $_COOKIE,
+        $_POST,
+        $_SERVER['SERVER_PORT'],
+        $_SERVER['REMOTE_ADDR']
+    );
+
+    $Router->getResponse($request, $Injector)->send();
+} catch (\Throwable $e) {
+    $Logger->error($e->getMessage());
+    $Logger->error($e->getTraceAsString());
+    $Response = new \Api\Router\Response("Internal server error", 500);
+    $Response->send();
+}
+
+$time_end = microtime(true);
+$Logger->info('Time: ' . ($time_end - $time_start)*1000 . 'ms');
 atEnd();

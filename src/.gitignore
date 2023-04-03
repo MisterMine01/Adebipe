@@ -1,3 +1,2 @@
 logs
-builddir/*
-!builddir/router
+builddir
