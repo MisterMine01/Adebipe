@@ -8,7 +8,8 @@ use Attribute;
  * Annotation for routes
  */
 #[Attribute]
-class Route {
+class Route
+{
     public function __construct(
         /**
          * Path of the route
@@ -18,5 +19,6 @@ class Route {
          * Method of the route
          */
         public string $method
-    ) {}
+    ) {
+    }
 }

@@ -3,7 +3,6 @@
 $time_start = microtime(true);
 
 try {
-
     include_once __DIR__ . '/services/loader.php';
 
     $request = new \Api\Router\Request(
@@ -28,5 +27,5 @@ try {
 }
 
 $time_end = microtime(true);
-$Logger->info('Execution time: ' . ($time_end - $time_start)*1000 . 'ms');
+$Logger->info('Execution time: ' . ($time_end - $time_start) * 1000 . 'ms');
 atEnd();

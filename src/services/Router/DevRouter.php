@@ -120,5 +120,5 @@ class Router implements BuilderServiceInterface
             throw new \Exception('Response is not an instance of Response');
         }
         return $response;
-    }    
+    }
 }

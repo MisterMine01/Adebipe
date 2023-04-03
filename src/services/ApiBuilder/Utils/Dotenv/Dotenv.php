@@ -56,7 +56,7 @@ class Dotenv implements StarterServiceInterface
      * 
      * @param string $name The name of the file
      */
-    private function getEnvFile($name)
+    private function getEnvFile(string $name): void
     {
         $file = fopen($name, 'r');
         while (!feof($file)) {

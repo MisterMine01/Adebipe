@@ -8,8 +8,13 @@ include_once __DIR__ . '/BuildFunc/BuildInterfaces.php';
 include_once __DIR__ . '/BuildFunc/BuildServices.php';
 include_once __DIR__ . '/BuildFunc/BuildLoader.php';
 
-
-function recurse_copy($src, $dst)
+/**
+ * Recursively copy files from one directory to another
+ * @param string $src
+ * @param string $dst
+ * @return void
+ */
+function recurse_copy($src, $dst): void
 {
     $dir = opendir($src);
     @mkdir($dst);
@@ -25,7 +30,11 @@ function recurse_copy($src, $dst)
     closedir($dir);
 }
 
-function removeDir($path)
+/**
+ * Recursively remove a directory
+ * @param string $path
+ */
+function removeDir(string $path): void
 {
     $files = glob($path . '/*');
     foreach ($files as $file) {

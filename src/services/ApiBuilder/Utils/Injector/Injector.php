@@ -12,7 +12,15 @@ class Injector implements RegisterServiceInterface
      */
     private array $services = [];
 
+    /**
+     * Injector of the services
+     * @param Logger $logger
+     */
     public function __construct(
+        /**
+         * Logger of the application
+         * @var Logger $logger
+         */
         private Logger $logger
     ) {
     }

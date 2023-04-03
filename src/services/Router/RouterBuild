@@ -6,14 +6,15 @@ class RouterBuild
 
     public function __construct(
         private array $routes
-    ) {}
-    
+    ) {
+    }
+
     public function getBuilderRouter(): string
     {
         $file_code = file_get_contents(__DIR__ . '/ProdRouter');
-        $file_code = str_replace("\"ROUTES GO HERE\";", $this->getRoutesCode(), $file_code);
+        $file_code = str_replace("[\"ROUTES GO HERE\"];", $this->getRoutesCode(), $file_code);
         $file_code = str_replace("// CODE OF ROUTES GOES HERE", $this->getRoutesFuncCode(), $file_code);
-        $file_code = str_replace("\"MIME TYPES GO HERE\";", $this->getMimeCode(), $file_code);
+        $file_code = str_replace("[\"MIME TYPES GO HERE\"];", $this->getMimeCode(), $file_code);
         return $file_code;
     }
 

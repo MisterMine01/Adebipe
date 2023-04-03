@@ -5,7 +5,8 @@ namespace Api\Router;
 /**
  * Response class
  */
-class Response {
+class Response
+{
     /**
      * Response constructor
      * @param string $body Body of the response
@@ -28,13 +29,15 @@ class Response {
          * @var array<string, string>
          */
         public array $headers = []
-    ) {}
+    ) {
+    }
 
     /**
      * Send the response
      * @return void
      */
-    public function send() {
+    public function send()
+    {
         echo $this->body;
         http_response_code($this->status);
         foreach ($this->headers as $key => $value) {

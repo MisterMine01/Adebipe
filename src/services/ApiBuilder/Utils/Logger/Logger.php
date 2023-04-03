@@ -70,7 +70,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
             }
         }
         $log .= $message . PHP_EOL;
-        
+
 
         if (defined('STDOUT')) {
             fwrite(STDOUT, $log);

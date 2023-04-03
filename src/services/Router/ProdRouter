@@ -2,7 +2,6 @@
 
 namespace Api\Services;
 
-use Api\Router\Annotations\Route;
 use Api\Router\Request;
 use Api\Router\Response;
 use ReflectionMethod;
@@ -13,13 +12,13 @@ class Router
      * All routes of the application
      * @var array
      */
-    private array $routes = "ROUTES GO HERE";
+    private array $routes = ["ROUTES GO HERE"];
 
     /**
      * Mime types
      * @var array
      */
-    private array $mime = "MIME TYPES GO HERE";
+    private array $mime = ["MIME TYPES GO HERE"];
 
     /**
      * Logger
@@ -73,6 +72,5 @@ class Router
             throw new \Exception('Response is not an instance of Response');
         }
         return $response;
-
-    }    
+    }
 }
