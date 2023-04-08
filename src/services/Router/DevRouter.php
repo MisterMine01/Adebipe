@@ -2,6 +2,7 @@
 
 namespace Api\Services;
 
+use Api\Router\Annotations\RegexSimple;
 use Api\Router\Annotations\Route;
 use Api\Router\Request;
 use Api\Router\Response;
@@ -11,7 +12,12 @@ class Router implements BuilderServiceInterface
 {
     /**
      * All routes of the application
-     * [path => [method => function]]
+     * [path => [
+     *      method => [
+     *          function,
+     *          route    
+     *      ]
+     * ]]
      * @var array
      */
     private array $routes = [];
@@ -74,10 +80,43 @@ class Router implements BuilderServiceInterface
                     }
                     $this->routes[$route->path] = [];
                 }
+                $regex_decoded = $route->path;
+                if ($route->regex !== null) {
+                    foreach ($route->regex as $param => $regex) {
+                        if ($regex::class == RegexSimple::class) {
+                            $regex = $regex->value;
+                        }
+                        $regex_decoded = str_replace('{' . $param . '}', '(' . $regex . ')', $regex_decoded);
+                        $regex_decoded = "/^\\" . $regex_decoded . "$/";
+                    }
+                }
                 // Add the route
-                $this->routes[$route->path][$route->method] = $method;
+                $this->routes[$regex_decoded][$route->method] = [$method, $route->path];
             }
         }
+    }
+
+    /**
+     * Get the the id of the route and assign is value from the uri
+     */
+    public function perform_regex(string $route, string $regex_route, string $uri): array
+    {
+        $this->logger->info('Perform regex for route: ' . $route);
+
+        $to_inject = [];
+        
+        preg_match_all('/\{([a-zA-Z0-9_]+)\}/', $route, $matches);
+        $id = $matches[0];
+        $this->logger->info('Get id: ' . json_encode($id));
+        preg_match($regex_route, $uri, $matches);
+        $this->logger->info('Get matches: ' . json_encode($matches));
+
+        for ($i = 0; $i < count($id); $i++) {
+            $id_sub = substr($id[$i], 1, -1);
+            $to_inject[$id_sub] = $matches[$i + 1];
+        }
+        $this->logger->info('Get to inject: ' . json_encode($to_inject));
+        return $to_inject;
     }
 
     /**
@@ -102,19 +141,46 @@ class Router implements BuilderServiceInterface
         // update the routes
         $this->updateRoutes();
         $this->logger->info('Get response for request: ' . $request->uri);
-        if (!isset($this->routes[$request->uri])) {
-            $this->logger->info('Route not found');
-            return new Response('Not found', 404);
+        $add_to_injector = [
+            Request::class => $request,
+        ];
+        $route = null;
+        if (isset($this->routes[$request->uri])) {
+            $route = $this->routes[$request->uri];
+        } else {
+            // Check if the route is a regex
+            foreach ($this->routes as $key => $value) {
+                if(!preg_match("/^\/.+\/[a-z]*$/i", $key)){
+                    continue;
+                }
+                if (preg_match($key, $request->uri)) {
+                    $this->logger->info('Regex match');
+                    if (!isset($this->routes[$key][$request->method])) {
+                        $this->logger->info('Method not allowed');
+                        return new Response('Method not allowed', 405);
+                    }
+                    $regex = $this->perform_regex($value[$request->method][1], $key, $request->uri);
+                    $route = $key;
+                    foreach ($regex as $key => $value) {
+                        $add_to_injector[$key] = $value;
+                    }
+                    break;
+                }
+            }
+            if ($route === null) {
+                $this->logger->info('Route not found');
+                return new Response('Not found', 404);
+            }
         }
-        if (!isset($this->routes[$request->uri][$request->method])) {
+        $this->logger->info('Route found');
+        $this->logger->info('Route: ' . json_encode($route));
+        if (!isset($this->routes[$route][$request->method])) {
             $this->logger->info('Method not allowed');
             return new Response('Method not allowed', 405);
         }
         // Execute the route with the injector
-        $route = $this->routes[$request->uri][$request->method];
-        $response = $injector->execute($route, null, [
-            Request::class => $request
-        ]);
+        $route = $this->routes[$route][$request->method][0];
+        $response = $injector->execute($route, null, $add_to_injector);
         // Check if the response is an instance of Response
         if (!($response instanceof Response)) {
             throw new \Exception('Response is not an instance of Response');

@@ -18,7 +18,8 @@ class Route
         /**
          * Method of the route
          */
-        public string $method
+        public string $method,
+        public array $regex = [],
     ) {
     }
 }

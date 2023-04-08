@@ -3,10 +3,13 @@
 
 class RouterBuild
 {
+    private string $salt;
 
     public function __construct(
         private array $routes
     ) {
+        $this->salt = rand(0, 100000);
+
     }
 
     public function getBuilderRouter(): string
@@ -30,7 +33,7 @@ class RouterBuild
         foreach ($this->routes as $route => $routeData) {
             $routesCode[$route] = array();
             foreach ($routeData as $method => $function) {
-                $routesCode[$route][$method] = $this->getFunctionName($route, $method);
+                $routesCode[$route][$method] = [$this->getFunctionName($route, $method), $function[1]];
             }
         }
         return var_export($routesCode, true) . ';';
@@ -38,6 +41,11 @@ class RouterBuild
 
     private function getFunctionName(string $route, string $method): string
     {
+        if( preg_match("/^\/.+\/[a-z]*$/i", $route)){
+            $alea = crypt($route, $this->salt);
+            $alea = str_replace('/', '_', $alea);
+            return 'route_regex_' . $alea . '_' . $method;
+        }
         return 'route_' . str_replace('/', '_', $route) . '_' . $method;
     }
 
@@ -45,7 +53,8 @@ class RouterBuild
     {
         $code_routes = '';
         foreach ($this->routes as $route => $routeData) {
-            foreach ($routeData as $method => $function) {
+            foreach ($routeData as $method => $data) {
+                $function = $data[0];
                 $start = $function->getStartLine() - 1;
                 $end = $function->getEndLine();
                 $length = $end - $start;

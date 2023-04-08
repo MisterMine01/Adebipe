@@ -70,6 +70,14 @@ class Injector implements RegisterServiceInterface
             $param_type = $param->getType();
 
             if ($param_type === null) {
+                if (in_array($param_name, array_keys($this->services))) {
+                    $find_params[] = $this->services[$param_name];
+                    continue;
+                }
+                if (isset($params[$param_name])) {
+                    $find_params[] = $params[$param_name];
+                    continue;
+                }
                 throw new \Exception('Param ' . $param_name . ' in method ' . $method->getName() . ' in class ' . $method->getDeclaringClass()->getName() . ' has no type');
             }
             $not_null = str_replace("?", "", $param_type->__toString());
