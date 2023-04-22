@@ -2,10 +2,7 @@
 
 namespace Api\Services;
 
-use Api\Router\Annotations\Route;
-use Api\Router\Request;
-use Api\Router\Response;
-use ReflectionMethod;
+// CODE OF USES GOES HERE
 
 class Router
 {
@@ -69,14 +66,14 @@ class Router
      * @param Injector $injector
      * @return Response
      */
-    public function getResponse(Request $request, Injector $injector): Response
+    public function getResponse(\Api\Router\Request $request, Injector $injector): \Api\Router\Response
     {
         // Remove double slashes
         $request->uri = preg_replace('(\/+)', '/', $request->uri);
         if (is_file("public" . $request->uri)) {
             // The request is a file
             $this->logger->info('Get file: ' . $request->uri);
-            return new Response(file_get_contents("public" . $request->uri), 200, [
+            return new \Api\Router\Response(file_get_contents("public" . $request->uri), 200, [
                 'Content-Type' => $this->mime[pathinfo("public" . $request->uri, PATHINFO_EXTENSION)]
             ]);
         }
@@ -87,14 +84,14 @@ class Router
         $route = $request->uri;
         if (!isset($this->routes[$route])) {
             foreach ($this->routes as $key => $value) {
-                if(!preg_match("/^\/.+\/[a-z]*$/i", $key)){
+                if(!preg_match("/^\/.+\/[a-z]*\/$/i", $key)){
                     continue;
                 }
                 if (preg_match($key, $request->uri)) {
                     $this->logger->info('Regex match');
                     if (!isset($this->routes[$key][$request->method])) {
                         $this->logger->info('Method not allowed');
-                        return new Response('Method not allowed', 405);
+                        return new \Api\Router\Response('Method not allowed', 405);
                     }
                     $regex = $this->perform_regex($value[$request->method][1], $key, $request->uri);
                     $route = $key;
@@ -106,17 +103,17 @@ class Router
             }
             if ($route === $request->uri) {
                 $this->logger->info('Route not found');
-                return new Response('Not found', 404);
+                return new \Api\Router\Response('Not found', 404);
             }
         }
         if (!isset($this->routes[$route][$request->method])) {
             $this->logger->info('Method not allowed');
-            return new Response('Method not allowed', 405);
+            return new \Api\Router\Response('Method not allowed', 405);
         }
         // Execute the route with the injector (the prod router doesn't need the injector but i'm lazy)
         $route = $this->routes[$route][$request->method][0];
-        $response = $injector->execute(new ReflectionMethod($this::class . '::' . $route), null, $add_to_injector);
-        if (!($response instanceof Response)) {
+        $response = $injector->execute(new \ReflectionMethod($this::class . '::' . $route), null, $add_to_injector);
+        if (!($response instanceof \Api\Router\Response)) {
             throw new \Exception('Response is not an instance of Response');
         }
         return $response;
