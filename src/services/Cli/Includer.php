@@ -35,14 +35,14 @@ class Includer
             $runtime_data = explode(PHP_EOL, $data);
             foreach ($runtime_data as $item) {
                 if (strpos($item, '@Not ') !== false) {
-                    $make_process[] = str_replace('@Not ', '', $item);
+                    $new_file = $path . "/" . str_replace('@Not ', '', $item);
+                    $make_process[] = $new_file;
                     continue;
                 }
                 if (strpos($item, '@Last ') !== false) {
-                    $last[] = $item;
-                    $new_file = $path . str_replace('@Last ', '', $item);
+                    $new_file = $path . "/" . str_replace('@Last ', '', $item);
                     $make_process[] = $new_file;
-                    $new_file = $this->dirRead($path . "/" . $new_file);
+                    $new_file = $this->dirRead($new_file);
                     $last = array_merge($last, $new_file[0]);
                     $last = array_merge($last, $new_file[1]);
                     continue;
@@ -55,8 +55,10 @@ class Includer
             }
         }
         foreach ($dir as $item) {
-            if (!in_array($item, $make_process)) {
-                $new_file = $path . '/' . $item;
+            if (in_array($item, [".", "..", "runtime"]))
+                continue;
+            $new_file = $path . '/' . $item;
+            if (!in_array($new_file, $make_process) && !in_array($new_file, $last)) {
                 $new_file = $this->dirRead($new_file);
                 $file = array_merge($file, $new_file[0]);
                 $last = array_merge($last, $new_file[1]);

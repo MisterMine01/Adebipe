@@ -42,7 +42,7 @@ class Router
 
         $request = new Request(
             $_SERVER['REQUEST_METHOD'],
-            $_SERVER['REQUEST_URI'],
+            parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH),
             getallheaders(),
             file_get_contents('php://input'),
             $_GET,

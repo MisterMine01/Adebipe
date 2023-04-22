@@ -46,7 +46,7 @@ class Router implements BuilderServiceInterface
     {
         $this->updateRoutes();
         include_once __DIR__ . '/RouterBuild';
-        return (new \RouterBuild($this->routes))->getBuilderRouter();
+        return (new \RouterBuild($this->logger, $this->routes))->getBuilderRouter();
     }
 
     /**
@@ -87,7 +87,8 @@ class Router implements BuilderServiceInterface
                             $regex = $regex->value;
                         }
                         $regex_decoded = str_replace('{' . $param . '}', '(' . $regex . ')', $regex_decoded);
-                        $regex_decoded = "/^\\" . $regex_decoded . "$/";
+                        $regex_decoded = str_replace('/', '\/', $regex_decoded);
+                        $regex_decoded = "/^" . $regex_decoded . "$/";
                     }
                 }
                 // Add the route
@@ -146,11 +147,11 @@ class Router implements BuilderServiceInterface
         ];
         $route = null;
         if (isset($this->routes[$request->uri])) {
-            $route = $this->routes[$request->uri];
+            $route = $request->uri;
         } else {
             // Check if the route is a regex
             foreach ($this->routes as $key => $value) {
-                if(!preg_match("/^\/.+\/[a-z]*$/i", $key)){
+                if (preg_match('/^\/\^.*\$\/$/', $key) === 0) {
                     continue;
                 }
                 if (preg_match($key, $request->uri)) {

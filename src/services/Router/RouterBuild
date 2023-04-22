@@ -1,15 +1,23 @@
 <?php
 
+use Api\Services\Logger;
 
 class RouterBuild
 {
     private string $salt;
 
     public function __construct(
+        private Logger $logger,
         private array $routes
     ) {
-        $this->salt = rand(0, 100000);
-
+        $length = 22;
+        $this->salt = substr(
+            str_shuffle(
+                str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))
+            ),
+            1,
+            $length
+        );
     }
 
     public function getBuilderRouter(): string
@@ -18,7 +26,32 @@ class RouterBuild
         $file_code = str_replace("[\"ROUTES GO HERE\"];", $this->getRoutesCode(), $file_code);
         $file_code = str_replace("// CODE OF ROUTES GOES HERE", $this->getRoutesFuncCode(), $file_code);
         $file_code = str_replace("[\"MIME TYPES GO HERE\"];", $this->getMimeCode(), $file_code);
+        $file_code = str_replace("// CODE OF USES GOES HERE", $this->getUsesCode(), $file_code);
         return $file_code;
+    }
+
+    private function getUsesCode(): string
+    {
+        $all_files = array();
+        foreach ($this->routes as $route => $routeData) {
+            foreach ($routeData as $method => $data) {
+                $function = $data[0];
+                $all_files[] = $function->getFileName();
+            }
+        }
+        $all_files = array_unique($all_files);
+        $uses = array();
+        foreach ($all_files as $file) {
+            $file = file_get_contents($file);
+            $all_lines = explode(PHP_EOL, $file);
+            foreach ($all_lines as $line) {
+                if (preg_match("/^use .+;$/", $line)) {
+                    $uses[] = $line;
+                }
+            }
+        }
+        $uses = array_unique($uses);
+        return implode(PHP_EOL, $uses);
     }
 
     private function getMimeCode(): string
@@ -41,7 +74,7 @@ class RouterBuild
 
     private function getFunctionName(string $route, string $method): string
     {
-        if( preg_match("/^\/.+\/[a-z]*$/i", $route)){
+        if (preg_match("/^\/.+\/[a-z]*\/$/i", $route)) {
             $alea = crypt($route, $this->salt);
             $alea = str_replace('/', '_', $alea);
             return 'route_regex_' . $alea . '_' . $method;
