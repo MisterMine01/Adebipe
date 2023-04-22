@@ -50,7 +50,7 @@ class Request
          * Params of the request
          * @var array<string, string>
          */
-        public array $params,
+        public array $get,
 
         /**
          * Files of the request
@@ -82,5 +82,23 @@ class Request
          */
         public string $ip
     ) {
+        if (self::isJson($this->body)) {
+            $data = json_decode($this->body, true);
+            $this->post = array_merge($this->post, $data);
+        }
+    }
+
+    public function getIntGet(string $key, int $default = 0): int
+    {
+        if (!isset($this->get[$key])) {
+            return $default;
+        }
+        return intval($this->get[$key] ?? $default);
+    }
+
+    private static function isJson($string)
+    {
+        json_decode($string);
+        return json_last_error() === JSON_ERROR_NONE;
     }
 }
