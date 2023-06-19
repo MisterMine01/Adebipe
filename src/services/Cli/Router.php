@@ -11,7 +11,7 @@ include_once __DIR__ . '/MakeClasses.php';
 
 class Router
 {
-    private int $time_start = 0;
+    private float $time_start = 0;
 
     public function __construct()
     {

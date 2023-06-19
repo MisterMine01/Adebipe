@@ -3,6 +3,8 @@
 use Api\Cli\MakeClasses;
 use Api\Services\Logger;
 
+putenv('ENV=dev');
+
 try {
     include_once __DIR__ . '/services/Cli/Router.php';
     $router = new Api\Cli\Router();
