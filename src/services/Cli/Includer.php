@@ -2,8 +2,6 @@
 
 namespace Api\Cli;
 
-use stdClass;
-
 class Includer
 {
 
@@ -48,10 +46,13 @@ class Includer
                     continue;
                 }
                 $make_process[] = $item;
-                $new_file = $path . '/' . $item;
-                $new_file = $this->dirRead($new_file);
-                $file = array_merge($file, $new_file[0]);
-                $last = array_merge($last, $new_file[1]);
+                if (is_dir($path . '/' . $item)) {
+                    $new_file = $path . '/' . $item;
+                    $new_file = $this->dirRead($new_file);
+                    $file = array_merge($file, $new_file[0]);
+                    $last = array_merge($last, $new_file[1]);
+                }
+                $file[] = $path . '/' . $item;
             }
         }
         foreach ($dir as $item) {

@@ -56,7 +56,7 @@ class Router implements BuilderServiceInterface
     {
         $this->routes = [];
         foreach (get_declared_classes() as $class) {
-            if (preg_match('/^Api\\\\Components\\\\/', $class) === 0) {
+            if (preg_match('/^App\\\\Components\\\\/', $class) === 0) {
                 // Don't check the class if it's not a component
                 continue;
             }

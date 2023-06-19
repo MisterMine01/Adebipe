@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\Components\Interfaces;
+namespace App\Components\Interfaces;
 
 /**
  * Interface for all components

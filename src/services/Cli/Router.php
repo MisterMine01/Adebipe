@@ -29,10 +29,9 @@ class Router
         }
     }
 
-    public function run()
+    public function run($cwd = __DIR__): void
     {
         $includer = new Includer();
-        $cwd = getcwd();
         $data = $includer->includeList($cwd . '/services');
         $data2 = $includer->includeList($cwd . '/src');
 

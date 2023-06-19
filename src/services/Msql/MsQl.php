@@ -15,6 +15,10 @@ class MsQl implements RegisterServiceInterface
     {
         $this->logger = $logger;
         $connection_string = getenv('DB_CONNECTION');
+        if (!$connection_string) {
+            $this->logger->warning('DB_CONNECTION environment variable not set');
+            return;
+        }
         $ptn_start = 0;
         $ptn_end = strpos($connection_string, '://');
         $drive = substr($connection_string, 0, $ptn_end);

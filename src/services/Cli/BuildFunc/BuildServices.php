@@ -11,7 +11,7 @@ function build_services(string $servicesPath, array $all_services): array
     $container = MakeClasses::$container;
     $to_include = [];
     foreach ($all_services as $service) {
-        if (preg_match('/^Api\\\\Components\\\\/', $service->getName())) {
+        if (preg_match('/^App\\\\Components\\\\/', $service->getName())) {
             continue;
         }
         $file = $service->getFileName();

@@ -1,8 +1,8 @@
 <?php
 
-namespace Api\Components;
+namespace App\Components;
 
-use Api\Components\Interfaces\ComponentInterface;
+use App\Components\Interfaces\ComponentInterface;
 use Api\Router\Annotations\RegexSimple;
 use Api\Router\Annotations\Route;
 use Api\Router\Response;
