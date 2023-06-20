@@ -6,6 +6,7 @@ use App\Components\Interfaces\ComponentInterface;
 use Api\Router\Annotations\RegexSimple;
 use Api\Router\Annotations\Route;
 use Api\Router\Response;
+use App\Model\User;
 
 class ExampleComponent implements ComponentInterface
 {
@@ -13,6 +14,7 @@ class ExampleComponent implements ComponentInterface
     #[Route(path: '/hello', method: 'GET')]
     public static function index(): Response
     {
+        $test = new User();
         return new Response('Hello World');
     }
 

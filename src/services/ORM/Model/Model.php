@@ -3,10 +3,11 @@
 namespace Api\Model;
 
 abstract class Model {
-    private static $table_name;
+    private $table_name;
 
     public function __construct()
     {
+        echo get_class($this) . "<br>";
         fwrite(STDOUT, get_class($this) . "\n");
     }
 

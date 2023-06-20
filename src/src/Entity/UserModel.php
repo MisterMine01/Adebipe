@@ -10,10 +10,6 @@ use Api\Model\Type\StringType;
 class User extends Model
 {
     public static $schema;
-
-    public function __construct()
-    {
-    }
 }
 
 User::$schema = [

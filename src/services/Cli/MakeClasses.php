@@ -35,6 +35,7 @@ class MakeClasses {
         $container->addService($container);
 
         $all_class = array();
+        $atStart = array();
         foreach ($classes as $class) {
             $reflection = new ReflectionClass($class);
             $all_class[] = $reflection;
@@ -58,10 +59,13 @@ class MakeClasses {
             }
             if ($reflection->implementsInterface(StarterServiceInterface::class))
             {
-                $atStart = $reflection->getMethod('atStart');
-                $injector->execute($atStart, $class);
+                $atStart_function = $reflection->getMethod('atStart');
+                $atStart[] = [$atStart_function, $class];
             }
             $container->addService($class);
+        }
+        foreach ($atStart as $function) {
+            $injector->execute($function[0], $function[1]);
         }
         return $all_class;
     }

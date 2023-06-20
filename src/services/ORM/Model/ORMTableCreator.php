@@ -4,11 +4,18 @@
 namespace Api\Model;
 
 
-class ORMTableCreator {
+class ORMTableCreator
+{
 
     public array $database_schema = [];
 
-    public function create_model(string $object_class) {
-        $database_schema[$object_class] = $object_class::$schema;
+    public function create_model(string $object_class)
+    {
+        $database_schema[$object_class] = $object_class;
+    }
+
+    public function getSchema(): array
+    {
+        return $this->database_schema;
     }
 }
