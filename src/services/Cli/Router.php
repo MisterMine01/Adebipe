@@ -34,6 +34,7 @@ class Router
         $includer = new Includer();
         $data = $includer->includeList($cwd . '/services');
         $data2 = $includer->includeList($cwd . '/src');
+        chdir($cwd);
 
         MakeClasses::makeClasses(array_merge($data, $data2));
         $logger = MakeClasses::$container->getService(Logger::class);

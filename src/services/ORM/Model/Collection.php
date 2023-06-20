@@ -26,7 +26,7 @@ class Collection implements ArrayAccess, Iterator
         return isset($this->sql_data[$offset]);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         if (!isset($this->data[$offset])) {
             $this->data[$offset] = new $this->object_name($this->sql_data[$offset]);
@@ -44,7 +44,7 @@ class Collection implements ArrayAccess, Iterator
         throw new \Exception("You can't delete elements from collection");
     }
 
-    public function current()
+    public function current(): mixed
     {
         return $this->offsetGet($this->position);
     }

@@ -16,6 +16,7 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
     {
         $this->msql = $msql;
         $class_creator = getenv("ORM_TABLE_MODELS");
+        var_dump($class_creator);
         $class_init = new $class_creator();
         $all_schema = $class_init->getSchema();
         foreach ($all_schema as $table_name => $object_class) {

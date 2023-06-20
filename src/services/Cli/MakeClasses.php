@@ -65,6 +65,8 @@ class MakeClasses {
             $container->addService($class);
         }
         foreach ($atStart as $function) {
+            var_dump($function);
+            echo "<br>";
             $injector->execute($function[0], $function[1]);
         }
         return $all_class;
