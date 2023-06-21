@@ -31,7 +31,11 @@ abstract class Model {
 
     public function __get(string $name)
     {
-        $schema = $this->getSchema()[$name];
+        $schema = $this->getSchema();
+        if (!isset($schema[$name])) {
+            throw new \Exception("Unknown key $name");
+        }
+        $schema = $schema[$name];
         if (!isset($this->properties[$name])) {
             if (!is_subclass_of($schema, SqlBasedTypeInterface::class)) {
                 throw new \Exception("Unknown key $name");

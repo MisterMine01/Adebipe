@@ -40,7 +40,7 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
 
     public function getRepository(string $object_class): Repository
     {
-        return $this->repository[static::class_to_table_name($object_class)];
+        return $this->repository[$object_class];
     }
 
     public function update(): void
