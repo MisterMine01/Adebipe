@@ -2,7 +2,11 @@
 
 namespace Api\Model\Type;
 
-class ManyToMany extends AbstractType
+use Api\Model\Collection;
+use Api\Services\MsQl;
+use Api\Services\ORM;
+
+class ManyToMany extends AbstractType implements SqlBasedTypeInterface
 {
     private $me_object;
     private string $object_type;
@@ -15,8 +19,8 @@ class ManyToMany extends AbstractType
     {
         $this->me_object = $me_object;
         $this->object_type = $object_type;
-        $this->named_me = strtolower(substr($me_object, strrpos($me_object, '\\') + 1));
-        $this->named_object = strtolower(substr($object_type, strrpos($object_type, '\\') + 1));
+        $this->named_me = ORM::class_to_table_name($me_object);
+        $this->named_object = ORM::class_to_table_name($object_type);
         $this->is_first = $is_first;
         if ($this->is_first) {
             $this->middle_table_name = $this->named_me . '_' . $this->named_object;
@@ -58,5 +62,15 @@ class ManyToMany extends AbstractType
     public function getGoodTypedValue($value): mixed
     {
         return (string) $value;
+    }
+
+    public function getResultFromDb(MsQl $msql, string $id)
+    {
+        $query = "SELECT " . $this->named_object . ".* FROM " . $this->named_object .
+            " INNER JOIN " . $this->middle_table_name . " ON " . $this->named_object . ".id = " . $this->middle_table_name . "." . $this->named_object . "_id" .
+            " WHERE " . $this->middle_table_name . "." . $this->named_me . "_id = " . $id;
+        $result = $msql->prepare($query);
+        $data = $msql->execute($result);
+        return new Collection($msql, $data, $this->object_type);
     }
 }

@@ -2,11 +2,15 @@
 
 namespace Api\Model;
 
+use Api\Services\MsQl;
 use ArrayAccess;
+use Countable;
 use Iterator;
 
-class Collection implements ArrayAccess, Iterator
+class Collection implements ArrayAccess, Iterator, Countable
 {
+    private MsQl $msql;
+
     private array $sql_data = [];
 
     private array $data = [];
@@ -15,10 +19,11 @@ class Collection implements ArrayAccess, Iterator
 
     private int $position = 0;
 
-    public function __construct(array $sql_data, string $object_name)
+    public function __construct(MsQl $msql, array $sql_data, string $object_name)
     {
         $this->sql_data = $sql_data;
         $this->object_name = $object_name;
+        $this->msql = $msql;
     }
 
     public function offsetExists($offset): bool
@@ -29,7 +34,7 @@ class Collection implements ArrayAccess, Iterator
     public function offsetGet($offset): mixed
     {
         if (!isset($this->data[$offset])) {
-            $this->data[$offset] = new $this->object_name($this->sql_data[$offset]);
+            $this->data[$offset] = new $this->object_name($this->msql, $this->sql_data[$offset]);
         }
         return $this->data[$offset];
     }
@@ -67,5 +72,10 @@ class Collection implements ArrayAccess, Iterator
     public function rewind(): void
     {
         $this->position = 0;
+    }
+
+    public function count(): int
+    {
+        return count($this->sql_data);
     }
 }

@@ -3,6 +3,7 @@
 namespace Api\Model;
 
 use Api\Services\MsQl;
+use Api\Services\ORM;
 
 class Repository
 {
@@ -15,7 +16,7 @@ class Repository
     public function __construct($class_name, MsQl $msql)
     {
         $this->class_name = $class_name;
-        $this->table_name = strtolower(substr($class_name, strrpos($class_name, '\\') + 1));
+        $this->table_name = ORM::class_to_table_name($class_name);
         $this->msql = $msql;
         $this->schema = $this->class_name::$schema;
     }
@@ -34,10 +35,10 @@ class Repository
 
     public function findAll(): Collection
     {
-        $query = "SELECT * FROM ?";
+        $query = "SELECT * FROM " . $this->table_name;
         $result = $this->msql->prepare($query);
-        $sql = $this->msql->execute($result, [$this->table_name]);
-        return new Collection($sql, $this->class_name);
+        $sql = $this->msql->execute($result);
+        return new Collection($this->msql, $sql, $this->class_name);
     }
 
     public function save($object): bool

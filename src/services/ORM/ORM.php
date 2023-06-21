@@ -12,6 +12,11 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
 
     private $repository = array();
 
+    public static function class_to_table_name(string $class_name): string
+    {
+        return strtolower(substr($class_name, strrpos($class_name, '\\') + 1));
+    }
+
     public function atStart(MsQl $msql = null): void
     {
         $this->msql = $msql;
@@ -35,7 +40,7 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
 
     public function getRepository(string $object_class): Repository
     {
-        return $this->repository[strtolower(substr($object_class, strrpos($object_class, '\\') + 1))];
+        return $this->repository[static::class_to_table_name($object_class)];
     }
 
     public function update(): void

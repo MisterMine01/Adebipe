@@ -57,6 +57,8 @@ class MsQl implements RegisterServiceInterface
             $this->logger->error("Error executing query: " . $statement->errorInfo()[2]);
             return [];
         }
+        $this->logger->info("Query executed successfully");
+        $this->logger->info("Query: " . $statement->queryString);
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
