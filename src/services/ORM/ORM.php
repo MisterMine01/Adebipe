@@ -28,6 +28,16 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
     {
     }
 
+    public function getRepositories(): array
+    {
+        return $this->repository;
+    }
+
+    public function getRepository(string $object_class): Repository
+    {
+        return $this->repository[strtolower(substr($object_class, strrpos($object_class, '\\') + 1))];
+    }
+
     public function update(): void
     {
         $already_existed = $this->msql->get_table();

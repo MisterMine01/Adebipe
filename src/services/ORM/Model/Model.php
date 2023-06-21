@@ -15,6 +15,14 @@ abstract class Model {
         return static::$table_name;
     }
 
+    public function getSchema(): array {
+        return static::$schema;
+    }
+
+    public function getKey(): array {
+        return array_keys(static::$schema);
+    }
+
     public function __get(string $name)
     {
         return $this->{$name};

@@ -17,4 +17,10 @@ class ORMComponents implements ComponentInterface
         return new Response('ORM updated');
     }
 
+    #[Route(path: '/orm/data', method: 'GET')]
+    public static function test(ORM $orm): Response
+    {
+        $repositories = $orm->getRepositories();
+    }
+
 }

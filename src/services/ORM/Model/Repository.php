@@ -25,7 +25,6 @@ class Repository
         return $this->table_name;
     }
 
-
     public function findById(int $id)
     {
         $query = "SELECT * FROM ? WHERE id = ?";
@@ -39,6 +38,11 @@ class Repository
         $result = $this->msql->prepare($query);
         $sql = $this->msql->execute($result, [$this->table_name]);
         return new Collection($sql, $this->class_name);
+    }
+
+    public function save($object): bool
+    {
+        return true;
     }
 
     public function create_table(): array
