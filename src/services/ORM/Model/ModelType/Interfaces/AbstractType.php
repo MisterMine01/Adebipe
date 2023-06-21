@@ -33,6 +33,11 @@ abstract class AbstractType implements ModelTypeInterface
         return $sql;
     }
 
+    public function getMoreSql(): array
+    {
+        return [];
+    }
+
     public function getSqlType(): string
     {
         return $this->type;

@@ -16,7 +16,6 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
     {
         $this->msql = $msql;
         $class_creator = getenv("ORM_TABLE_MODELS");
-        var_dump($class_creator);
         $class_init = new $class_creator();
         $all_schema = $class_init->getSchema();
         foreach ($all_schema as $table_name => $object_class) {
@@ -27,5 +26,19 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
 
     public function atEnd(): void
     {
+    }
+
+    public function update(): void
+    {
+        $already_existed = $this->msql->get_table();
+        $already_table_name = array();
+        foreach ($already_existed as $table) {
+            $already_table_name[] = $table['TABLE_NAME'];
+        }
+        foreach ($this->repository as $table_name => $repository) {
+            if (!in_array($table_name, $already_table_name)) {
+                $repository->create_table();
+            }
+        }
     }
 }

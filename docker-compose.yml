@@ -1,6 +1,7 @@
 version: '3.7'
 services:
   web:
+    container_name: web
     image: nginx:alpine
     ports:
       - "8000:80"
@@ -13,7 +14,10 @@ services:
     volumes:
       - ./src:/var/www/html
       - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   mysql:
+    container_name: mysql
     image: mysql:latest
     volumes:
       - ./docker/data/mysql:/var/lib/mysql
@@ -25,6 +29,7 @@ services:
       MYSQL_USER: webapp
       MYSQL_PASSWORD: root
   phpmyadmin:
+    container_name: phpmyadmin
     image: phpmyadmin/phpmyadmin
     ports:
       - "8080:80"

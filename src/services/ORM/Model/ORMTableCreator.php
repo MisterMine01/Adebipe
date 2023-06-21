@@ -11,7 +11,7 @@ class ORMTableCreator
 
     public function create_model(string $object_class)
     {
-        $database_schema[$object_class] = $object_class;
+        $this->database_schema[$object_class] = $object_class;
     }
 
     public function getSchema(): array

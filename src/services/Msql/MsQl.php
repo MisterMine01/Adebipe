@@ -10,6 +10,11 @@ class MsQl implements RegisterServiceInterface
 {
     private Logger $logger;
     private PDO $connection;
+    private string $driver;
+    private string $host;
+    private string $database;
+    private string $user;
+    private string $password;
 
     public function __construct(Logger $logger)
     {
@@ -21,23 +26,23 @@ class MsQl implements RegisterServiceInterface
         }
         $ptn_start = 0;
         $ptn_end = strpos($connection_string, '://');
-        $drive = substr($connection_string, 0, $ptn_end);
+        $this->driver = substr($connection_string, 0, $ptn_end);
         $ptn_start = $ptn_end + 3;
         $ptn_end = strpos($connection_string, ':', $ptn_start);
-        $user = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
+        $this->user = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
         $ptn_start = $ptn_end + 1;
         $ptn_end = strpos($connection_string, '@', $ptn_start);
-        $password = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
+        $this->password = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
         $ptn_start = $ptn_end + 1;
         $ptn_end = strpos($connection_string, '/', $ptn_start);
-        $host = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
+        $this->host = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
         $ptn_start = $ptn_end + 1;
-        $database = substr($connection_string, $ptn_start);
-        $connection_string = "$drive:host=$host;dbname=$database";
+        $this->database = substr($connection_string, $ptn_start);
+        $connection_string = "$this->driver:host=$this->host;dbname=$this->database";
         $this->logger->info("Connecting to database: $connection_string");
-        $this->logger->info("User: $user");
-        $this->logger->info("Password: $password");
-        $this->connection = new PDO($connection_string, $user, $password);
+        $this->logger->info("User: $this->user");
+        $this->logger->info("Password: $this->password");
+        $this->connection = new PDO($connection_string, $this->user, $this->password);
     }
 
     public function prepare(string $query): PDOStatement|false
@@ -55,4 +60,10 @@ class MsQl implements RegisterServiceInterface
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function get_table() {
+        $query = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_CATALOG=?";
+        $statement = $this->prepare($query);
+        $data = $this->execute($statement, [$this->database]);
+        return $data;
+    }
 }

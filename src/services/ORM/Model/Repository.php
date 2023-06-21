@@ -40,4 +40,17 @@ class Repository
         $sql = $this->msql->execute($result, [$this->table_name]);
         return new Collection($sql, $this->class_name);
     }
+
+    public function create_table(): void
+    {
+        $query = "CREATE TABLE " . $this->table_name . " (";
+        foreach ($this->schema as $column_name => $column_type) {
+            $query .= $column_name . " " . $column_type->getSqlCreationType() . ', ';
+        }
+        $query .= 'PRIMARY KEY (id)';
+        $query .= ')';
+        $result = $this->msql->prepare($query);
+        $this->msql->execute($result);
+        
+    }
 }
