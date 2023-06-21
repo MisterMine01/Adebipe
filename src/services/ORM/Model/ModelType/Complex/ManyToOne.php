@@ -2,9 +2,10 @@
 
 namespace Api\Model\Type;
 
+use Api\Services\MsQl;
 use Api\Services\ORM;
 
-class ManyToOne extends AbstractType
+class ManyToOne extends AbstractType implements SqlBasedTypeInterface
 {
     private $me_object;
     private $relationedBy;
@@ -31,5 +32,17 @@ class ManyToOne extends AbstractType
     public function getGoodTypedValue($value): mixed
     {
         return (string) $value;
+    }
+
+    public function getResultFromDb(MsQl $msql, string $id)
+    {
+        $object_table = ORM::class_to_table_name($this->object);
+        $me_object_table = ORM::class_to_table_name($this->me_object);
+        $query = "SELECT " . $object_table . ".* FROM " . $me_object_table .
+            " INNER JOIN " . $object_table . " ON " . $me_object_table . "." . $this->relationedBy . " = " . $object_table . ".id" .
+            " WHERE " . $me_object_table . ".id = " . $id;
+        $result = $msql->prepare($query);
+        $data = $msql->execute($result);
+        return new $this->object($msql, $data[0]);
     }
 }

@@ -6,5 +6,5 @@ use Api\Services\MsQl;
 
 interface SqlBasedTypeInterface
 {
-    public function getResultFromDb(MsQl $msql, string $row_name);
+    public function getResultFromDb(MsQl $msql, string $id);
 }
