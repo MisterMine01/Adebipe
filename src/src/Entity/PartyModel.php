@@ -7,16 +7,15 @@ use Api\Model\Type\DateTimeType;
 use Api\Model\Type\IntType;
 use Api\Model\Type\StringType;
 
-class User extends Model
+class Party extends Model
 {
     public static $schema;
 }
 
-User::$schema = [
+Party::$schema = [
     'id' => new IntType(true, true),
-    'username' => new StringType(25, true),
-    'password' => new StringType(50, true),
-    'email' => new StringType(100, true),
+    'name' => new StringType(25, true),
+    'description' => new StringType(200, true),
     'created_at' => new DateTimeType(true),
     'updated_at' => new DateTimeType(true),
 ];

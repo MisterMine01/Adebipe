@@ -41,16 +41,33 @@ class Repository
         return new Collection($sql, $this->class_name);
     }
 
-    public function create_table(): void
+    public function create_table(): array
     {
         $query = "CREATE TABLE " . $this->table_name . " (";
+        $for_now = [];
+        $for_after = [];
         foreach ($this->schema as $column_name => $column_type) {
-            $query .= $column_name . " " . $column_type->getSqlCreationType() . ', ';
+            $type = $column_type->getSqlCreationType();
+            $type_more_sql = $column_type->getMoreSql();
+            if (in_array("now", array_keys($type_more_sql))) {
+                $for_now = array_merge($for_now, $type_more_sql["now"]);
+            }
+            if (in_array("after", array_keys($type_more_sql))) {
+                $for_after = array_merge($for_after, $type_more_sql["after"]);
+            }
+            if ($type === null) {
+                continue;
+            }
+            $query .= $column_name . " " . $type . ', ';
         }
         $query .= 'PRIMARY KEY (id)';
         $query .= ')';
         $result = $this->msql->prepare($query);
         $this->msql->execute($result);
-        
+        foreach ($for_now as $sql) {
+            $result = $this->msql->prepare($sql);
+            $this->msql->execute($result);
+        }
+        return $for_after;
     }
 }

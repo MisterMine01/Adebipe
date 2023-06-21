@@ -18,7 +18,7 @@ abstract class AbstractType implements ModelTypeInterface
         $this->auto_increment = $auto_increment;
     }
 
-    public function getSqlCreationType(): string
+    public function getSqlCreationType(): ?string
     {
         $sql = $this->type;
 

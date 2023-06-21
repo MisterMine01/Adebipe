@@ -25,11 +25,9 @@ class ManyToMany extends AbstractType
         parent::__construct('INT', $not_null, false);
     }
 
-    public function getSqlCreationType(): string
+    public function getSqlCreationType(): ?string
     {
-        $sql = parent::getSqlCreationType();
-        $sql .= ' REFERENCES ' . $this->middle_table_name . '(' . $this->named_object . '_id)';
-        return $sql;
+        return null;
     }
 
     public function getMoreSql(): array
@@ -41,15 +39,15 @@ class ManyToMany extends AbstractType
         $second_id = $named_object . '_id';
         return [
             "now" => [
-                `CREATE TABLE ${table_name} (
-                    ${first_id} INT NOT NULL,
-                    ${second_id} INT NOT NULL,
-                    PRIMARY KEY (${first_id}, ${second_id}),
+                `CREATE TABLE ` . $table_name . ` (
+                    ` . $first_id . ` INT NOT NULL,
+                    ` . $second_id . ` INT NOT NULL,
+                    PRIMARY KEY (` . $first_id . `, ` . $second_id . `),
                 )`,
             ],
             "after" => [
-                `ALTER TABLE ${table_name} ADD FOREIGN KEY (${first_id}) REFERENCES ${named_me}(id)`,
-                `ALTER TABLE ${table_name} ADD FOREIGN KEY (${second_id}) REFERENCES ${named_object}(id)`,
+                `ALTER TABLE ` . $table_name . ` ADD FOREIGN KEY (` . $first_id . `) REFERENCES ` . $named_me . `(id)`,
+                `ALTER TABLE ` . $table_name . ` ADD FOREIGN KEY (` . $second_id . `) REFERENCES ` . $named_object . `(id)`,
             ],
         ];
     }
