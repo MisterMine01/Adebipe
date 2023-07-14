@@ -2,7 +2,7 @@
 
 namespace App\Components;
 
-use App\Components\Interfaces\ComponentInterface;
+use Adebipe\Components\Interfaces\ComponentInterface;
 use Adebipe\Router\Annotations\RegexSimple;
 use Adebipe\Router\Annotations\Route;
 use Adebipe\Router\Response;

@@ -6,7 +6,7 @@ namespace App\Components;
 use Adebipe\Router\Annotations\Route;
 use Adebipe\Router\Response;
 use Adebipe\Services\ORM;
-use App\Components\Interfaces\ComponentInterface;
+use Adebipe\Components\Interfaces\ComponentInterface;
 use App\Model\User;
 
 class ORMComponents implements ComponentInterface
