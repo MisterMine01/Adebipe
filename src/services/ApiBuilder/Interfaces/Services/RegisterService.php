@@ -1,12 +1,12 @@
 <?php
 
-namespace Api\Services\Interfaces;
+namespace Adebipe\Services\Interfaces;
 
 /**
  * Interface for registered services
  * Can be used in routes
  * 
- * @package Api\Services\Interfaces
+ * @package Adebipe\Services\Interfaces
  */
 interface RegisterServiceInterface
 {

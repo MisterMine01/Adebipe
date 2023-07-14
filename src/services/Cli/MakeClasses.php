@@ -1,19 +1,19 @@
 <?php
 
-namespace Api\Cli;
+namespace Adebipe\Cli;
 
-use Api\Services\Container;
-use Api\Services\Dotenv;
-use Api\Services\Injector;
-use Api\Services\Interfaces\RegisterServiceInterface;
-use Api\Services\Interfaces\StarterServiceInterface;
-use Api\Services\Logger;
+use Adebipe\Services\Container;
+use Adebipe\Services\Dotenv;
+use Adebipe\Services\Injector;
+use Adebipe\Services\Interfaces\RegisterServiceInterface;
+use Adebipe\Services\Interfaces\StarterServiceInterface;
+use Adebipe\Services\Logger;
 use ReflectionClass;
 
 /**
  * Make the classes from the Application namespace
  * 
- * @package Api\Cli
+ * @package Adebipe\Cli
  */
 class MakeClasses {
     public static Injector $injector;
@@ -49,7 +49,7 @@ class MakeClasses {
         foreach ($classes as $class) {
             $reflection = new ReflectionClass($class);
             $all_class[] = $reflection;
-            if (strpos($class, 'Api\\Services\\') !== 0)
+            if (strpos($class, 'Adebipe\\Services\\') !== 0)
             {
                 continue;
             }

@@ -9,7 +9,7 @@ $time_start = microtime(true);
 try {
     include_once __DIR__ . '/services/loader.php';
 
-    $request = new \Api\Router\Request(
+    $request = new \Adebipe\Router\Request(
         $_SERVER['REQUEST_METHOD'],
         $_SERVER['REQUEST_URI'],
         getallheaders(),
@@ -26,7 +26,7 @@ try {
 } catch (\Throwable $e) {
     $Logger->error($e->getMessage());
     $Logger->error($e->getTraceAsString());
-    $Response = new \Api\Router\Response("Internal server error", 500);
+    $Response = new \Adebipe\Router\Response("Internal server error", 500);
     $Response->send();
 }
 

@@ -1,9 +1,9 @@
 <?php
 
-use Api\Services\Container;
-use Api\Services\Injector;
-use Api\Services\Interfaces\RegisterServiceInterface;
-use Api\Services\Interfaces\StarterServiceInterface;
+use Adebipe\Services\Container;
+use Adebipe\Services\Injector;
+use Adebipe\Services\Interfaces\RegisterServiceInterface;
+use Adebipe\Services\Interfaces\StarterServiceInterface;
 
 /**
  * Get the parameters of the constructor and return the code to inject them
@@ -52,7 +52,7 @@ function continue_loader(string $loaderPath, array $all_services): void
 {
     $all_services_existed = array();
     foreach ($all_services as $service) {
-        if (preg_match('/^Api\\\\Services\\\\/', $service->getName())) {
+        if (preg_match('/^Adebipe\\\\Services\\\\/', $service->getName())) {
             $contructor = setConstructor($service, $all_services_existed);
             // Get the name of the variable
             $all_services_existed[$service->getName()] = substr($contructor, 0, strpos($contructor, ' = '));

@@ -1,12 +1,12 @@
 <?php
 
-namespace Api\Services;
+namespace Adebipe\Services;
 
-use Api\Services\Interfaces\RegisterServiceInterface;
+use Adebipe\Services\Interfaces\RegisterServiceInterface;
 
 /**
  * Injector of the services
- * @package Api\Services
+ * @package Adebipe\Services
  */
 class Injector implements RegisterServiceInterface
 {

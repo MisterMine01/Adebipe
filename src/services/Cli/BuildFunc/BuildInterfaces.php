@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Api\Cli;
+namespace Adebipe\Cli;
 
 use ReflectionClass;
 
@@ -16,7 +16,7 @@ function build_interfaces(string $servicesPath): array
         $to_include = [];
         foreach (get_declared_interfaces() as $interface) {
             $interface = new ReflectionClass($interface);
-            if (!preg_match('/^Api\\\\/', $interface->getName())) {
+            if (!preg_match('/^Adebipe\\\\/', $interface->getName())) {
                 continue;
             }
             $file = $interface->getFileName();

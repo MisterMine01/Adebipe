@@ -1,13 +1,13 @@
 <?php
 
-namespace Api\Services;
+namespace Adebipe\Services;
 
-use Api\Services\Interfaces\RegisterServiceInterface;
-use Api\Services\Interfaces\StarterServiceInterface;
+use Adebipe\Services\Interfaces\RegisterServiceInterface;
+use Adebipe\Services\Interfaces\StarterServiceInterface;
 
 /**
  * Logger of the application
- * @package Api\Services
+ * @package Adebipe\Services
  */
 class Logger implements StarterServiceInterface, RegisterServiceInterface
 {

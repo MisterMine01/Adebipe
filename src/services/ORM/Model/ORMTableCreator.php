@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Api\Model;
+namespace Adebipe\Model;
 
 
 class ORMTableCreator

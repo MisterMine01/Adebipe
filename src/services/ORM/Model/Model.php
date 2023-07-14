@@ -1,9 +1,9 @@
 <?php
 
-namespace Api\Model;
+namespace Adebipe\Model;
 
-use Api\Model\Type\SqlBasedTypeInterface;
-use Api\Services\MsQl;
+use Adebipe\Model\Type\SqlBasedTypeInterface;
+use Adebipe\Services\MsQl;
 
 abstract class Model {
 

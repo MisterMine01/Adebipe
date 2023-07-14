@@ -1,11 +1,11 @@
 <?php
 
-namespace Api\Services\Interfaces;
+namespace Adebipe\Services\Interfaces;
 
 /**
  * Interface for services who need to set functions at the start and end of the application
  * 
- * @package Api\Services\Interfaces
+ * @package Adebipe\Services\Interfaces
  */
 interface StarterServiceInterface
 {

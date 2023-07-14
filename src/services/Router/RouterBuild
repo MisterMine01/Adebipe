@@ -1,6 +1,6 @@
 <?php
 
-use Api\Services\Logger;
+use Adebipe\Services\Logger;
 
 class RouterBuild
 {

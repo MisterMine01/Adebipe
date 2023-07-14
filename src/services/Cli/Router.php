@@ -1,10 +1,10 @@
 <?php
 
-namespace Api\Cli;
+namespace Adebipe\Cli;
 
-use Api\Router\Request;
-use Api\Services\Logger;
-use Api\Services\Router as ServicesRouter;
+use Adebipe\Router\Request;
+use Adebipe\Services\Logger;
+use Adebipe\Services\Router as ServicesRouter;
 
 include_once __DIR__ . '/Includer.php';
 include_once __DIR__ . '/MakeClasses.php';
@@ -13,7 +13,7 @@ include_once __DIR__ . '/MakeClasses.php';
  * Router for production environment.
  * More information about the router in the README.md
  * 
- * @package Api\Cli
+ * @package Adebipe\Cli
  */
 class Router
 {

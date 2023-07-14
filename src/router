@@ -1,13 +1,13 @@
 <?php
 
-use Api\Cli\MakeClasses;
-use Api\Services\Logger;
+use Adebipe\Cli\MakeClasses;
+use Adebipe\Services\Logger;
 
 putenv('ENV=dev');
 
 try {
     include_once __DIR__ . '/services/Cli/Router.php';
-    $router = new Api\Cli\Router();
+    $router = new Adebipe\Cli\Router();
     $router->run(__DIR__);
 } catch (Throwable $e) {
     echo $e->getMessage() . PHP_EOL;

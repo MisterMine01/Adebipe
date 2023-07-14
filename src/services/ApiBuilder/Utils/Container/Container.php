@@ -1,14 +1,14 @@
 <?php
 
-namespace Api\Services;
+namespace Adebipe\Services;
 
-use Api\Services\Interfaces\BuilderServicesInterface;
-use Api\Services\Interfaces\RegisterServiceInterface;
-use Api\Services\Interfaces\StarterServiceInterface;
+use Adebipe\Services\Interfaces\BuilderServicesInterface;
+use Adebipe\Services\Interfaces\RegisterServiceInterface;
+use Adebipe\Services\Interfaces\StarterServiceInterface;
 
 /**
  * Contains all classes of the services
- * @package Api\Services
+ * @package Adebipe\Services
  */
 class Container implements RegisterServiceInterface
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Api\Cli;
+namespace Adebipe\Cli;
 
 /**
  * get all files from a directory and his subdirectories
  * 
- * @package Api\Cli
+ * @package Adebipe\Cli
  */
 class Includer
 {

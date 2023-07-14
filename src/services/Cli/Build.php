@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\Cli;
+namespace Adebipe\Cli;
 
 include_once __DIR__ . '/Includer.php';
 include_once __DIR__ . '/MakeClasses.php';

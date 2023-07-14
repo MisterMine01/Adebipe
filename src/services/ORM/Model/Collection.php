@@ -1,8 +1,8 @@
 <?php
 
-namespace Api\Model;
+namespace Adebipe\Model;
 
-use Api\Services\MsQl;
+use Adebipe\Services\MsQl;
 use ArrayAccess;
 use Countable;
 use Iterator;

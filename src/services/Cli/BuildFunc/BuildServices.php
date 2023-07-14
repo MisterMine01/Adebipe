@@ -1,8 +1,8 @@
 <?php
 
-namespace Api\Cli;
+namespace Adebipe\Cli;
 
-use Api\Services\Interfaces\BuilderServiceInterface;
+use Adebipe\Services\Interfaces\BuilderServiceInterface;
 
 
 /**

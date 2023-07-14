@@ -2,11 +2,11 @@
 
 namespace App\Model;
 
-use Api\Model\Model;
-use Api\Model\Type\DateTimeType;
-use Api\Model\Type\IntType;
-use Api\Model\Type\ManyToMany;
-use Api\Model\Type\StringType;
+use Adebipe\Model\Model;
+use Adebipe\Model\Type\DateTimeType;
+use Adebipe\Model\Type\IntType;
+use Adebipe\Model\Type\ManyToMany;
+use Adebipe\Model\Type\StringType;
 
 class User extends Model
 {

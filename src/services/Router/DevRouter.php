@@ -1,12 +1,12 @@
 <?php
 
-namespace Api\Services;
+namespace Adebipe\Services;
 
-use Api\Router\Annotations\RegexSimple;
-use Api\Router\Annotations\Route;
-use Api\Router\Request;
-use Api\Router\Response;
-use Api\Services\Interfaces\BuilderServiceInterface;
+use Adebipe\Router\Annotations\RegexSimple;
+use Adebipe\Router\Annotations\Route;
+use Adebipe\Router\Request;
+use Adebipe\Router\Response;
+use Adebipe\Services\Interfaces\BuilderServiceInterface;
 
 class Router implements BuilderServiceInterface
 {

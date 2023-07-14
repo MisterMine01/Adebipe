@@ -3,9 +3,9 @@
 
 namespace App\Components;
 
-use Api\Router\Annotations\Route;
-use Api\Router\Response;
-use Api\Services\ORM;
+use Adebipe\Router\Annotations\Route;
+use Adebipe\Router\Response;
+use Adebipe\Services\ORM;
 use App\Components\Interfaces\ComponentInterface;
 use App\Model\User;
 

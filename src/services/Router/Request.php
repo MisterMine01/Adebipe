@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\Router;
+namespace Adebipe\Router;
 
 class Request
 {

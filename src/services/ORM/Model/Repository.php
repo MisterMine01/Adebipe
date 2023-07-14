@@ -1,10 +1,10 @@
 <?php
 
-namespace Api\Model;
+namespace Adebipe\Model;
 
-use Api\Model\Type\SqlBasedTypeInterface;
-use Api\Services\MsQl;
-use Api\Services\ORM;
+use Adebipe\Model\Type\SqlBasedTypeInterface;
+use Adebipe\Services\MsQl;
+use Adebipe\Services\ORM;
 
 class Repository
 {

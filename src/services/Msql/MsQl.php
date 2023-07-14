@@ -1,8 +1,8 @@
 <?php
 
-namespace Api\Services;
+namespace Adebipe\Services;
 
-use Api\Services\Interfaces\RegisterServiceInterface;
+use Adebipe\Services\Interfaces\RegisterServiceInterface;
 use PDO;
 use PDOException;
 use PDOStatement;

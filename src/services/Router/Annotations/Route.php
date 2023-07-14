@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\Router\Annotations;
+namespace Adebipe\Router\Annotations;
 
 use Attribute;
 

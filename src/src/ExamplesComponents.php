@@ -3,10 +3,10 @@
 namespace App\Components;
 
 use App\Components\Interfaces\ComponentInterface;
-use Api\Router\Annotations\RegexSimple;
-use Api\Router\Annotations\Route;
-use Api\Router\Response;
-use Api\Services\ORM;
+use Adebipe\Router\Annotations\RegexSimple;
+use Adebipe\Router\Annotations\Route;
+use Adebipe\Router\Response;
+use Adebipe\Services\ORM;
 use App\Model\User;
 
 class ExampleComponent implements ComponentInterface

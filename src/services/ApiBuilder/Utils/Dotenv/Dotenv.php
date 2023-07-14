@@ -1,13 +1,13 @@
 <?php
 
-namespace Api\Services;
+namespace Adebipe\Services;
 
-use Api\Services\Interfaces\StarterServiceInterface;
+use Adebipe\Services\Interfaces\StarterServiceInterface;
 
 /**
  * Initialize the environment variables
  * 
- * @package Api\Services
+ * @package Adebipe\Services
  */
 class Dotenv implements StarterServiceInterface
 {

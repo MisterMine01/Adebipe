@@ -1,10 +1,10 @@
 <?php
 
-namespace Api\Model\Type;
+namespace Adebipe\Model\Type;
 
-use Api\Model\Collection;
-use Api\Services\MsQl;
-use Api\Services\ORM;
+use Adebipe\Model\Collection;
+use Adebipe\Services\MsQl;
+use Adebipe\Services\ORM;
 
 class OneToMany extends AbstractType implements SqlBasedTypeInterface
 {

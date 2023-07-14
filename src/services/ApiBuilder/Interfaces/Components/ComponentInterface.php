@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Components\Interfaces;
+namespace Adebipe\Components\Interfaces;
 
 /**
  * Interface for all components
  * 
- * @package Api\Services\Interfaces
+ * @package Adebipe\Services\Interfaces
  */
 interface ComponentInterface
 {

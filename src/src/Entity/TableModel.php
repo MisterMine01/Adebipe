@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use Api\Model\ORMTableCreator;
+use Adebipe\Model\ORMTableCreator;
 
 class TableModel extends ORMTableCreator
 {

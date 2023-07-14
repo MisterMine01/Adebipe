@@ -1,9 +1,9 @@
 <?php
 
-namespace Api\Model\Type;
+namespace Adebipe\Model\Type;
 
-use Api\Services\MsQl;
-use Api\Services\ORM;
+use Adebipe\Services\MsQl;
+use Adebipe\Services\ORM;
 
 class ManyToOne extends AbstractType implements SqlBasedTypeInterface
 {

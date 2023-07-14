@@ -1,11 +1,11 @@
 <?php
 
-namespace Api\Services;
+namespace Adebipe\Services;
 
-use Api\Model\Model;
-use Api\Model\Repository;
-use Api\Services\Interfaces\RegisterServiceInterface;
-use Api\Services\Interfaces\StarterServiceInterface;
+use Adebipe\Model\Model;
+use Adebipe\Model\Repository;
+use Adebipe\Services\Interfaces\RegisterServiceInterface;
+use Adebipe\Services\Interfaces\StarterServiceInterface;
 
 class ORM implements RegisterServiceInterface, StarterServiceInterface
 {

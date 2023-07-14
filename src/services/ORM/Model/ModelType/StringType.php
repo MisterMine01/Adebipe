@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\Model\Type;
+namespace Adebipe\Model\Type;
 
 
 class StringType extends AbstractType
