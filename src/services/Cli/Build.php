@@ -44,8 +44,14 @@ function removeDir(string $path): void
     return;
 }
 
+/**
+ * Build the project
+ */
 class Build
 {
+    /**
+     * Build the project
+     */
     public function build()
     {
         $getcwd = getcwd();

@@ -9,10 +9,19 @@ use Api\Services\Router as ServicesRouter;
 include_once __DIR__ . '/Includer.php';
 include_once __DIR__ . '/MakeClasses.php';
 
+/**
+ * Router for production environment.
+ * More information about the router in the README.md
+ * 
+ * @package Api\Cli
+ */
 class Router
 {
     private float $time_start = 0;
 
+    /**
+     * Router constructor.
+     */
     public function __construct()
     {
         $this->time_start = microtime(true);

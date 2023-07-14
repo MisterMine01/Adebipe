@@ -5,6 +5,12 @@ namespace Api\Cli;
 
 use ReflectionClass;
 
+/**
+ * Build the interfaces from the Application namespace
+ * 
+ * @param string $servicesPath The path of the services
+ * @return array<string> The list of the interfaces
+ */
 function build_interfaces(string $servicesPath): array
     {
         $to_include = [];

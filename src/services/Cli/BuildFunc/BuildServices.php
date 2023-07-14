@@ -5,7 +5,11 @@ namespace Api\Cli;
 use Api\Services\Interfaces\BuilderServiceInterface;
 
 
-
+/**
+ * Build the services from the Application namespace
+ * @param string $servicesPath The path of the services
+ * @param array<ReflectionClass> $all_services The list of the services
+ */
 function build_services(string $servicesPath, array $all_services): array
 {
     $container = MakeClasses::$container;

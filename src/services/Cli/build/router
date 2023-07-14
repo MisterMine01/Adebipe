@@ -1,8 +1,10 @@
 <?php
-
+/**
+ * Router of the application in production
+ */
 $time_start = microtime(true);
 
-putenv('ENV=dev');
+//putenv('ENV=dev'); // For test the prod router
 
 try {
     include_once __DIR__ . '/services/loader.php';

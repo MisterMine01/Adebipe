@@ -10,10 +10,20 @@ use Api\Services\Interfaces\StarterServiceInterface;
 use Api\Services\Logger;
 use ReflectionClass;
 
+/**
+ * Make the classes from the Application namespace
+ * 
+ * @package Api\Cli
+ */
 class MakeClasses {
     public static Injector $injector;
     public static Container $container;
 
+    /**
+     * Make the classes from the Application namespace
+     * 
+     * @param array<string> $classes The list of the classes
+     */
     public static function makeClasses(array $classes): array
     {
         $dotenv = new Dotenv();
@@ -70,6 +80,9 @@ class MakeClasses {
         return $all_class;
     }
 
+    /**
+     * Stop all the services
+     */
     public static function stopServices(): void
     {
         $logger = MakeClasses::$injector->getService(Logger::class);

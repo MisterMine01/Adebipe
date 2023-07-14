@@ -2,9 +2,17 @@
 
 namespace Api\Cli;
 
+/**
+ * get all files from a directory and his subdirectories
+ * 
+ * @package Api\Cli
+ */
 class Includer
 {
-
+    /**
+     * get all files from a directory, if not a dir include them
+     * @param string $path
+     */
     private function dirRead($path): array
     {
         $file = [];
@@ -19,6 +27,11 @@ class Includer
         return [$file, $last];
     }
 
+    /**
+     * get all files from a directory and his subdirectories
+     * @param string $path
+     * @return array<array<string>> $file
+     */
     private function makeIncludeList($path): array
     {
         $file = [];
@@ -68,6 +81,11 @@ class Includer
         return [$file, $last];
     }
 
+    /**
+     * get all files from a directory and his subdirectories
+     * @param string $path
+     * @return array<string> $file
+     */
     public function setIncludeList($path): array
     {
         $file = $this->makeIncludeList($path);
@@ -76,6 +94,11 @@ class Includer
         return $file;
     }
 
+    /**
+     * include all files from a directory and his subdirectories
+     * @param string $path
+     * @return array<string> $class
+     */
     public function includeList($path): array
     {
         $file = $this->setIncludeList($path);

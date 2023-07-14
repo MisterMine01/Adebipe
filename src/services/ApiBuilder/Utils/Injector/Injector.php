@@ -4,6 +4,10 @@ namespace Api\Services;
 
 use Api\Services\Interfaces\RegisterServiceInterface;
 
+/**
+ * Injector of the services
+ * @package Api\Services
+ */
 class Injector implements RegisterServiceInterface
 {
     /**

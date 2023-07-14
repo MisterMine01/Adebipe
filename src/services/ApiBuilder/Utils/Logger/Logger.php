@@ -5,6 +5,10 @@ namespace Api\Services;
 use Api\Services\Interfaces\RegisterServiceInterface;
 use Api\Services\Interfaces\StarterServiceInterface;
 
+/**
+ * Logger of the application
+ * @package Api\Services
+ */
 class Logger implements StarterServiceInterface, RegisterServiceInterface
 {
     private $logFile;
@@ -18,6 +22,9 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     ];
 
 
+    /**
+     * Logger of the application
+     */
     public function __construct()
     {
         if (!is_dir('logs')) {

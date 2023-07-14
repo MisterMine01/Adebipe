@@ -1,11 +1,15 @@
 <?php
 
-use Api\Cli\MakeClasses;
 use Api\Services\Container;
 use Api\Services\Injector;
 use Api\Services\Interfaces\RegisterServiceInterface;
 use Api\Services\Interfaces\StarterServiceInterface;
 
+/**
+ * Get the parameters of the constructor and return the code to inject them
+ * @param ReflectionMethod $func The constructor
+ * @param array<string> $all_services_existed The list of the services already generated
+ */
 function getParameters($func, $all_services_existed): string
 {
     $params = $func->getParameters();
@@ -23,6 +27,11 @@ function getParameters($func, $all_services_existed): string
     return $params_code;
 }
 
+/**
+ * Set the constructor of a service
+ * @param ReflectionClass $service The service
+ * @param array<string> $all_services_existed The list of the services already generated
+ */
 function setConstructor($service, $all_services_existed): string
 {
     $constructor = $service->getConstructor();
@@ -34,6 +43,11 @@ function setConstructor($service, $all_services_existed): string
     return "$" . $service->getShortName() . " = new " . $service->getName() . "($params_code);";
 }
 
+/**
+ * Continue the loader with generating the code of the services
+ * @param string $loaderPath The path of the loader
+ * @param array<ReflectionClass> $all_services The list of the services
+ */
 function continue_loader(string $loaderPath, array $all_services): void
 {
     $all_services_existed = array();
