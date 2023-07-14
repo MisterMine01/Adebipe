@@ -11,12 +11,12 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
     private $relationedBy;
     private $object;
 
-    public function __construct($me_object, $relationedBy, $object, bool $not_null = false)
+    public function __construct($me_object, $relationedBy, $object)
     {
         $this->me_object = $me_object;
         $this->relationedBy = $relationedBy;
         $this->object = $object;
-        parent::__construct('INT', $not_null, false);
+        parent::__construct('INT', false, false);
     }
 
     public function getMoreSql(): array
@@ -29,11 +29,6 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
         ];
     }
 
-    public function getGoodTypedValue($value): mixed
-    {
-        return (string) $value;
-    }
-
     public function getResultFromDb(MsQl $msql, string $id)
     {
         $object_table = ORM::class_to_table_name($this->object);
@@ -43,6 +38,16 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
             " WHERE " . $me_object_table . ".id = " . $id;
         $result = $msql->prepare($query);
         $data = $msql->execute($result);
-        return new $this->object($msql, $data[0]);
+        return new $this->object($data[0]);
+    }
+
+    public function checkType($value): ?bool
+    {
+        return null;
+    }
+
+    public function getPDOParamType(): ?int
+    {
+        return null;
     }
 }

@@ -59,11 +59,6 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
         ];
     }
 
-    public function getGoodTypedValue($value): mixed
-    {
-        return (string) $value;
-    }
-
     public function getResultFromDb(MsQl $msql, string $id)
     {
         $query = "SELECT " . $this->named_object . ".* FROM " . $this->named_object .
@@ -71,6 +66,16 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
             " WHERE " . $this->middle_table_name . "." . $this->named_me . "_id = " . $id;
         $result = $msql->prepare($query);
         $data = $msql->execute($result);
-        return new Collection($msql, $data, $this->object_type);
+        return new Collection($data, $this->object_type);
+    }
+
+    public function checkType($value): ?bool
+    {
+        return null;
+    }
+
+    public function getPDOParamType(): ?int
+    {
+        return null;
     }
 }

@@ -16,6 +16,7 @@ class MsQl implements RegisterServiceInterface
     private string $database;
     private string $user;
     private string $password;
+    private bool $last_query_success;
 
     public function __construct(Logger $logger)
     {
@@ -55,16 +56,36 @@ class MsQl implements RegisterServiceInterface
         return $this->connection->prepare($query);
     }
 
-    public function execute(PDOStatement $statement, array|null $params = null): array
+    public function execute(PDOStatement $statement, array|null $params = null, array|null $types = null): array
     {
-        $data = $statement->execute($params);
+        $data = null;
+        if ($params !== null && $types !== null) {
+            $this->logger->info("Binding params");
+            $this->logger->info("Params: " . json_encode($params));
+            $this->logger->info("Types: " . json_encode($types));
+            $i = 0;
+            foreach ($params as $param) {
+                $statement->bindValue($i + 1, $param, $types[$i]);
+                $i++;
+            }
+            $data = $statement->execute();
+        } else {
+            $data = $statement->execute($params);
+        }
         if ($data === false) {
             $this->logger->error("Error executing query: " . $statement->errorInfo()[2]);
+            $this->last_query_success = false;
             return [];
         }
         $this->logger->info("Query executed successfully");
         $this->logger->info("Query: " . $statement->queryString);
+        $this->last_query_success = true;
         return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function get_last_query_success(): bool
+    {
+        return $this->last_query_success;
     }
 
     public function get_table() {

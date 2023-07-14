@@ -10,8 +10,13 @@ class IntType extends AbstractType
         parent::__construct('INT', $not_null, $auto_increment);
     }
 
-    public function getGoodTypedValue($value): mixed
+    public function checkType(mixed $value): ?bool
     {
-        return (int) $value;
+        return is_int($value);
+    }
+
+    public function getPDOParamType(): ?int
+    {
+        return \PDO::PARAM_INT;
     }
 }

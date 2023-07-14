@@ -7,13 +7,16 @@ use Api\Services\MsQl;
 
 abstract class Model {
 
-    private MsQl $msql;
+    public static MsQl $msql;
     private array $properties = [];
+    private array $schema = [];
 
-    public function __construct(MsQl $msql, array $data)
+    abstract public static function createSchema(): array;
+
+    public function __construct(array $data)
     {
-        $this->msql = $msql;
-        $all_key = array_keys(static::$schema);
+        $this->schema = static::createSchema();
+        $all_key = array_keys($this->schema);
         foreach ($data as $key => $value) {
             if (!in_array($key, $all_key)) {
                 throw new \Exception("Unknown key $key");
@@ -22,11 +25,11 @@ abstract class Model {
         }
     }
     public function getSchema(): array {
-        return static::$schema;
+        return $this->schema;
     }
 
     public function getKey(): array {
-        return array_keys(static::$schema);
+        return array_keys($this->schema);
     }
 
     public function __get(string $name)
@@ -38,9 +41,9 @@ abstract class Model {
         $schema = $schema[$name];
         if (!isset($this->properties[$name])) {
             if (!is_subclass_of($schema, SqlBasedTypeInterface::class)) {
-                throw new \Exception("Unknown key $name");
+                return null;
             }
-            $this->properties[$name] = $schema->getResultFromDb($this->msql, $this->id);
+            $this->properties[$name] = $schema->getResultFromDb(Model::$msql, $this->id);
         }
         $schema = $this->getSchema()[$name];
         return $this->properties[$name];

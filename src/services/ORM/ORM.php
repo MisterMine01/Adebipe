@@ -2,6 +2,7 @@
 
 namespace Api\Services;
 
+use Api\Model\Model;
 use Api\Model\Repository;
 use Api\Services\Interfaces\RegisterServiceInterface;
 use Api\Services\Interfaces\StarterServiceInterface;
@@ -26,6 +27,7 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
         foreach ($all_schema as $table_name => $object_class) {
             $this->repository[$table_name] = new Repository($object_class, $this->msql);
         }
+        Model::$msql = $this->msql;
     }
 
 

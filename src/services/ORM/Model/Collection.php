@@ -9,7 +9,6 @@ use Iterator;
 
 class Collection implements ArrayAccess, Iterator, Countable
 {
-    private MsQl $msql;
 
     private array $sql_data = [];
 
@@ -19,11 +18,10 @@ class Collection implements ArrayAccess, Iterator, Countable
 
     private int $position = 0;
 
-    public function __construct(MsQl $msql, array $sql_data, string $object_name)
+    public function __construct(array $sql_data, string $object_name)
     {
         $this->sql_data = $sql_data;
         $this->object_name = $object_name;
-        $this->msql = $msql;
     }
 
     public function offsetExists($offset): bool
@@ -34,7 +32,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     public function offsetGet($offset): mixed
     {
         if (!isset($this->data[$offset])) {
-            $this->data[$offset] = new $this->object_name($this->msql, $this->sql_data[$offset]);
+            $this->data[$offset] = new $this->object_name($this->sql_data[$offset]);
         }
         return $this->data[$offset];
     }

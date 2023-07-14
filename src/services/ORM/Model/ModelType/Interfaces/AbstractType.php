@@ -18,6 +18,16 @@ abstract class AbstractType implements ModelTypeInterface
         $this->auto_increment = $auto_increment;
     }
 
+    public function canBeNull(): bool
+    {
+        return !$this->not_null;
+    }
+
+    public function isAutoIncrement(): bool
+    {
+        return $this->auto_increment;
+    }
+
     public function getSqlCreationType(): ?string
     {
         $sql = $this->type;

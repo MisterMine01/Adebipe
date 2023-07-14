@@ -2,6 +2,7 @@
 
 namespace Api\Model\Type;
 
+use DateTime;
 
 class DateTimeType extends AbstractType
 {
@@ -10,8 +11,18 @@ class DateTimeType extends AbstractType
         parent::__construct('DATETIME', $not_null, false);
     }
 
-    public function getGoodTypedValue($value): mixed
+
+    public function checkType(mixed $value): ?bool
     {
-        return (string) $value;
+        if (is_string($value)) {
+            $test = DateTime::createFromFormat('Y-m-d H:i:s', $value);
+            return $test !== false;
+        }
+        return false; 
+    }
+
+    public function getPDOParamType(): ?int
+    {
+        return \PDO::PARAM_STR;
     }
 }

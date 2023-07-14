@@ -2,6 +2,7 @@
 
 namespace Api\Model\Type;
 
+use Api\Model\Collection;
 use Api\Services\MsQl;
 use Api\Services\ORM;
 
@@ -11,22 +12,28 @@ class OneToMany extends AbstractType implements SqlBasedTypeInterface
     private $object;
     private $relationedBy;
     
-    public function __construct($me_object, $object, $relationedBy, bool $not_null = false)
+    public function __construct($me_object, $object, $relationedBy)
     {
         $this->me_object = $me_object;
         $this->object = $object;
         $this->relationedBy = $relationedBy;
-        parent::__construct('INT', $not_null, false);
+        parent::__construct('INT', false, false);
+    }
+
+
+    public function checkType(mixed $value): ?bool
+    {
+        return null;
+    }
+
+    public function getPDOParamType(): ?int
+    {
+        return null;
     }
 
     public function getSqlCreationType(): ?string
     {
         return null;
-    }
-
-    public function getGoodTypedValue($value): mixed
-    {
-        return (string) $value;
     }
 
     public function getResultFromDb(MsQl $msql, string $id)
@@ -38,6 +45,6 @@ class OneToMany extends AbstractType implements SqlBasedTypeInterface
             " WHERE " . $me_object_table . ".id = " . $id;
         $result = $msql->prepare($query);
         $data = $msql->execute($result);
-        return new $this->object($msql, $data[0]);
+        return new Collection($data, $this->object);
     }
 }
