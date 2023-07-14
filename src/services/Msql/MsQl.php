@@ -4,6 +4,7 @@ namespace Api\Services;
 
 use Api\Services\Interfaces\RegisterServiceInterface;
 use PDO;
+use PDOException;
 use PDOStatement;
 
 class MsQl implements RegisterServiceInterface
@@ -42,7 +43,11 @@ class MsQl implements RegisterServiceInterface
         $this->logger->info("Connecting to database: $connection_string");
         $this->logger->info("User: $this->user");
         $this->logger->info("Password: $this->password");
-        $this->connection = new PDO($connection_string, $this->user, $this->password);
+        try {
+            $this->connection = new PDO($connection_string, $this->user, $this->password);
+        } catch (PDOException $e) {
+            $logger->critical("PDO can't be opened");
+        }
     }
 
     public function prepare(string $query): PDOStatement|false
