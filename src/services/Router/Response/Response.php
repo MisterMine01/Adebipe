@@ -38,6 +38,7 @@ class Response
      */
     public function send()
     {
+        http_response_code($this->status);
         foreach ($this->headers as $key => $value) {
             header("$key: $value");
         }
