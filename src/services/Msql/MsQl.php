@@ -68,9 +68,23 @@ class MsQl implements RegisterServiceInterface
                 $statement->bindValue($i + 1, $param, $types[$i]);
                 $i++;
             }
-            $data = $statement->execute();
         } else {
-            $data = $statement->execute($params);
+            if ($params !== null) {
+                $i = 0;
+                foreach ($params as $param) {
+                    $statement->bindValue($i + 1, $param);
+                    $i++;
+                }
+            }
+        }
+        try {
+            $data = $statement->execute();
+        } catch (PDOException $e) {
+            if (getenv('ENV') === 'dev') {
+                $statement->debugDumpParams();
+            }
+            $this->logger->critical("Error executing query: " . $e->getMessage());
+            exit(1);
         }
         if ($data === false) {
             $this->logger->error("Error executing query: " . $statement->errorInfo()[2]);

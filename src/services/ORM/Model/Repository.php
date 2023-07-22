@@ -27,11 +27,43 @@ class Repository
         return $this->table_name;
     }
 
-    public function findById(int $id)
+    public function findOneById(int $id): ?object
     {
-        $query = "SELECT * FROM ? WHERE id = ?";
-        $result = $this->msql->prepare($query);
-        return $this->msql->execute($result, [$this->table_name, $id]);
+        return $this->findOneBy(['id' => $id], [\PDO::PARAM_INT]);
+    }
+
+    public function findOneBy(array $conditions, ?array $type = null) : ?object
+    {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE ";
+        $query .= implode(" AND ", array_map(function ($key) {
+            return "$key = ?";
+        }, array_keys($conditions)));
+        $statement = $this->msql->prepare($query);
+        if ($type === null) {
+            $type = array_fill(0, count($conditions), \PDO::PARAM_STR);
+        }
+        $result = $this->msql->execute($statement, array_values($conditions), $type);
+        if ($result === null) {
+            return null;
+        }
+        if (count($result) === 0) {
+            return null;
+        }
+        return new $this->class_name($result[0]);
+    }
+
+    public function findAllBy(array $conditions, ?array $type = null) : Collection
+    {
+        $query = "SELECT * FROM ? WHERE ";
+        $query .= implode(" AND ", array_map(function ($key) {
+            return "$key = ?";
+        }, array_keys($conditions)));
+        $statement = $this->msql->prepare($query);
+        if ($type === null) {
+            $type = array_fill(0, count($conditions), \PDO::PARAM_STR);
+        }
+        $result = $this->msql->execute($statement, array_values($conditions), array_merge([\PDO::PARAM_STR], $type));
+        return new Collection($result, $this->class_name);
     }
 
     public function findAll(): Collection

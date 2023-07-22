@@ -32,6 +32,19 @@ abstract class Model {
         return array_keys($this->schema);
     }
 
+    public function getValues(): array
+    {
+        $schema = $this->getSchema();
+        $values = [];
+        foreach ($schema as $key => $value) {
+            if (is_subclass_of($value, SqlBasedTypeInterface::class)) {
+                continue;
+            }
+            $values[$key] = $this->properties[$key];
+        }
+        return $values;
+    }
+
     public function __get(string $name)
     {
         $schema = $this->getSchema();
