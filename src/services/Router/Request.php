@@ -96,6 +96,19 @@ class Request
         return intval($this->get[$key] ?? $default);
     }
 
+    public function validatePost(array $schema): bool
+    {
+        foreach ($schema as $key => $type) {
+            if (!isset($this->post[$key])) {
+                return false;
+            }
+            if (gettype($this->post[$key]) !== $type) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private static function isJson($string)
     {
         json_decode($string);
