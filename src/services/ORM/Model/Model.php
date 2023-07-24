@@ -2,11 +2,11 @@
 
 namespace Adebipe\Model;
 
-use Adebipe\Model\Type\ModelTypeInterface;
 use Adebipe\Model\Type\SqlBasedTypeInterface;
 use Adebipe\Services\MsQl;
 
-abstract class Model {
+abstract class Model implements ModelInterface
+{
 
     public static MsQl $msql;
     private array $properties = [];
@@ -73,7 +73,11 @@ abstract class Model {
     }
 
 
-
+    /**
+     * Get the value of a property
+     * @param string $name
+     * @return mixed
+     */
     public function __get(string $name)
     {
         $schema = $this->getSchema();
@@ -91,6 +95,11 @@ abstract class Model {
         return $this->properties[$name];
     }
 
+    /**
+     * Set the value of a property
+     * @param string $name
+     * @param mixed $value
+     */
     public function __set(string $name, $value)
     {
         if (!isset($this->properties[$name])) {

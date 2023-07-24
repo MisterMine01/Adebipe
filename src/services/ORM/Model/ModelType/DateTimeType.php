@@ -18,7 +18,7 @@ class DateTimeType extends AbstractType
             $test = DateTime::createFromFormat('Y-m-d H:i:s', $value);
             return $test !== false;
         }
-        return false; 
+        return false;
     }
 
     public function getPDOParamType(): ?int

@@ -6,15 +6,54 @@ use Adebipe\Model\Collection;
 use Adebipe\Services\MsQl;
 use Adebipe\Services\ORM;
 
+/**
+ * Many to many relation
+ * Himself is the many, the other is the many
+ * @package Adebipe\Model\Type
+ */
 class ManyToMany extends AbstractType implements SqlBasedTypeInterface
 {
-    private $me_object;
+    /**
+     * The object that has this column
+     * @var string
+     */
+    private string $me_object;
+
+    /**
+     * The object that is related
+     */
     private string $object_type;
+
+    /**
+     * Is the first object in the middle table?
+     * @var bool
+     */
     private bool $is_first;
+
+    /**
+     * The name of the table for myself
+     * @var string
+     */
     private string $named_me;
+
+    /**
+     * The name of the table for the other object
+     * @var string
+     */
     private string $named_object;
+
+    /**
+     * The name of the middle table
+     */
     private string $middle_table_name;
 
+    /**
+     * Many to many relation
+     * Himself is the many, the other is the many
+     * @param string $me_object
+     * @param string $object_type
+     * @param bool $is_first
+     */
     public function __construct($me_object, $object_type, bool $is_first)
     {
         $this->me_object = $me_object;
@@ -31,6 +70,17 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
     }
 
     public function getSqlCreationType(): ?string
+    {
+        return null;
+    }
+
+
+    public function checkType($value): ?bool
+    {
+        return null;
+    }
+
+    public function getPDOParamType(): ?int
     {
         return null;
     }
@@ -83,17 +133,5 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
         $result = $msql->prepare($query);
         $msql->execute($result);
         return $msql->get_last_query_success();
-    }
-
-
-
-    public function checkType($value): ?bool
-    {
-        return null;
-    }
-
-    public function getPDOParamType(): ?int
-    {
-        return null;
     }
 }

@@ -10,7 +10,7 @@ include_once __DIR__ . '/Includer.php';
 include_once __DIR__ . '/MakeClasses.php';
 
 /**
- * Router for production environment.
+ * Router of the CLI for development environment.
  * More information about the router in the README.md
  * 
  * @package Adebipe\Cli

@@ -5,12 +5,37 @@ namespace Adebipe\Model\Type;
 use Adebipe\Services\MsQl;
 use Adebipe\Services\ORM;
 
+/**
+ * Many to one relation
+ * Himself is the many, the other is the one
+ */
 class ManyToOne extends AbstractType implements SqlBasedTypeInterface
 {
+    /**
+     * The object that has the relation
+     * @var string
+     */
     private $me_object;
-    private $relationedBy;
-    private $object;
 
+    /**
+     * The column that is related (this column)
+     * @var string
+     */
+    private string $relationedBy;
+
+    /**
+     * The object that is related
+     */
+    private string $object;
+
+    /**
+     * Many to one relation
+     * Himself is the many, the other is the one
+     * @param string $me_object
+     * @param string $relationedBy
+     * @param string $object
+     * @return void
+     */
     public function __construct($me_object, $relationedBy, $object)
     {
         $this->me_object = $me_object;
@@ -27,6 +52,16 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
                 " ADD FOREIGN KEY (" . $this->relationedBy . ") REFERENCES " . ORM::class_to_table_name($this->object) . "(id)"
             ]
         ];
+    }
+
+    public function checkType($value): ?bool
+    {
+        return null;
+    }
+
+    public function getPDOParamType(): ?int
+    {
+        return null;
     }
 
     public function getResultFromDb(MsQl $msql, string $id)
@@ -57,17 +92,5 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
         $result = $msql->prepare($query);
         $msql->execute($result);
         return $msql->get_last_query_success();
-    }
-
-
-
-    public function checkType($value): ?bool
-    {
-        return null;
-    }
-
-    public function getPDOParamType(): ?int
-    {
-        return null;
     }
 }

@@ -11,4 +11,9 @@ class TableModel extends ORMTableCreator
         $this->create_model(User::class);
         $this->create_model(Party::class);
     }
+
+    public function getFixtures(): array
+    {
+        return [];
+    }
 }

@@ -2,20 +2,29 @@
 
 namespace Adebipe\Model;
 
-use Adebipe\Services\MsQl;
-use ArrayAccess;
-use Countable;
-use Iterator;
-
-class Collection implements ArrayAccess, Iterator, Countable
+class Collection implements CollectionInterface
 {
 
+    /**
+     * The data from the database
+     * @var array
+     */
     private array $sql_data = [];
 
+    /**
+     * The data that is already converted to objects (lazy loading)
+     * @var array
+     */
     private array $data = [];
 
+    /**
+     * The name of the object
+     */
     private string $object_name;
 
+    /**
+     * The position of the iterator
+     */
     private int $position = 0;
 
     public function __construct(array $sql_data, string $object_name)

@@ -7,6 +7,10 @@ use PDO;
 use PDOException;
 use PDOStatement;
 
+/**
+ * Execute queries on a MySQl database
+ * @package Adebipe\Services
+ */
 class MsQl implements RegisterServiceInterface
 {
     private Logger $logger;
@@ -18,6 +22,9 @@ class MsQl implements RegisterServiceInterface
     private string $password;
     private bool $last_query_success;
 
+    /**
+     * Execute queries on a MySQl database
+     */
     public function __construct(Logger $logger)
     {
         $this->logger = $logger;
@@ -26,6 +33,8 @@ class MsQl implements RegisterServiceInterface
             $this->logger->warning('DB_CONNECTION environment variable not set');
             return;
         }
+        // Extracting connection parameters
+        // Format: driver://user:password@host/database
         $ptn_start = 0;
         $ptn_end = strpos($connection_string, '://');
         $this->driver = substr($connection_string, 0, $ptn_end);
@@ -51,11 +60,23 @@ class MsQl implements RegisterServiceInterface
         }
     }
 
+    /**
+     * Prepare a query
+     * @param string $query
+     * @return PDOStatement|false
+     */
     public function prepare(string $query): PDOStatement|false
     {
         return $this->connection->prepare($query);
     }
 
+    /**
+     * Execute a query and return the result as an array
+     * @param PDOStatement $statement
+     * @param array|null $params
+     * @param array|null $types
+     * @return array
+     */
     public function execute(PDOStatement $statement, array|null $params = null, array|null $types = null): array
     {
         $data = null;
@@ -97,11 +118,18 @@ class MsQl implements RegisterServiceInterface
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Test if the last query was successful
+     * @return bool
+     */
     public function get_last_query_success(): bool
     {
         return $this->last_query_success;
     }
 
+    /**
+     * Get the list of tables in the database
+     */
     public function get_table() {
         $query = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_CATALOG=?";
         $statement = $this->prepare($query);
