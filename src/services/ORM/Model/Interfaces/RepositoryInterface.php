@@ -1,6 +1,6 @@
 <?php
 
-use Adebipe\Model\Collection;
+namespace Adebipe\Model;
 
 interface RepositoryInterface
 {
@@ -12,9 +12,9 @@ interface RepositoryInterface
 
     function findOneBy(array $conditions, ?array $type = null) : ?object;
 
-    function findAllBy(array $conditions, ?array $type = null) : Collection;
+    function findAllBy(array $conditions, ?array $type = null) : CollectionInterface;
 
-    function findAll(): Collection;
+    function findAll(): CollectionInterface;
 
     function save($object): bool;
 

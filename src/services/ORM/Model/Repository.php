@@ -6,7 +6,7 @@ use Adebipe\Model\Type\SqlBasedTypeInterface;
 use Adebipe\Services\MsQl;
 use Adebipe\Services\ORM;
 
-class Repository
+class Repository implements RepositoryInterface
 {
     private string $class_name;
     private string $table_name;

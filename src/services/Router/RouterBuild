@@ -74,12 +74,11 @@ class RouterBuild
 
     private function getFunctionName(string $route, string $method): string
     {
-        if (preg_match("/^\/.+\/[a-z]*\/$/i", $route)) {
-            $alea = crypt($route, $this->salt);
-            $alea = str_replace('/', '_', $alea);
-            return 'route_regex_' . $alea . '_' . $method;
-        }
-        return 'route_' . str_replace('/', '_', $route) . '_' . $method;
+        $alea = crypt($route, $this->salt);
+        $alea = str_replace('/', '_', $alea);
+        $alea = str_replace('.', '_', $alea);
+        $alea = str_replace('-', '_', $alea);
+        return 'route_' . $alea . '_' . $method;
     }
 
     private function getRoutesFuncCode(): string

@@ -15,4 +15,10 @@ interface BuilderServiceInterface
      * @return string The code to add to the build
      */
     public function build(string $classCode): ?string;
+
+    /**
+     * Append files to the build
+     * @return array The files to append to the build
+     */
+    public function appendFiles(): array;
 }

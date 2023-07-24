@@ -49,6 +49,11 @@ class Router implements BuilderServiceInterface
         return (new \RouterBuild($this->logger, $this->routes))->getBuilderRouter();
     }
 
+    public function appendFiles(): array
+    {
+        return [];
+    }
+
     /**
      * Update the routes
      */

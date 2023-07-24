@@ -22,6 +22,10 @@ function build_services(string $servicesPath, array $all_services): array
         $file_code = file_get_contents($file);
         if ($service->implementsInterface(BuilderServiceInterface::class)) {
             $service_class = $container->getService($service->getName());
+            $added = $service_class->appendFiles();
+            if ($added !== null) {
+                $to_include = array_merge($to_include, $added);
+            }
             $file_code = $service_class->build($file_code);
             if ($file_code === null) {
                 continue;

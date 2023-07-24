@@ -1,0 +1,43 @@
+<?php
+
+class ORMBuilder
+{
+
+    private array $repositories;
+
+    public function __construct(array $repositories)
+    {
+        $this->repositories = $repositories;
+    }
+
+    public function getBuilder(): string
+    {
+        $file_code = file_get_contents(__DIR__ . '/ProdORM');
+        $file_code = str_replace("// CODE OF USES GOES HERE", $this->getUsesCode(), $file_code);
+        $file_code = str_replace("// MODEL INIT GOES HERE", $this->getInitCode(), $file_code);
+        return $file_code;
+    }
+
+    public function getUsesCode()
+    {
+        $uses = array();
+        foreach ($this->repositories as $key => $repository) {
+            $uses[] = "use " . $key . ";";
+        }
+        return implode(PHP_EOL, $uses);
+    }
+
+    public function getInitCode()
+    {
+        $init = array();
+        foreach ($this->repositories as $key => $repository) {
+            $init[] = '$this->repository["' . $key . '"] = new Repository("' . $key . '", $this->msql);';
+        }
+        return implode(PHP_EOL, $init);
+    }
+
+    public function appendFiles(): array
+    {
+        return [];
+    }
+}

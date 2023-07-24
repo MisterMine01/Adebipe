@@ -4,10 +4,11 @@ namespace Adebipe\Services;
 
 use Adebipe\Model\Model;
 use Adebipe\Model\Repository;
+use Adebipe\Services\Interfaces\BuilderServiceInterface;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
 use Adebipe\Services\Interfaces\StarterServiceInterface;
 
-class ORM implements RegisterServiceInterface, StarterServiceInterface
+class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderServiceInterface
 {
     private MsQl $msql;
 
@@ -33,6 +34,19 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
 
     public function atEnd(): void
     {
+    }
+
+    public function build(string $classCode): ?string
+    {
+        
+        include_once __DIR__ . '/Build/ORMBuild';
+        return (new \ORMBuilder($this->repository))->getBuilder();
+    }
+
+    public function appendFiles(): array
+    {
+        include_once __DIR__ . '/Build/ORMBuild';
+        return (new \ORMBuilder($this->repository))->appendFiles();
     }
 
     public function getRepositories(): array
