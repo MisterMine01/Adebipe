@@ -22,6 +22,11 @@ class Repository
         $this->schema = $this->class_name::createSchema();
     }
 
+    public function getObjectClass($data): object
+    {
+        return new $this->class_name($data);
+    }
+
     public function getTableName(): string
     {
         return $this->table_name;

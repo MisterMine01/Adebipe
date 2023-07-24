@@ -52,9 +52,18 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
         foreach ($already_existed as $table) {
             $already_table_name[] = $table['TABLE_NAME'];
         }
+        $class_creator = getenv("ORM_TABLE_MODELS");
+        $class_init = new $class_creator();
+        $fixtures = $class_init->getFixtures();
         foreach ($this->repository as $table_name => $repository) {
             if (!in_array($table_name, $already_table_name)) {
                 $repository->create_table();
+                if (array_key_exists($table_name, $fixtures)) {
+                    foreach ($fixtures[$table_name] as $fixture) {
+                        $object = $repository->getObjectClass($fixture);
+                        $repository->save($object);
+                    }
+                }
             }
         }
     }

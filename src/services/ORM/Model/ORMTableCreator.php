@@ -4,10 +4,12 @@
 namespace Adebipe\Model;
 
 
-class ORMTableCreator
+abstract class ORMTableCreator
 {
 
     public array $database_schema = [];
+
+    public array $fixtures = [];
 
     public function create_model(string $object_class)
     {
@@ -18,4 +20,6 @@ class ORMTableCreator
     {
         return $this->database_schema;
     }
+
+    public abstract function getFixtures(): array;
 }

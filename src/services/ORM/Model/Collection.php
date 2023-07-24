@@ -24,6 +24,16 @@ class Collection implements ArrayAccess, Iterator, Countable
         $this->object_name = $object_name;
     }
 
+    public function find(string $key, string $value): ?object
+    {
+        foreach ($this->sql_data as $data) {
+            if ($data[$key] == $value) {
+                return new $this->object_name($data);
+            }
+        }
+        return null;
+    }
+
     public function offsetExists($offset): bool
     {
         return isset($this->sql_data[$offset]);

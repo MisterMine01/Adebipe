@@ -47,4 +47,22 @@ class OneToMany extends AbstractType implements SqlBasedTypeInterface
         $data = $msql->execute($result);
         return new Collection($data, $this->object);
     }
+
+    public function addToDb(MsQl $msql, string $id, object $value): bool
+    {
+        $object_table = ORM::class_to_table_name($this->object);
+        $query = "UPDATE " . $object_table . " SET " . $this->relationedBy . " = " . $id . " WHERE id = " . $value->id;
+        $result = $msql->prepare($query);
+        $msql->execute($result);
+        return $msql->get_last_query_success();
+    }
+
+    public function deleteToDb(MsQl $msql, string $id, object $value): bool
+    {
+        $object_table = ORM::class_to_table_name($this->object);
+        $query = "UPDATE " . $object_table . " SET " . $this->relationedBy . " = NULL WHERE id = " . $value->id;
+        $result = $msql->prepare($query);
+        $msql->execute($result);
+        return $msql->get_last_query_success();
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Adebipe\Model;
 
+use Adebipe\Model\Type\ModelTypeInterface;
 use Adebipe\Model\Type\SqlBasedTypeInterface;
 use Adebipe\Services\MsQl;
 
@@ -44,6 +45,34 @@ abstract class Model {
         }
         return $values;
     }
+
+    public function addTo(string $name, object $value): bool
+    {
+        $schema = $this->getSchema();
+        if (!isset($schema[$name])) {
+            throw new \Exception("Unknown key $name");
+        }
+        $schema = $schema[$name];
+        if (!is_subclass_of($schema, SqlBasedTypeInterface::class)) {
+            throw new \Exception("You can't add value to $name");
+        }
+        return $schema->addToDb(Model::$msql, $this->id, $value);
+    }
+
+    public function deleteTo(string $name, object $value): bool
+    {
+        $schema = $this->getSchema();
+        if (!isset($schema[$name])) {
+            throw new \Exception("Unknown key $name");
+        }
+        $schema = $schema[$name];
+        if (!is_subclass_of($schema, SqlBasedTypeInterface::class)) {
+            throw new \Exception("You can't delete value to $name");
+        }
+        return $schema->deleteToDb(Model::$msql, $this->id, $value);
+    }
+
+
 
     public function __get(string $name)
     {
