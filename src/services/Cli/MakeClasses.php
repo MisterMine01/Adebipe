@@ -5,6 +5,7 @@ namespace Adebipe\Cli;
 use Adebipe\Services\Container;
 use Adebipe\Services\Dotenv;
 use Adebipe\Services\Injector;
+use Adebipe\Services\Interfaces\CreatorInterface;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
 use Adebipe\Services\Interfaces\StarterServiceInterface;
 use Adebipe\Services\Logger;
@@ -49,6 +50,7 @@ class MakeClasses {
         foreach ($classes as $class) {
             $reflection = new ReflectionClass($class);
             $all_class[] = $reflection;
+            $container->addReflection($reflection);
             if (strpos($class, 'Adebipe\\Services\\') !== 0)
             {
                 continue;
@@ -62,17 +64,23 @@ class MakeClasses {
                 $logger->info('Skip service: ' . $class);
                 continue;
             }
-            $class = $injector->create_class($reflection);
-            if ($reflection->implementsInterface(RegisterServiceInterface::class))
+            if ($reflection->isAbstract() || $reflection->isInterface() || $reflection->isTrait())
             {
-                $injector->addService($class);
+                continue;
             }
-            if ($reflection->implementsInterface(StarterServiceInterface::class))
-            {
-                $atStart_function = $reflection->getMethod('atStart');
-                $atStart[] = [$atStart_function, $class];
+            if ($reflection->implementsInterface(CreatorInterface::class)) {
+                $class = $injector->create_class($reflection);
+                if ($reflection->implementsInterface(RegisterServiceInterface::class))
+                {
+                    $injector->addService($class);
+                }
+                if ($reflection->implementsInterface(StarterServiceInterface::class))
+                {
+                    $atStart_function = $reflection->getMethod('atStart');
+                    $atStart[] = [$atStart_function, $class];
+                }
+                $container->addService($class);
             }
-            $container->addService($class);
         }
         foreach ($atStart as $function) {
             $injector->execute($function[0], $function[1]);
@@ -88,7 +96,7 @@ class MakeClasses {
     {
         $logger = MakeClasses::$injector->getService(Logger::class);
         $logger->info('Stopping the services');
-        foreach (MakeClasses::$container->getStarterServices() as $service) {
+        foreach (MakeClasses::$container->getSubclassInterfaces(StarterServiceInterface::class) as $service) {
             $reflection = new ReflectionClass($service);
             $atEnd = $reflection->getMethod('atEnd');
             MakeClasses::$injector->execute($atEnd, $service);

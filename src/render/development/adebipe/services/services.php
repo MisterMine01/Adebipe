@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-
+        <style>
+            <?php
+                include __DIR__ . '/services.css';
+            ?>
+        </style>
     </head>
     <body>
         <div class="services-list">

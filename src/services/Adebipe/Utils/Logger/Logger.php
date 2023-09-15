@@ -160,8 +160,6 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     {
         $this->log('ERROR', $message);
         $backtrace = debug_backtrace();
-        $backtrace[2]["line"] = $backtrace[1]["line"];
-        $backtrace[2]["file"] = $backtrace[1]["file"];
         $this->sendSentry(array_splice($backtrace, 2));
     }
 
@@ -170,9 +168,15 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      * 
      * @param string $message
      */
-    public function critical(string $message, $backtrace): void
+    public function critical(string $message, ?array $backtrace = null): void
     {
         $this->log('CRITICAL', $message);
+        if ($backtrace === null) {
+            $backtrace = debug_backtrace();
+            $backtrace[2]["line"] = $backtrace[1]["line"];
+            $backtrace[2]["file"] = $backtrace[1]["file"];
+            $backtrace = array_splice($backtrace, 2);
+        }
         $this->sendSentry($backtrace);
     }
 

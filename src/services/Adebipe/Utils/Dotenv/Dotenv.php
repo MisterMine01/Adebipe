@@ -58,6 +58,12 @@ class Dotenv implements StarterServiceInterface
         while (!feof($file)) {
             $line = fgets($file);
             $line = trim($line);
+            if (empty($line)) {
+                continue;
+            }
+            if (strpos($line, '#') === 0) {
+                continue;
+            }
             if (strpos($line, '=') !== false) {
                 $line = explode('=', $line);
                 $this->variable[$line[0]] = $line[1];

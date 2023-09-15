@@ -5,6 +5,7 @@ namespace Adebipe\Services;
 use Adebipe\Services\Interfaces\BuilderServicesInterface;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
 use Adebipe\Services\Interfaces\StarterServiceInterface;
+use ReflectionClass;
 
 /**
  * Contains all classes of the services
@@ -17,6 +18,12 @@ class Container implements RegisterServiceInterface
      * @var array<object> $services
      */
     private array $services = [];
+
+    /**
+     * ReflectionClass of all class
+     * @var array<ReflectionClass> $reflections
+     */
+    private array $reflections = [];
 
     /**
      * Add a service to the container
@@ -35,7 +42,16 @@ class Container implements RegisterServiceInterface
      */
     public function getService(string $name): object
     {
+        if (!isset($this->services[$name])) {
+            $this->services[$name] = $this->createClass($this->getReflection($name));
+        }
         return $this->services[$name];
+    }
+
+    private function createClass(ReflectionClass $reflection): object
+    {
+        $injector = $this->getService(Injector::class);
+        return $injector->create_class($reflection);
     }
 
     /**
@@ -48,52 +64,46 @@ class Container implements RegisterServiceInterface
     }
 
     /**
-     * Get all services that implements BuilderServicesInterface
-     * @return array<object>
+     * Add a ReflectionClass to the containera
+     * @param ReflectionClass $reflection
      */
-    public function getBuildServices(): array
+    public function addReflection(ReflectionClass $reflection): void
     {
-        $services = [];
-
-        foreach ($this->services as $name => $service) {
-            if (is_subclass_of($service, BuilderServicesInterface::class)) {
-                $services[$name] = $service;
-            }
-        }
-
-        return $services;
+        $this->reflections[$reflection->getName()] = $reflection;
     }
 
     /**
-     * Get all services that implements StarterServiceInterface
-     * @return array<object>
+     * Get a ReflectionClass from the container
+     * @param string $name
+     * @return ReflectionClass
      */
-    public function getStarterServices(): array
+    public function getReflection(string $name): ReflectionClass
     {
-        $services = [];
-
-        foreach ($this->services as $name => $service) {
-            if (is_subclass_of($service, StarterServiceInterface::class)) {
-                $services[$name] = $service;
-            }
-        }
-        return array_reverse($services);
+        return $this->reflections[$name];
     }
 
     /**
-     * Get all services that implements RegisterServiceInterface
+     * Get all ReflectionClass from the container
+     * @return array<ReflectionClass>
+     */
+    public function getReflections(): array
+    {
+        return $this->reflections;
+    }
+
+    /**
+     * Get all services who implements an interface
+     * @param string $interface
      * @return array<object>
      */
-    public function getRegisterServices(): array
+    public function getSubclassInterfaces(string $subclass): array
     {
-        $services = [];
-
+        $interfaces = [];
         foreach ($this->services as $name => $service) {
-            if (is_subclass_of($service, RegisterServiceInterface::class)) {
-                $services[$name] = $service;
+            if (is_subclass_of($service, $subclass)) {
+                $interfaces[$name] = $service;
             }
         }
-
-        return $services;
+        return $interfaces;
     }
 }

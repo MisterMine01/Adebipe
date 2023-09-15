@@ -7,7 +7,7 @@ namespace Adebipe\Services\Interfaces;
  * 
  * @package Adebipe\Services\Interfaces
  */
-interface StarterServiceInterface
+interface StarterServiceInterface extends CreatorInterface
 {
     /**
      * Function to run at the start of the application

@@ -8,6 +8,6 @@ namespace Adebipe\Services\Interfaces;
  * 
  * @package Adebipe\Services\Interfaces
  */
-interface RegisterServiceInterface
+interface RegisterServiceInterface extends CreatorInterface
 {
 }

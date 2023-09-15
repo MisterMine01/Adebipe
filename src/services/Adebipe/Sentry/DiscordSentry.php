@@ -73,7 +73,7 @@ class DiscordSentry implements SentryInterfaces
     }
 
 
-    public function sendMessage(string $message) {
+    private function sendMessage(string $message) {
         $data = [
             "content" => $message,
         ];
