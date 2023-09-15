@@ -36,6 +36,6 @@ class ExampleComponent implements ComponentInterface
     #[Route(path: '/test', method: 'GET')]
     public static function test(Renderer $renderer): Response
     {
-        return $renderer->render('test.php', ['test' => 'Hello World']);
+        return $renderer->render('test.php', ['test' => 'Hello TERTGERGE']);
     }
 }
