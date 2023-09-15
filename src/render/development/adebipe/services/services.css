@@ -1,0 +1,72 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+
+.service-item {
+    margin: 10px;
+    margin-top: 25px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #1dfffd;
+}
+
+.service-item:hover {
+    border: 1px solid #000;
+}
+
+.service-name {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.method-list {
+    margin: 5px;
+    padding: 0;
+}
+
+.method-item {
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #000;
+    background: #25c193;
+}
+
+.method-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+.method-item:first-child {
+    margin-top: 0;
+}
+
+.method-parameters-list {
+    margin-left: 10px;
+    padding: 0;
+}
+
+.method-parameter-item {
+    display: flex;
+}
+
+.method-parameter-name {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+.method-parameter-type {
+    font-size: 12px;
+    font-style: italic;
+    margin: 0;
+    padding: 0;
+    margin-left: 5px;
+}

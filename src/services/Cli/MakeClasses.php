@@ -50,11 +50,11 @@ class MakeClasses {
         foreach ($classes as $class) {
             $reflection = new ReflectionClass($class);
             $all_class[] = $reflection;
-            $container->addReflection($reflection);
             if (strpos($class, 'Adebipe\\Services\\') !== 0)
             {
                 continue;
             }
+            $container->addReflection($reflection);
             if (in_array($class, [
                 Dotenv::class,
                 Logger::class,
