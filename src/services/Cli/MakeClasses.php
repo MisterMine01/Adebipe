@@ -77,6 +77,7 @@ class MakeClasses {
         foreach ($atStart as $function) {
             $injector->execute($function[0], $function[1]);
         }
+        $logger->atStart();
         return $all_class;
     }
 

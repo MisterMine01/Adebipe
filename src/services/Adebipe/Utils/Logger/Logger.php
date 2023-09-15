@@ -11,6 +11,8 @@ use Adebipe\Services\Interfaces\StarterServiceInterface;
  */
 class Logger implements StarterServiceInterface, RegisterServiceInterface
 {
+    private SentryInterfaces $sentry;
+    public $logTrace = array();
     private $logFile;
     private $loglevel;
     private $loglevels = [
@@ -37,33 +39,40 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
 
     public function atStart(): void
     {
+        $class = getenv('SENTRY_CLASS');
+        if (class_exists($class)) {
+            $this->sentry = new $class();
+            $this->info($class . ' sentry loaded');
+        } else {
+            $this->debug("No sentry");
+        }
+
+        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+            $this->warning($errstr . ' in ' . $errfile . ' on line ' . $errline);
+        }, E_WARNING);
     }
 
     public function atEnd(): void
     {
         $this->info('Stopping Logger');
+        restore_error_handler();
         fclose($this->logFile);
     }
 
     /**
-     * Log a message
+     * Get the log string
      * [Date] (Type) Class : Message
      * 
      * @param string $type
      * @param string $message
+     * @return string
      */
-    private function log(string $type, string $message): void
+    private function getString(string $type, string $message): string
     {
-        if (!isset($this->loglevels[$type])) {
-            throw new \Exception('Invalid log type');
-        }
-        if ($this->loglevel > $this->loglevels[$type]) {
-            return;
-        }
         $trace = debug_backtrace();
         $call_class = "Main";
-        if (isset($trace[2]['class'])) {
-            $call_class = $trace[2]['class'];
+        if (isset($trace[3]['class'])) {
+            $call_class = $trace[3]['class'];
         }
         $call_class = explode('\\', $call_class);
         $call_class = end($call_class);
@@ -77,7 +86,27 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
             }
         }
         $log .= $message . PHP_EOL;
+        return $log;
+    }
 
+    /**
+     * Log a message
+     * 
+     * @param string $type
+     * @param string $message
+     */
+    private function log(string $type, string $message): void
+    {
+        if (!isset($this->loglevels[$type])) {
+            throw new \Exception('Invalid log type');
+        }
+        if ($this->loglevel > $this->loglevels[$type]) {
+            return;
+        }
+
+        $log = $this->getString($type, $message);
+
+        $this->logTrace[] = $log;
 
         if (defined('STDOUT')) {
             fwrite(STDOUT, $log);
@@ -116,6 +145,10 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     public function warning(string $message): void
     {
         $this->log('WARNING', $message);
+        $backtrace = debug_backtrace();
+        $backtrace[2]["line"] = $backtrace[1]["line"];
+        $backtrace[2]["file"] = $backtrace[1]["file"];
+        $this->sendSentry(array_splice($backtrace, 2));
     }
 
     /**
@@ -126,6 +159,10 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     public function error(string $message): void
     {
         $this->log('ERROR', $message);
+        $backtrace = debug_backtrace();
+        $backtrace[2]["line"] = $backtrace[1]["line"];
+        $backtrace[2]["file"] = $backtrace[1]["file"];
+        $this->sendSentry(array_splice($backtrace, 2));
     }
 
     /**
@@ -133,8 +170,21 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      * 
      * @param string $message
      */
-    public function critical(string $message): void
+    public function critical(string $message, $backtrace): void
     {
         $this->log('CRITICAL', $message);
+        $this->sendSentry($backtrace);
+    }
+
+
+    /**
+     * Send to Sentry
+     */
+    public function sendSentry($backtrace): void
+    {
+        if (!isset($this->sentry)) {
+            return;
+        }
+        $this->sentry->sendSentry($this, $backtrace);
     }
 }
