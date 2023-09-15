@@ -24,15 +24,18 @@ class RouteComponents implements ComponentInterface
                     'route_regexed' => $route,
                     'route' => $function[1],
                     'method' => $method,
+                    'more' => [],
                 ];
                 foreach ($function[0]->getAttributes() as $attribute) {
                     if ($attribute->getName() === ValidatePost::class) {
-                        $route['schema'] = $attribute->getArguments()["schema"];
+                        $route['more']['schema'] = $attribute->getArguments()["schema"];
                     }
                 }
                 $routes_after[] = $route;
             }
         }
-        return new JsonResponse($routes_after);
+        return $renderer->render('Adebipe/routes/routes.php', [
+            'routes' => $routes_after,
+        ]);
     }
 }
