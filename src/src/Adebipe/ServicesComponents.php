@@ -76,7 +76,7 @@ class ServicesComponents implements ComponentInterface
         $environment = [
             'services' => $decoded_services,
         ];
-        return $renderer->render('development/adebipe/services/services.php', $environment);
+        return $renderer->render('Adebipe/services/services.php', $environment);
     }
 
 }

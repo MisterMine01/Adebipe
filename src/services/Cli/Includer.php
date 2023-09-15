@@ -35,6 +35,7 @@ class Includer
     private function makeIncludeList($path): array
     {
         $file = [];
+        $end_file = [];
         $last = [];
         $dir = scandir($path);
         $make_process = [".", ".."];

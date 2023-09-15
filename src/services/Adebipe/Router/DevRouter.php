@@ -2,25 +2,18 @@
 
 namespace Adebipe\Services;
 
+use Adebipe\Router\Annotations\BeforeRoute;
 use Adebipe\Router\Annotations\RegexSimple;
 use Adebipe\Router\Annotations\Route;
 use Adebipe\Router\Request;
 use Adebipe\Router\Response;
 use Adebipe\Services\Interfaces\BuilderServiceInterface;
+use ReflectionMethod;
 
 class Router implements BuilderServiceInterface
 {
-    /**
-     * All routes of the application
-     * [path => [
-     *      method => [
-     *          function,
-     *          route    
-     *      ]
-     * ]]
-     * @var array
-     */
-    private array $routes = [];
+
+    private RouteKeeper $routeKeeper;
 
     /**
      * Logger
@@ -32,9 +25,10 @@ class Router implements BuilderServiceInterface
      * Constructor
      * @param Logger $logger
      */
-    public function __construct(Logger $logger)
+    public function __construct(Logger $logger, RouteKeeper $routeKeeper)
     {
         $this->logger = $logger;
+        $this->routeKeeper = $routeKeeper;
     }
 
     /**
@@ -59,7 +53,7 @@ class Router implements BuilderServiceInterface
      */
     private function updateRoutes(): void
     {
-        $this->routes = [];
+        $this->routeKeeper->deleteAllRoutes();
         foreach (get_declared_classes() as $class) {
             if (preg_match('/^App\\\\Components\\\\/', $class) === 0) {
                 // Don't check the class if it's not a component
@@ -79,11 +73,8 @@ class Router implements BuilderServiceInterface
                 }
                 $route = $attributes[0]->newInstance();
                 // Check if the route already exists
-                if (isset($this->routes[$route->path])) {
-                    if (isset($this->routes[$route->path][$route->method])) {
-                        throw new \Exception('Route ' . $route->path . ' already exists');
-                    }
-                    $this->routes[$route->path] = [];
+                if ($this->routeKeeper->routeAlreadyExist($route->path, $route->method)) {
+                    throw new \Exception('Route ' . $route->path . ' with method ' . $route->method . ' already exists');
                 }
                 $regex_decoded = $route->path;
                 if ($route->regex !== null) {
@@ -97,32 +88,37 @@ class Router implements BuilderServiceInterface
                     }
                 }
                 // Add the route
-                $this->routes[$regex_decoded][$route->method] = [$method, $route->path];
+                $this->routeKeeper->addRoute($route->path, $route->method, $method, $regex_decoded);
             }
         }
     }
 
-    /**
-     * Get the the id of the route and assign is value from the uri
-     */
-    public function perform_regex(string $route, string $regex_route, string $uri): array
+    private function executeRoute(ReflectionMethod $method, array $parameters, Injector $injector): mixed
     {
-        $this->logger->info('Perform regex for route: ' . $route);
-
-        $to_inject = [];
-        
-        preg_match_all('/\{([a-zA-Z0-9_]+)\}/', $route, $matches);
-        $id = $matches[0];
-        $this->logger->info('Get id: ' . json_encode($id));
-        preg_match($regex_route, $uri, $matches);
-        $this->logger->info('Get matches: ' . json_encode($matches));
-
-        for ($i = 0; $i < count($id); $i++) {
-            $id_sub = substr($id[$i], 1, -1);
-            $to_inject[$id_sub] = $matches[$i + 1];
+        // Execute before Annotations
+        foreach ($method->getAttributes() as $attribute) {
+            if (is_subclass_of($attribute->getName(), BeforeRoute::class)) {
+                $beforeRoute = $attribute->newInstance();
+                $execute = new ReflectionMethod($beforeRoute, 'execute');
+                $response = $injector->execute($execute, $beforeRoute, $parameters);
+                if ($response instanceof Response) {
+                    return $response;
+                }
+                if ($response === false) {
+                    return new Response('An error occured', 500);
+                }
+                if ($response !== true) {
+                    throw new \Exception('BeforeRoute ' . $attribute->getName() . ' returned an invalid value');
+                }
+            }
         }
-        $this->logger->info('Get to inject: ' . json_encode($to_inject));
-        return $to_inject;
+        $response = $injector->execute($method, null, $parameters);
+        // Check if the response is an instance of Response
+        if (!($response instanceof Response)) {
+            throw new \Exception('Response is not an instance of Response');
+        }
+        return $response;
+
     }
 
     /**
@@ -150,47 +146,18 @@ class Router implements BuilderServiceInterface
         $add_to_injector = [
             Request::class => $request,
         ];
-        $route = null;
-        if (isset($this->routes[$request->uri])) {
-            $route = $request->uri;
-        } else {
-            // Check if the route is a regex
-            foreach ($this->routes as $key => $value) {
-                if (preg_match('/^\/\^.*\$\/$/', $key) === 0) {
-                    continue;
-                }
-                if (preg_match($key, $request->uri)) {
-                    $this->logger->info('Regex match');
-                    if (!isset($this->routes[$key][$request->method])) {
-                        $this->logger->info('Method not allowed');
-                        return new Response('Method not allowed', 405);
-                    }
-                    $regex = $this->perform_regex($value[$request->method][1], $key, $request->uri);
-                    $route = $key;
-                    foreach ($regex as $key => $value) {
-                        $add_to_injector[$key] = $value;
-                    }
-                    break;
-                }
-            }
-            if ($route === null) {
-                $this->logger->info('Route not found');
-                return new Response('Not found', 404);
-            }
+        // Find the route
+        $result = $this->routeKeeper->findRoute($request->uri, $request->method);
+        // Check if the route is not found
+        if ($result === null) {
+            throw new \Exception('An error occured while finding the route');
         }
-        $this->logger->info('Route found');
-        $this->logger->info('Route: ' . json_encode($route));
-        if (!isset($this->routes[$route][$request->method])) {
-            $this->logger->info('Method not allowed');
-            return new Response('Method not allowed', 405);
+        // Check if the route is not found
+        if (is_numeric($result[0])) {
+            return new Response($result[1], $result[0]);
         }
-        // Execute the route with the injector
-        $route = $this->routes[$route][$request->method][0];
-        $response = $injector->execute($route, null, $add_to_injector);
-        // Check if the response is an instance of Response
-        if (!($response instanceof Response)) {
-            throw new \Exception('Response is not an instance of Response');
-        }
-        return $response;
+        $route = $result[0];
+        $add_to_injector = array_merge($add_to_injector, $result[1]);
+        return $this->executeRoute($route, $add_to_injector, $injector);
     }
 }

@@ -5,7 +5,7 @@ namespace Adebipe\Router\Annotations;
 use Attribute;
 
 #[Attribute]
-interface AfterRoute
+abstract class AfterRoute
 {
-    public function execute(): void;
+    public abstract function execute(): void;
 }
