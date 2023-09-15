@@ -7,6 +7,7 @@ use Adebipe\Router\Annotations\RegexSimple;
 use Adebipe\Router\Annotations\Route;
 use Adebipe\Router\Response;
 use Adebipe\Services\ORM;
+use Adebipe\Services\Renderer;
 use App\Model\User;
 
 class ExampleComponent implements ComponentInterface
@@ -30,5 +31,11 @@ class ExampleComponent implements ComponentInterface
     public static function identifier(int $id): Response
     {
         return new Response(strval($id));
+    }
+
+    #[Route(path: '/test', method: 'GET')]
+    public static function test(Renderer $renderer): Response
+    {
+        return $renderer->render('test.php', ['test' => 'Hello World']);
     }
 }
