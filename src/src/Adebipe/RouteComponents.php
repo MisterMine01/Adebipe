@@ -13,10 +13,6 @@ use Adebipe\Services\RouteKeeper;
 class RouteComponents implements ComponentInterface
 {
     #[Route(path: '/adebipe/routes', method: 'GET')]
-    #[ValidatePost(schema: [
-        "username" => "string",
-        "password" => "string",
-    ])]
     public static function index(Renderer $renderer, RouteKeeper $routeKeeper): Response
     {
         $routes = $routeKeeper->getRoutes();
@@ -24,12 +20,17 @@ class RouteComponents implements ComponentInterface
         $routes_after = [];
         foreach ($routes as $route => $methods) {
             foreach ($methods as $method => $function) {
-                $routes_after[] = [
+                $route = [
                     'route_regexed' => $route,
                     'route' => $function[1],
                     'method' => $method,
-                    'function' => $function[0]->getName(),
                 ];
+                foreach ($function[0]->getAttributes() as $attribute) {
+                    if ($attribute->getName() === ValidatePost::class) {
+                        $route['schema'] = $attribute->getArguments()["schema"];
+                    }
+                }
+                $routes_after[] = $route;
             }
         }
         return new JsonResponse($routes_after);

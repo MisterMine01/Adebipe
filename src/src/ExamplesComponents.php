@@ -2,9 +2,11 @@
 
 namespace App\Components;
 
+use Adebipe\Annotations\ValidatePost;
 use Adebipe\Components\Interfaces\ComponentInterface;
 use Adebipe\Router\Annotations\RegexSimple;
 use Adebipe\Router\Annotations\Route;
+use Adebipe\Router\Request;
 use Adebipe\Router\Response;
 use Adebipe\Services\ORM;
 use Adebipe\Services\Renderer;
@@ -33,9 +35,14 @@ class ExampleComponent implements ComponentInterface
         return new Response(strval($id));
     }
 
-    #[Route(path: '/test', method: 'GET')]
-    public static function test(Renderer $renderer): Response
+    #[Route(path: '/test', method: 'POST')]
+    #[ValidatePost(schema: [
+        'username' => 'string',
+        'password' => 'string',
+        'email' => '?string',
+    ])]
+    public static function test(Renderer $renderer, Request $request): Response
     {
-        return $renderer->render('test.php', ['test' => 'Hello TERTGERGE']);
+        return $renderer->render('test.php', ['post' => $request->post]);
     }
 }

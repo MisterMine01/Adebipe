@@ -20,8 +20,8 @@
         </div>
         <div class="services-list">
             <? foreach ($services as $service): ?>
-                <div class="service-item" id="<?= $service['long_name'] ?>">
-                    <p class="service-name"><?= $service['name'] ?></p>
+                <details class="service-item" id="<?= $service['long_name'] ?>">
+                    <summary class="service-name"><?= $service['name'] ?></summary>
                     <div class="method-list">
                         <? foreach ($service['methods'] as $method): ?>
                             <div class="method-item">
@@ -41,7 +41,7 @@
                             </div>
                         <? endforeach ?>
                     </div>
-                </div>
+                </details>
             <? endforeach ?>
         </div>
     </body>

@@ -99,6 +99,9 @@ class Request
     public function validatePost(array $schema): bool
     {
         foreach ($schema as $key => $type) {
+            if (strpos($type, '?') !== false) {
+                continue;
+            }
             if (!isset($this->post[$key])) {
                 return false;
             }
