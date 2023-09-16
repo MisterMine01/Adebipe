@@ -97,9 +97,13 @@ class MakeClasses {
         $logger = MakeClasses::$injector->getService(Logger::class);
         $logger->info('Stopping the services');
         foreach (MakeClasses::$container->getSubclassInterfaces(StarterServiceInterface::class) as $service) {
+            if ($service::class === Logger::class) {
+                continue;
+            }
             $reflection = new ReflectionClass($service);
             $atEnd = $reflection->getMethod('atEnd');
             MakeClasses::$injector->execute($atEnd, $service);
         }
+        $logger->atEnd();
     }
 }
