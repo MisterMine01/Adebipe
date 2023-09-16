@@ -27,9 +27,10 @@ class RouteComponents implements ComponentInterface
                     'more' => [],
                 ];
                 foreach ($function[0]->getAttributes() as $attribute) {
-                    if ($attribute->getName() === ValidatePost::class) {
-                        $route['more']['schema'] = $attribute->getArguments()["schema"];
+                    if ($attribute->getName() === Route::class) {
+                        continue;
                     }
+                    $route['more'][$attribute->getName()] = $attribute->getArguments();
                 }
                 $routes_after[] = $route;
             }

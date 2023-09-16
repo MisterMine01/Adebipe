@@ -24,14 +24,21 @@
                     <details class="route-item" id="<?= $route['route'] ?>_<?= $route['method'] ?>">
                         <summary class="route-name"><span class="pastille"><?= $route["method"] ?></span> <?= $route['route'] ?></summary>
                         <div class="more-list">
-                            <? if (isset($route["more"]['schema'])): ?>
+                            <? foreach ($route["more"] as $key => $value): ?>
                                 <div class="more-item">
-                                    <p class="more-name">schema</p>
-                                    <div class="more-detail more-schema">
-                                        <pre><?= json_encode($route["more"]['schema'], JSON_PRETTY_PRINT) ?></pre>
-                                    </div>
+                                    <? if ($key === 'Adebipe\Annotations\ValidatePost'): ?>
+                                        <p class="more-name">schema</p>
+                                        <div class="more-detail more-schema">
+                                            <pre><?= json_encode($route["more"]['schema'], JSON_PRETTY_PRINT) ?></pre>
+                                        </div>
+                                    <? else: ?>
+                                        <p class="more-name"><?= $key ?></p>
+                                        <div class="more-detail">
+                                            <pre><?= json_encode($value, JSON_PRETTY_PRINT) ?></pre>
+                                        </div>
+                                    <? endif ?>
                                 </div>
-                            <? endif ?>
+                            <? endforeach ?>
                         </div>
                     </details>
                 <? else: ?>
