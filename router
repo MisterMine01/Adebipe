@@ -12,7 +12,7 @@ try {
 } catch (Throwable $e) {
     echo $e->getMessage() . PHP_EOL;
     try {
-        MakeClasses::$injector->getService(Logger::class)->critical($e->getMessage());
+        MakeClasses::$injector->getService(Logger::class)->critical($e->getMessage(), $e->getTrace());
         MakeClasses::stopServices();
     } catch (Throwable $e) {
     }

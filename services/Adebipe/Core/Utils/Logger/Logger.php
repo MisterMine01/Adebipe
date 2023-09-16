@@ -50,6 +50,10 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         set_error_handler(function ($errno, $errstr, $errfile, $errline) {
             $this->warning($errstr . ' in ' . $errfile . ' on line ' . $errline);
         }, E_WARNING);
+
+        set_exception_handler(function ($exception) {
+            $this->critical($exception->getMessage(), $exception->getTrace());
+        });
     }
 
     public function atEnd(): void
