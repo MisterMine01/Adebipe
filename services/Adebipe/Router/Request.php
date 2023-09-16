@@ -105,7 +105,7 @@ class Request
             if (!isset($this->post[$key])) {
                 return false;
             }
-            if (gettype($this->post[$key]) !== $type) {
+            if (get_debug_type($this->post[$key]) !== $type) {
                 return false;
             }
         }

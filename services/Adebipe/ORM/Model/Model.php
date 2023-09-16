@@ -22,6 +22,9 @@ abstract class Model implements ModelInterface
             if (!in_array($key, $all_key)) {
                 throw new \Exception("Unknown key $key");
             }
+            if (is_subclass_of($this->schema[$key], SqlBasedTypeInterface::class)) {
+                continue;
+            }
             $this->properties[$key] = $value;
         }
     }
