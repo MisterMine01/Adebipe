@@ -53,6 +53,18 @@ class DiscordSentry implements SentryInterfaces
 
         $secondPart = PHP_EOL . " Backtrace: " . PHP_EOL . "```";
         foreach ($backtrace as $trace) {
+            if (!isset($trace["class"])) {
+                $trace["class"] = "???";
+            }
+            if (!isset($trace["function"])) {
+                $trace["function"] = "???";
+            }
+            if (!isset($trace["line"])) {
+                $trace["line"] = "???";
+            }
+            if (!isset($trace["file"])) {
+                $trace["file"] = "???";
+            }
             $line = ($trace["class"] ?? "") . "::" . $trace["function"] . "()" . PHP_EOL;
             $line .= "   line " . $trace["line"] . " in " . $trace["file"] . PHP_EOL . PHP_EOL;
             if (strlen($secondPart) + strlen($line) > 1800 - 3) {
