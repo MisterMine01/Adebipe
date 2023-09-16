@@ -34,7 +34,7 @@
                                     <? else: ?>
                                         <p class="more-name"><?= $key ?></p>
                                         <div class="more-detail">
-                                            <pre><?= json_encode($value, JSON_PRETTY_PRINT) ?></pre>
+                                            <pre><?= json_encode($value["schema"], JSON_PRETTY_PRINT) ?></pre>
                                         </div>
                                     <? endif ?>
                                 </div>
