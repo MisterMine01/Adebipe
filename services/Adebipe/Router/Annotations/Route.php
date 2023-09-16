@@ -20,6 +20,7 @@ class Route
          */
         public string $method,
         public array $regex = [],
+        public string $env = 'PROD',
     ) {
     }
 }

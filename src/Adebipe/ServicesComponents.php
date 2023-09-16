@@ -12,7 +12,7 @@ use Adebipe\Services\Renderer;
 
 class ServicesComponents implements ComponentInterface
 {
-    #[Route(path: '/adebipe/services', method: 'GET')]
+    #[Route(path: '/adebipe/services', method: 'GET', env: 'DEV')]
     public static function index(Container $container, Renderer $renderer): Response
     {
         $services = $container->getReflections();

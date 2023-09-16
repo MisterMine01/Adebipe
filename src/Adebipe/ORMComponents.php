@@ -11,14 +11,14 @@ use App\Model\User;
 
 class ORMComponents implements ComponentInterface
 {
-    #[Route(path: '/orm/update', method: 'GET')]
+    #[Route(path: '/orm/update', method: 'GET', env: 'DEV')]
     public static function update(ORM $orm): Response
     {
         $orm->update();
         return new Response('ORM updated');
     }
 
-    #[Route(path: '/orm/data', method: 'GET')]
+    #[Route(path: '/orm/data', method: 'GET', env: 'DEV')]
     public static function test(ORM $orm): Response
     {
         $repository = $orm->getRepository(User::class);

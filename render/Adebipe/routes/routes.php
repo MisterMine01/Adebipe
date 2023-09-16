@@ -22,7 +22,13 @@
             <? foreach ($routes as $route): ?>
                 <? if (count($route["more"]) > 0): ?>
                     <details class="route-item" id="<?= $route['route'] ?>_<?= $route['method'] ?>">
-                        <summary class="route-name"><span class="pastille"><?= $route["method"] ?></span> <?= $route['route'] ?></summary>
+                        <summary class="route-name">
+                            <? if (isset($route['env'])): ?>
+                                <span class="pastille <?= $route['env'] ?>"><?= $route['env'] ?></span>
+                            <? endif ?>
+                            <span class="pastille"><?= $route["method"] ?></span>
+                            <?= $route['route'] ?>
+                        </summary>
                         <div class="more-list">
                             <? foreach ($route["more"] as $key => $value): ?>
                                 <div class="more-item">
