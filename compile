@@ -3,9 +3,11 @@
 use Adebipe\Cli\Build;
 use Adebipe\Cli\MakeClasses;
 
+putenv('ENV=build');
+
 try {
-    include_once __DIR__ . '/services/Cli/Build.php';
-    $build = new Build();
+    include_once __DIR__ . '/services/Cli/Builder/Builder.php';
+    $build = new Builder();
     $build->build();
 } catch (Throwable $e) {
     throw $e;

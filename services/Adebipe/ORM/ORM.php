@@ -23,6 +23,14 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
     {
         $this->msql = $msql;
         $class_creator = getenv("ORM_TABLE_MODELS");
+        if (!$class_creator) {
+            throw new \Exception("ORM_TABLE_MODELS environment variable not set");
+        }
+        if (!class_exists($class_creator)) {
+            if (getenv("ENV") == 'build') {
+                return;
+            }
+        }
         $class_init = new $class_creator();
         $all_schema = $class_init->getSchema();
         foreach ($all_schema as $table_name => $object_class) {

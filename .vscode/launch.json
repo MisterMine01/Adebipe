@@ -12,6 +12,21 @@
             "pathMappings": {
                 "/var/www/html/": "${workspaceFolder}"
             }
+        },
+        {
+            "name": "Compile Adebipe",
+            "type": "php",
+            "request": "launch",
+            "program": "compile",
+            "cwd": "${workspaceFolder}",
+            "port": 0,
+            "runtimeArgs": [
+                "-dxdebug.start_with_request=yes"
+            ],
+            "env": {
+                "XDEBUG_MODE": "debug,develop",
+                "XDEBUG_CONFIG": "client_port=${port}"
+            }
         }
     ]
 }
