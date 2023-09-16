@@ -49,7 +49,13 @@
                     </details>
                 <? else: ?>
                     <div class="route-item" id="<?= $route['route'] ?>_<?= $route['method'] ?>">
-                        <p class="route-name"><span class="pastille"><?= $route["method"] ?></span> <?= $route['route'] ?></p>
+                        <p class="route-name">
+                            <? if (isset($route['env'])): ?>
+                                <span class="pastille <?= $route['env'] ?>"><?= $route['env'] ?></span>
+                            <? endif ?>
+                            <span class="pastille"><?= $route["method"] ?></span>
+                            <?= $route['route'] ?>
+                        </p>
                     </div>
                 <? endif ?>
             <? endforeach ?>
