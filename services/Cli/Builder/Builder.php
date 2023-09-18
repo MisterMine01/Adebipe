@@ -6,7 +6,7 @@ use Adebipe\Cli\MakeClasses;
 require_once __DIR__ . '/BuilderUtils.php';
 require_once __DIR__ . '/../Includer.php';
 require_once __DIR__ . '/../MakeClasses.php';
-require_once __DIR__ . '/IncludeList.php';
+require_once __DIR__ . '/Constructor/IncludeList.php';
 
 class Builder
 {
@@ -26,7 +26,6 @@ class Builder
         $all_services = MakeClasses::makeClasses($get_services_classes);
 
         $include_list = new IncludeList();
-        var_dump($all_services);
 
         $this->_buildInterfaces($include_list);
 
@@ -48,6 +47,7 @@ class Builder
         mkdir($this->_build_dir);
         mkdir($this->_build_dir . '/services');
         mkdir($this->_build_dir . '/services/interfaces');
+        mkdir($this->_build_dir . '/services/others');
     }
 
     /**
@@ -77,13 +77,49 @@ class Builder
     /**
      * Build all services
      * 
-     * @param IncludeList $include_list The list of the interfaces
-     * @param array $all_services The list of all services
+     * @param IncludeList            $include_list The list of the interfaces
+     * @param array<ReflectionClass> $all_services The list of all services
      * 
      * @return void
      */
     private function _buildServices(IncludeList $include_list, array $all_services): void
     {
-        // TODO
+        foreach ($all_services as $service) {
+            if ($service->isInterface()) {
+                continue;
+            }
+            if ($service->getAttributes("NoBuildable")) {
+                continue;
+            }
+            if ($service->getName() === "NoBuildable") {
+                continue;
+            }
+            if (in_array("Adebipe\\Services\\Interfaces\\CreatorInterface", $service->getInterfaceNames())) {
+                continue; // TODO: Build the creator
+            }
+            if (in_array("Adebipe\\Services\\Interfaces\\BuilderServiceInterface", $service->getInterfaceNames())) {
+                continue; // TODO: Build the builder
+            }
+            $this->_buildOther($include_list, $service);
+        }
+    }
+
+    /**
+     * Build all other services
+     * 
+     * @param IncludeList     $include_list The list of the interfaces
+     * @param ReflectionClass $all_services The list of all services
+     * 
+     * @return void
+     */
+    private function _buildOther(IncludeList $include_list, ReflectionClass $service): void
+    {
+        $file = $service->getFileName();
+        $file_code = file_get_contents($file);
+        $file_path = $this->_build_dir . '/services/others/' .
+            $service->getShortName() . '.php';
+        file_put_contents($file_path, $file_code);
+        $include = substr($file_path, strlen($this->_build_dir . '/'));
+        $include_list->add($include);
     }
 }

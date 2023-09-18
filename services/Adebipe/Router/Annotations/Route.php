@@ -3,11 +3,13 @@
 namespace Adebipe\Router\Annotations;
 
 use Attribute;
+use NoBuildable;
 
 /**
  * Annotation for routes
  */
 #[Attribute]
+#[NoBuildable]
 class Route
 {
     public function __construct(
