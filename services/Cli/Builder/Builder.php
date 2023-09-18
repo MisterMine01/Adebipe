@@ -30,6 +30,8 @@ class Builder
         $this->_buildInterfaces($include_list);
 
         $this->_buildServices($include_list, $all_services);
+
+        $include_list->generate($build_dir . '/services.php');
     }
 
     /**

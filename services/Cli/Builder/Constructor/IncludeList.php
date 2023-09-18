@@ -26,7 +26,7 @@ class IncludeList
         return $this->function_list;
     }
 
-    public function includeList(): string
+    private function includeList(): string
     {
         $include_list = '';
         foreach ($this->include_list as $file) {
@@ -35,7 +35,7 @@ class IncludeList
         return $include_list;
     }
 
-    public function functionList(): string
+    private function functionList(): string
     {
         $function_list = '';
         foreach ($this->function_list as $function) {
@@ -44,4 +44,15 @@ class IncludeList
         return $function_list;
     }
 
+    public function generate(string $file)
+    {
+        $include_list = $this->includeList();
+        $function_list = $this->functionList();
+        $content = "<?php";
+        $content .= "\n\n";
+        $content .= $include_list;
+        $content .= "\n\n";
+        $content .= $function_list;
+        file_put_contents($file, $content);
+    }
 }
