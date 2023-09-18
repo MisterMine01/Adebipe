@@ -6,6 +6,8 @@ class IncludeList
 
     private $function_list = [];
 
+    private $other_list = [];
+
     public function add(string $file)
     {
         $this->include_list[] = $file;
@@ -19,6 +21,16 @@ class IncludeList
     public function addFunction(string $function)
     {
         $this->function_list[] = $function;
+    }
+
+    public function addOther(string $other)
+    {
+        $this->other_list[] = $other;
+    }
+
+    public function getOther(): array
+    {
+        return $this->other_list;
     }
 
     public function getFunction(): array
@@ -44,15 +56,24 @@ class IncludeList
         return $function_list;
     }
 
+    private function otherList(): string
+    {
+        $other_list = '';
+        foreach ($this->other_list as $other) {
+            $other_list .= $other . "\n";
+        }
+        return $other_list;
+    }
+
     public function generate(string $file)
     {
-        $include_list = $this->includeList();
-        $function_list = $this->functionList();
         $content = "<?php";
         $content .= "\n\n";
-        $content .= $include_list;
+        $content .= $this->includeList();
         $content .= "\n\n";
-        $content .= $function_list;
+        $content .= $this->functionList();
+        $content .= "\n\n";
+        $content .= $this->otherList();
         file_put_contents($file, $content);
     }
 }

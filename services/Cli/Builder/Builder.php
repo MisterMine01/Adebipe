@@ -2,11 +2,16 @@
 
 use Adebipe\Cli\Includer;
 use Adebipe\Cli\MakeClasses;
+use Adebipe\Services\Container;
+use Adebipe\Services\Injector;
+use Adebipe\Services\Interfaces\BuilderServiceInterface;
+use Adebipe\Services\Interfaces\CreatorInterface;
 
 require_once __DIR__ . '/BuilderUtils.php';
 require_once __DIR__ . '/../Includer.php';
 require_once __DIR__ . '/../MakeClasses.php';
 require_once __DIR__ . '/Constructor/IncludeList.php';
+require_once __DIR__ . '/Constructor/ServicesBuilder.php';
 
 class Builder
 {
@@ -32,6 +37,8 @@ class Builder
         $this->_buildServices($include_list, $all_services);
 
         $include_list->generate($build_dir . '/services.php');
+
+        removeDir($build_dir . '/tmp');
     }
 
     /**
@@ -50,6 +57,7 @@ class Builder
         mkdir($this->_build_dir . '/services');
         mkdir($this->_build_dir . '/services/interfaces');
         mkdir($this->_build_dir . '/services/others');
+        mkdir($this->_build_dir . '/tmp');
     }
 
     /**
@@ -86,24 +94,50 @@ class Builder
      */
     private function _buildServices(IncludeList $include_list, array $all_services): void
     {
+        $contained_services = [];
         foreach ($all_services as $service) {
             if ($service->isInterface()) {
                 continue;
             }
-            if ($service->getAttributes("NoBuildable")) {
+            if ($service->getAttributes(NoBuildable::class)) {
                 continue;
             }
-            if ($service->getName() === "NoBuildable") {
+            if ($service->getName() === NoBuildable::class) {
                 continue;
             }
-            if (in_array("Adebipe\\Services\\Interfaces\\CreatorInterface", $service->getInterfaceNames())) {
-                continue; // TODO: Build the creator
+            if (Container::class === $service->getName()) {
+                continue;
             }
-            if (in_array("Adebipe\\Services\\Interfaces\\BuilderServiceInterface", $service->getInterfaceNames())) {
-                continue; // TODO: Build the builder
+            if (Injector::class === $service->getName()) {
+                continue;
+            }
+            if (in_array(BuilderServiceInterface::class, $service->getInterfaceNames())) {
+                $service = $this->_buildBuilder($include_list, $service);
+            }
+            if (in_array(CreatorInterface::class, $service->getInterfaceNames())) {
+                $this->_buildCreator($include_list, $service);
+                continue;
             }
             $this->_buildOther($include_list, $service);
         }
+    }
+
+    private function _buildBuilder(IncludeList $include_list, ReflectionClass $service): ReflectionClass
+    {
+        return $service;
+    }
+
+    private function _buildCreator(IncludeList $include_list, ReflectionClass $service): void
+    {
+        $file = $service->getFileName();
+        $file_code = file_get_contents($file);
+        $file_path = $this->_build_dir . '/services/' .
+            $service->getShortName() . '.php';
+        file_put_contents($file_path, $file_code);
+        $include = substr($file_path, strlen($this->_build_dir . '/'));
+        $include_list->add($include);
+        $service_builder = new ServicesBuilder($service);
+        $include_list->addFunction($service_builder->generate_function_constructor());
     }
 
     /**
