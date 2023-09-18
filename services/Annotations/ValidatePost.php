@@ -6,9 +6,10 @@ use Adebipe\Router\Annotations\BeforeRoute;
 use Adebipe\Router\Request;
 use Adebipe\Router\Response;
 use Attribute;
-use ReflectionMethod;
+use NoBuildable;
 
 #[Attribute]
+#[NoBuildable]
 class ValidatePost extends BeforeRoute
 {
     public function __construct(

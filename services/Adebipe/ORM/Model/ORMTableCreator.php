@@ -3,10 +3,13 @@
 
 namespace Adebipe\Model;
 
+use NoBuildable;
+
 /**
  * Create the schema of the database
  * @package Adebipe\Model
  */
+#[NoBuildable]
 abstract class ORMTableCreator
 {
     /**
