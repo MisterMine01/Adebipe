@@ -69,7 +69,7 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
     /**
      * Update the routes
      */
-    public function updateRoutes(): void
+    public function updateRoutes(string $env_wanted = "???"): void
     {
         $this->deleteAllRoutes();
         foreach (get_declared_classes() as $class) {
@@ -93,6 +93,9 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
                 // Check if the route already exists
                 if ($this->routeAlreadyExist($route->path, $route->method)) {
                     throw new \Exception('Route ' . $route->path . ' with method ' . $route->method . ' already exists');
+                }
+                if ($env_wanted !== "???" && $route->env !== $env_wanted) {
+                    continue;
                 }
                 $regex_decoded = $route->path;
                 if ($route->regex !== null) {

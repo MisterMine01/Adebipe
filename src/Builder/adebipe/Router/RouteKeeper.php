@@ -1,9 +1,11 @@
 <?php
 
-namespace Adebipe\Services;
+namespace Adebipe\Services\Generated;
 
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
+use Adebipe\Services\Logger;
 use ReflectionMethod;
+// CODE OF USES GOES HERE
 
 class RouteKeeper implements RegisterServiceInterface
 {
@@ -24,8 +26,9 @@ class RouteKeeper implements RegisterServiceInterface
     public function __construct(Logger $logger)
     {
         $this->logger = $logger;
-        
     }
+
+    // CODE OF ROUTES GOES HERE
 
     /**
      * Get the the id of the route and assign is value from the uri
