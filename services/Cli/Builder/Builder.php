@@ -61,9 +61,21 @@ class Builder
 
         $this->generateInjectorFunction($include_list);
 
+        $include_list->addOther('function atEnd() {' . "\n");
+
+        foreach ($this->_at_end as $at_end) {
+            $include_list->addOther($at_end);
+        }
+        $include_list->addOther('}');
+
         $include_list->generate($build_dir . '/services.php');
 
         removeDir($build_dir . '/tmp');
+
+        file_put_contents(
+            $build_dir . '/router.php',
+            file_get_contents("src/Builder/adebipe/router.php")
+        );
     }
 
     /**

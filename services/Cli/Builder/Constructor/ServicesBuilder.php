@@ -78,7 +78,7 @@ class ServicesBuilder
             $function_parameters[] = ServicesBuilder::getName($param_class) . '()';
         }
         $function = 'if (isset($_GLOBALS[\'' . $class_name . '\'])) {' . "\n";
-        $function = '$_GLOBALS[\'' . $class_name . '\']->atEnd(' . implode(",\n", $function_parameters) . ");\n";
+        $function .= '$_GLOBALS[\'' . $class_name . '\']->atEnd(' . implode(",\n", $function_parameters) . ");\n";
         $function .= '}';
         return $function;
     }
