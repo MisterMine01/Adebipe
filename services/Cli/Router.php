@@ -6,7 +6,7 @@ use Adebipe\Router\Request;
 use Adebipe\Services\Logger;
 use Adebipe\Services\Router as ServicesRouter;
 
-include_once __DIR__ . '/Includer.php';
+include_once __DIR__ . '/Includer/Includer.php';
 include_once __DIR__ . '/MakeClasses.php';
 
 /**
@@ -41,8 +41,8 @@ class Router
     public function run($cwd = __DIR__): void
     {
         $includer = new Includer();
-        $data = $includer->includeList($cwd . '/services');
-        $data2 = $includer->includeList($cwd . '/src');
+        $data = $includer->includeAllFile($cwd . '/services');
+        $data2 = $includer->includeAllFile($cwd . '/src');
         chdir($cwd);
 
         MakeClasses::makeClasses(array_merge($data, $data2));

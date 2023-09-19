@@ -2,6 +2,8 @@
 
 namespace Adebipe\Services;
 
+use Adebipe\Router\Annotations\RegexSimple;
+use Adebipe\Router\Annotations\Route;
 use Adebipe\Services\Interfaces\BuilderServiceInterface;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
 use ReflectionMethod;
@@ -62,6 +64,51 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
     public function getRoutes(): array
     {
         return $this->routes;
+    }
+
+    /**
+     * Update the routes
+     */
+    public function updateRoutes(): void
+    {
+        $this->deleteAllRoutes();
+        foreach (get_declared_classes() as $class) {
+            if (preg_match('/^App\\\\Components\\\\/', $class) === 0) {
+                // Don't check the class if it's not a component
+                continue;
+            }
+            $reflection = new \ReflectionClass($class);
+            $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+            // Check all public methods
+            foreach ($methods as $method) {
+                if (!$method->isStatic()) {
+                    throw new \Exception('Method ' . $method->getName() . ' in class ' . $class . ' is not static');
+                }
+                $attributes = $method->getAttributes(Route::class);
+                // Check if the method has a route
+                if (count($attributes) === 0) {
+                    throw new \Exception('Method ' . $method->getName() . ' in class ' . $class . ' has no route');
+                }
+                $route = $attributes[0]->newInstance();
+                // Check if the route already exists
+                if ($this->routeAlreadyExist($route->path, $route->method)) {
+                    throw new \Exception('Route ' . $route->path . ' with method ' . $route->method . ' already exists');
+                }
+                $regex_decoded = $route->path;
+                if ($route->regex !== null) {
+                    foreach ($route->regex as $param => $regex) {
+                        if ($regex::class == RegexSimple::class) {
+                            $regex = $regex->value;
+                        }
+                        $regex_decoded = str_replace('{' . $param . '}', '(' . $regex . ')', $regex_decoded);
+                        $regex_decoded = str_replace('/', '\/', $regex_decoded);
+                        $regex_decoded = "/^" . $regex_decoded . "$/";
+                    }
+                }
+                // Add the route
+                $this->addRoute($route->path, $route->method, $method, $regex_decoded);
+            }
+        }
     }
 
     /**

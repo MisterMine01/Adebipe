@@ -1,7 +1,9 @@
 <?php
 
+
 namespace Adebipe\Cli;
 
+require_once __DIR__ . '/IncluderInterface.php';
 use IncluderInterface;
 
 /**
@@ -129,6 +131,7 @@ class Includer implements IncluderInterface
         $all_class = get_declared_classes();
         include_once $path;
         $new_class = array_diff(get_declared_classes(), $all_class);
+        $new_class = array_values($new_class);
         return $new_class;
     }
 }
