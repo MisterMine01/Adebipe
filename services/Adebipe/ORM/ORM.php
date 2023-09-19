@@ -44,17 +44,9 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
     {
     }
 
-    public function build(string $classCode): ?string
+    public function build(): string
     {
-        
-        include_once __DIR__ . '/Build/ORMBuild';
-        return (new \ORMBuilder($this->repository))->getBuilder();
-    }
-
-    public function appendFiles(): array
-    {
-        include_once __DIR__ . '/Build/ORMBuild';
-        return (new \ORMBuilder($this->repository))->appendFiles();
+        return "adebipe/ORM/ORMBuilder.php";
     }
 
     public function getRepositories(): array

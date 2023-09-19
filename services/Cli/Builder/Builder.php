@@ -8,7 +8,8 @@ use Adebipe\Services\Interfaces\BuilderServiceInterface;
 use Adebipe\Services\Interfaces\CreatorInterface;
 
 require_once __DIR__ . '/BuilderUtils.php';
-require_once __DIR__ . '/../Includer.php';
+require_once __DIR__ . '/../Includer/IncluderInterface.php';
+require_once __DIR__ . '/../Includer/Includer.php';
 require_once __DIR__ . '/../MakeClasses.php';
 require_once __DIR__ . '/Constructor/IncludeList.php';
 require_once __DIR__ . '/Constructor/ServicesBuilder.php';
@@ -27,7 +28,7 @@ class Builder
 
         $includer = new Includer();
 
-        $get_services_classes = $includer->includeList($getcwd . '/services');
+        $get_services_classes = $includer->includeAllFile($getcwd . '/services');
         $all_services = MakeClasses::makeClasses($get_services_classes);
 
         $include_list = new IncludeList();

@@ -2,10 +2,11 @@
 
 namespace Adebipe\Services;
 
+use Adebipe\Services\Interfaces\BuilderServiceInterface;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
 use ReflectionMethod;
 
-class RouteKeeper implements RegisterServiceInterface
+class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
 {
     /**
      * All routes of the application
@@ -24,7 +25,11 @@ class RouteKeeper implements RegisterServiceInterface
     public function __construct(Logger $logger)
     {
         $this->logger = $logger;
-        
+    }
+
+    public function build(): string
+    {
+        return "adebipe/Router/RouteKeeperBuilder";
     }
 
     /**

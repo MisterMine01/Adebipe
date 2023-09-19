@@ -36,16 +36,9 @@ class Router implements BuilderServiceInterface
      * @param string $classCode
      * @return string The prod router
      */
-    public function build(string $classCode): ?string
+    public function build(): string
     {
-        $this->updateRoutes();
-        include_once __DIR__ . '/RouterBuild';
-        return (new \RouterBuild($this->logger, $this->routes))->getBuilderRouter();
-    }
-
-    public function appendFiles(): array
-    {
-        return [];
+        return "adebipe/Router/RouterBuilder.php";
     }
 
     /**
