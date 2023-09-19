@@ -90,13 +90,7 @@ class Builder
             if ($interface->getAttributes(NoBuildable::class)) {
                 continue;
             }
-            $file = $interface->getFileName();
-            $file_code = file_get_contents($file);
-            $file_path = $this->_build_dir . '/services/interfaces/' .
-                $interface->getShortName() . '.php';
-            file_put_contents($file_path, $file_code);
-            $include = substr($file_path, strlen($this->_build_dir . '/'));
-            $include_list->add($include);
+            $this->_buildFile($include_list, $interface, '/services/interfaces/');
         }
     }
 
@@ -177,13 +171,7 @@ class Builder
 
     private function _buildCreator(IncludeList $include_list, ReflectionClass $service): void
     {
-        $file = $service->getFileName();
-        $file_code = file_get_contents($file);
-        $file_path = $this->_build_dir . '/services/' .
-            $service->getShortName() . '.php';
-        file_put_contents($file_path, $file_code);
-        $include = substr($file_path, strlen($this->_build_dir . '/'));
-        $include_list->add($include);
+        $this->_buildFile($include_list, $service, '/services/');
         $service_builder = new ServicesBuilder($service);
         $include_list->addFunction($service_builder->generate_function_constructor());
     }
@@ -198,10 +186,22 @@ class Builder
      */
     private function _buildOther(IncludeList $include_list, ReflectionClass $service): void
     {
+        $this->_buildFile($include_list, $service, '/services/others/');
+    }
+
+
+    private function _buildFile(IncludeList $include_list, ReflectionClass $service, string $directory)
+    {
         $file = $service->getFileName();
         $file_code = file_get_contents($file);
-        $file_path = $this->_build_dir . '/services/others/' .
-            $service->getShortName() . '.php';
+        $file_path = $this->_build_dir . $directory . $service->getShortName() . '.php';
+        if (preg_match_all("/namespace (.*)\\\\Generated;/", $file_code, $matches)) {
+            $file_code = str_replace(
+                "namespace " . $service->getNamespaceName() . ";",
+                "namespace " . $matches[1][0] . ";",
+                $file_code
+            );
+        }
         file_put_contents($file_path, $file_code);
         $include = substr($file_path, strlen($this->_build_dir . '/'));
         $include_list->add($include);

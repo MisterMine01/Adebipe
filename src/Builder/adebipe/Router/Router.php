@@ -1,6 +1,6 @@
 <?php
 
-namespace Adebipe\Services;
+namespace Adebipe\Services\Generated;
 
 // CODE OF USES GOES HERE
 

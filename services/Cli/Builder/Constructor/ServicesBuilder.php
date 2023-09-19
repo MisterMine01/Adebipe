@@ -21,6 +21,9 @@ class ServicesBuilder
 
     public static function getName($function_name): string
     {
+        if (strpos($function_name, "\\Generated")) {
+            $function_name = str_replace("\\Generated", "", $function_name);
+        }
         $function_name = "get" . implode('_', explode('\\', $function_name));
         return $function_name;
     }
