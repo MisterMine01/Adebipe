@@ -6,6 +6,7 @@ use Adebipe\Services\Container;
 use Adebipe\Services\Injector;
 use Adebipe\Services\Interfaces\BuilderServiceInterface;
 use Adebipe\Services\Interfaces\CreatorInterface;
+use Adebipe\Services\Interfaces\RegisterServiceInterface;
 
 require_once __DIR__ . '/BuilderUtils.php';
 require_once __DIR__ . '/../Includer/IncluderInterface.php';
@@ -22,6 +23,12 @@ class Builder
     private Includer $_includer;
 
     private BuilderHelper $_builder_helper;
+
+    private array $_started_services = [];
+
+    private array $_injector_services = [];
+
+    private array $_at_end = [];
 
     public function __construct()
     {
@@ -47,6 +54,12 @@ class Builder
         $this->_buildInterfaces($include_list);
 
         $this->_buildServices($include_list, $all_services);
+
+        foreach ($this->_started_services as $service_function) {
+            $include_list->addOther($service_function . '();');
+        }
+
+        $this->generateInjectorFunction($include_list);
 
         $include_list->generate($build_dir . '/services.php');
 
@@ -118,9 +131,6 @@ class Builder
             if (Container::class === $service->getName()) {
                 continue;
             }
-            if (Injector::class === $service->getName()) {
-                continue;
-            }
             if (in_array(BuilderServiceInterface::class, $service->getInterfaceNames())) {
                 $service = $this->_buildBuilder($include_list, $service);
             }
@@ -174,6 +184,13 @@ class Builder
         $this->_buildFile($include_list, $service, '/services/');
         $service_builder = new ServicesBuilder($service);
         $include_list->addFunction($service_builder->generate_function_constructor());
+        $name = ServicesBuilder::getName($service->getName());
+        $this->_at_end[] = $service_builder->atEnd();
+        if (in_array(RegisterServiceInterface::class, $service->getInterfaceNames())) {
+            $this->_injector_services[] = $name;
+            return;
+        }
+        $this->_started_services[] = $name;
     }
 
     /**
@@ -205,5 +222,13 @@ class Builder
         file_put_contents($file_path, $file_code);
         $include = substr($file_path, strlen($this->_build_dir . '/'));
         $include_list->add($include);
+    }
+
+    private function generateInjectorFunction(IncludeList $include_list)
+    {
+        $include_list->addOther('$injector = ' . ServicesBuilder::getName(Injector::class) . '();' . "\n");
+        foreach ($this->_injector_services as $service) {
+            $include_list->addOther('$injector->add(' . $service . '());' . "\n");
+        }
     }
 }

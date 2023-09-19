@@ -115,7 +115,6 @@ class Includer implements IncluderInterface
     public function includeAllFile($path): array
     {
         $all_file = $this->findAllFile($path);
-        file_put_contents('all_file.json', json_encode($all_file, JSON_PRETTY_PRINT));
         $initialized_class = [];
         foreach ($all_file as $file) {
             $initialized_class = array_merge($initialized_class, $this->includeFile($file));

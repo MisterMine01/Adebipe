@@ -2,6 +2,11 @@
 
 namespace Adebipe\Services\Generated;
 
+use Adebipe\Router\Response;
+use Adebipe\Services\Injector;
+use Adebipe\Services\Logger;
+use ReflectionMethod;
+
 // CODE OF USES GOES HERE
 
 class Router
@@ -18,13 +23,16 @@ class Router
      */
     private Logger $logger;
 
+    private RouteKeeper $routeKeeper;
+
     /**
      * Constructor
      * @param Logger $logger
      */
-    public function __construct(Logger $logger)
+    public function __construct(Logger $logger, RouteKeeper $routeKeeper)
     {
         $this->logger = $logger;
+        $this->routeKeeper = $routeKeeper;
     }
 
     // CODE OF ROUTES GOES HERE
@@ -60,7 +68,7 @@ class Router
      * @param Injector $injector
      * @return Response
      */
-    public function getResponse(\Adebipe\Router\Request $request, Injector $injector): \Adebipe\Router\Response
+    public function getResponse(\Adebipe\Router\Request $request, Injector $injector): Response
     {
         // Remove double slashes or more in the uri
         $request->uri = preg_replace('(\/+)', '/', $request->uri);
@@ -73,7 +81,6 @@ class Router
             ]);
         }
         // update the routes
-        $this->routeKeeper->updateRoutes();
         $this->logger->info('Get response for request: ' . $request->uri);
         $add_to_injector = [
             Request::class => $request,
@@ -91,5 +98,33 @@ class Router
         $route = $result[0];
         $add_to_injector = array_merge($add_to_injector, $result[1]);
         return $this->executeRoute($route, $add_to_injector, $injector);
+    }
+
+    private function executeRoute(ReflectionMethod $method, array $parameters, Injector $injector): mixed
+    {
+        // Execute before Annotations
+        /*foreach ($method->getAttributes() as $attribute) {
+            if (is_subclass_of($attribute->getName(), BeforeRoute::class)) {
+                $beforeRoute = $attribute->newInstance();
+                $execute = new ReflectionMethod($beforeRoute, 'execute');
+                $response = $injector->execute($execute, $beforeRoute, $parameters);
+                if ($response instanceof Response) {
+                    return $response;
+                }
+                if ($response === false) {
+                    return new Response('An error occured', 500);
+                }
+                if ($response !== true) {
+                    throw new \Exception('BeforeRoute ' . $attribute->getName() . ' returned an invalid value');
+                }
+            }
+        }*/
+        $response = $injector->execute($method, null, $parameters);
+        // Check if the response is an instance of Response
+        if (!($response instanceof Response)) {
+            throw new \Exception('Response is not an instance of Response');
+        }
+        return $response;
+
     }
 }
