@@ -3,8 +3,6 @@
 namespace Adebipe\Services;
 
 use Adebipe\Router\Annotations\BeforeRoute;
-use Adebipe\Router\Annotations\RegexSimple;
-use Adebipe\Router\Annotations\Route;
 use Adebipe\Router\Request;
 use Adebipe\Router\Response;
 use Adebipe\Services\Interfaces\BuilderServiceInterface;

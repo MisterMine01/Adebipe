@@ -19,10 +19,15 @@ class ServicesBuilder
         }
     }
 
+    public static function getName($function_name): string
+    {
+        $function_name = "get" . implode('_', explode('\\', $function_name));
+        return $function_name;
+    }
+
     public function generate_function_constructor()
     {
-        $function_name = $this->_class->getName();
-        $function_name = "get" . implode('_', explode('\\', $function_name));
+        $function_name = self::getName($this->_class->getName());
         $function =  'function ' . $function_name . "() {\n";
         $function .= 'if (isset($_GLOBALS[\'' . $this->_class->getName() . '\'])) {' . "\n";
         $function .= 'return $_GLOBALS[\'' . $this->_class->getName() . '\'];' . "\n";

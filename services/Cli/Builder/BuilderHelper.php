@@ -24,6 +24,8 @@ class BuilderHelper implements CoreBuilderInterface
         return $this->_container->getService($service);
     }
 
-    
-
+    public function getServiceFunctionName(string $service): string
+    {
+        return ServicesBuilder::getName($service);
+    }
 }

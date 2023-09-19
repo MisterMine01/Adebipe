@@ -7,4 +7,6 @@ interface CoreBuilderInterface
 
     public function getService(string $service): mixed;
 
+    public function getServiceFunctionName(string $service): string;
+
 }
