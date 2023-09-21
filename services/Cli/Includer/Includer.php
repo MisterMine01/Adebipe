@@ -100,8 +100,6 @@ class Includer implements IncluderInterface
     public function findAllFile($path): array
     {
         $result = $this->readPath($path);
-        $uniq = uniqid();
-        file_put_contents('result' . $uniq . '.json', json_encode($result, JSON_PRETTY_PRINT));
         $result = array_merge($result["atStart"], $result["middle"], $result["atEnd"]);
         $result = array_unique($result);
         $result = array_filter(

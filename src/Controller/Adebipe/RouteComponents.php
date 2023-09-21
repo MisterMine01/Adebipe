@@ -12,7 +12,7 @@ use Adebipe\Services\RouteKeeper;
 
 class RouteComponents implements ComponentInterface
 {
-    #[Route(path: '/adebipe/routes', method: 'GET', env: 'DEV')]
+    #[Route(path: '/adebipe/routes', method: 'GET', env: 'dev')]
     public static function index(Renderer $renderer, RouteKeeper $routeKeeper): Response
     {
         $routes = $routeKeeper->getRoutes();
