@@ -1,5 +1,6 @@
 <?php
 
+#[NoBuildable]
 interface BuilderInterface
 {
     public function includeFiles(): array;

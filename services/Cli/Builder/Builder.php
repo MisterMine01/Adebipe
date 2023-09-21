@@ -8,13 +8,17 @@ use Adebipe\Services\Interfaces\BuilderServiceInterface;
 use Adebipe\Services\Interfaces\CreatorInterface;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
 
-require_once __DIR__ . '/BuilderUtils.php';
 require_once __DIR__ . '/../Includer/IncluderInterface.php';
 require_once __DIR__ . '/../Includer/Includer.php';
-require_once __DIR__ . '/../MakeClasses.php';
-require_once __DIR__ . '/Constructor/IncludeList.php';
-require_once __DIR__ . '/Constructor/ServicesBuilder.php';
-require_once __DIR__ . '/BuilderHelper.php';
+require_once __DIR__ . '/BuilderUtils.php';
+
+function require_all()
+{
+    include_once __DIR__ . '/../MakeClasses.php';
+    include_once __DIR__ . '/Constructor/IncludeList.php';
+    include_once __DIR__ . '/Constructor/ServicesBuilder.php';
+    include_once __DIR__ . '/BuilderHelper.php';
+}
 
 class Builder
 {
@@ -44,6 +48,7 @@ class Builder
         recurse_copy($getcwd . '/public', $build_dir . '/public');
 
         $get_services_classes = $this->_includer->includeAllFile($getcwd . '/services');
+        require_all();
         $all_services = MakeClasses::makeClasses($get_services_classes);
 
 
