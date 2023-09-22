@@ -4,6 +4,7 @@ namespace Adebipe\Services\Generated;
 
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
 use Adebipe\Services\Logger;
+use Reflection;
 use ReflectionMethod;
 // CODE OF USES GOES HERE
 
@@ -63,7 +64,8 @@ class RouteKeeper implements RegisterServiceInterface
     {
         if (isset($this->routes[$path])) {
             if (isset($this->routes[$path][$method])) {
-                return [$this->routes[$path][$method][0], []];
+                $reflection = new ReflectionMethod($this, $this->routes[$path][$method][0]);
+                return [$reflection, []];
             }
             return [405, "Method not allowed"];
         }
@@ -93,6 +95,7 @@ class RouteKeeper implements RegisterServiceInterface
             $this->logger->info('Route not found');
             return [404, "Not found"];
         }
-        return [$this->routes[$route][$method][0], $regex];
+        $reflection = new ReflectionMethod($this, $this->routes[$route][$method][0]);
+        return [$reflection, $regex];
     }
 }

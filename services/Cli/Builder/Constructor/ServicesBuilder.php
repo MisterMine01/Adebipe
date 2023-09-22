@@ -42,14 +42,14 @@ class ServicesBuilder
 
         $function_name = self::getName($class_name);
         $function =  'function ' . $function_name . "() {\n";
-        $function .= 'if (isset($_GLOBALS[\'' . $class_name . '\'])) {' . "\n";
-        $function .= 'return $_GLOBALS[\'' . $class_name . '\'];' . "\n";
+        $function .= 'if (isset($GLOBALS[\'' . $class_name . '\'])) {' . "\n";
+        $function .= 'return $GLOBALS[\'' . $class_name . '\'];' . "\n";
         $function .= '}' . "\n";
         $parameters = [];
         foreach ($this->_constructor_service_needed as $service) {
             $parameters[] = ServicesBuilder::getName($service) . '()';
         }
-        $function .= '$_GLOBALS[\'' . $class_name . '\'] = new ' . $class_name . '(' . implode(",\n", $parameters) . ");\n";
+        $function .= '$GLOBALS[\'' . $class_name . '\'] = new ' . $class_name . '(' . implode(",\n", $parameters) . ");\n";
         if (in_array(StarterServiceInterface::class, $this->_class->getInterfaceNames())) {
             $function_start = $this->_class->getMethod('atStart');
             $function_parameters = [];
@@ -57,9 +57,9 @@ class ServicesBuilder
                 $param_class = $param->getType()->getName();
                 $function_parameters[] = ServicesBuilder::getName($param_class) . '()';
             }
-            $function .= '$_GLOBALS[\'' . $class_name . '\']->atStart(' . implode(",\n", $function_parameters) . ");\n";
+            $function .= '$GLOBALS[\'' . $class_name . '\']->atStart(' . implode(",\n", $function_parameters) . ");\n";
         }
-        $function .= 'return $_GLOBALS[\'' . $class_name . '\'];';
+        $function .= 'return $GLOBALS[\'' . $class_name . '\'];';
         $function .= '}';
         return $function;
     }
@@ -77,8 +77,8 @@ class ServicesBuilder
             $param_class = $param->getType()->getName();
             $function_parameters[] = ServicesBuilder::getName($param_class) . '()';
         }
-        $function = 'if (isset($_GLOBALS[\'' . $class_name . '\'])) {' . "\n";
-        $function .= '$_GLOBALS[\'' . $class_name . '\']->atEnd(' . implode(",\n", $function_parameters) . ");\n";
+        $function = 'if (isset($GLOBALS[\'' . $class_name . '\'])) {' . "\n";
+        $function .= '$GLOBALS[\'' . $class_name . '\']->atEnd(' . implode(",\n", $function_parameters) . ");\n";
         $function .= '}';
         return $function;
     }

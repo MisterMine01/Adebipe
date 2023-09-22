@@ -4,12 +4,13 @@ namespace Adebipe\Services\Generated;
 
 use Adebipe\Router\Response;
 use Adebipe\Services\Injector;
+use Adebipe\Services\Interfaces\CreatorInterface;
 use Adebipe\Services\Logger;
 use ReflectionMethod;
 
 // CODE OF USES GOES HERE
 
-class Router
+class Router implements CreatorInterface
 {
     /**
      * Mime types

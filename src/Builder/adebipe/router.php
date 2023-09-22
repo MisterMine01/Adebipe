@@ -6,6 +6,7 @@ $time_start = microtime(true);
 
 //putenv('ENV=dev'); // For test the prod router
 
+chdir(__DIR__);
 try {
     include_once __DIR__ . '/services.php';
 

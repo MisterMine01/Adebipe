@@ -6,9 +6,10 @@ use Adebipe\Router\Annotations\BeforeRoute;
 use Adebipe\Router\Request;
 use Adebipe\Router\Response;
 use Adebipe\Services\Interfaces\BuilderServiceInterface;
+use Adebipe\Services\Interfaces\CreatorInterface;
 use ReflectionMethod;
 
-class Router implements BuilderServiceInterface
+class Router implements CreatorInterface, BuilderServiceInterface
 {
 
     private RouteKeeper $routeKeeper;

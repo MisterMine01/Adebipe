@@ -167,7 +167,7 @@ class Builder
         $builder_file = $service->getFileName();
         $builder_name = $class->build();
         try {
-            $builder_class_name = $this->_includer->includeFile("src/Builder/" . $builder_name . ".php")[0];
+            $builder_class_name = $this->_includer->includeFile("src/Builder/" . $builder_name)[0];
         } catch (Throwable $e) {
             return $service;
         }
@@ -184,7 +184,7 @@ class Builder
         foreach ($all_included as $file) {
             $filename = explode('/', $file);
             $filename = $filename[count($filename) - 1];
-            $new_file = $this->_build_dir . '/services/' . $filename;
+            $new_file = $this->_build_dir . '/includes/' . $filename;
             file_put_contents($new_file, file_get_contents($file));
             $include = substr($new_file, strlen($this->_build_dir . '/'));
             $include_list->add($include);
@@ -245,7 +245,7 @@ class Builder
     {
         $include_list->addOther('$injector = ' . ServicesBuilder::getName(Injector::class) . '();' . "\n");
         foreach ($this->_injector_services as $service) {
-            $include_list->addOther('$injector->add(' . $service . '());' . "\n");
+            $include_list->addOther('$injector->addService(' . $service . '());' . "\n");
         }
     }
 }

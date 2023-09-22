@@ -31,7 +31,7 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
 
     public function build(): string
     {
-        return "adebipe/Router/RouteKeeperBuilder";
+        return "adebipe/Router/RouteKeeperBuilder.php";
     }
 
     /**
