@@ -160,7 +160,7 @@ class Repository implements RepositoryInterface
         );
         $result = $this->msql->prepare($sql);
         $this->msql->execute($result, array_values($values));
-        return $this->msql->get_last_query_success();
+        return $this->msql->getLastQuerySuccess();
     }
 
     public function create_table(): array

@@ -85,7 +85,7 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
         $query = "UPDATE " . $me_object_table . " SET " . $this->relationedBy . " = " . $value->id . " WHERE id = " . $id;
         $result = $msql->prepare($query);
         $msql->execute($result);
-        return $msql->get_last_query_success();
+        return $msql->getLastQuerySuccess();
     }
 
     public function deleteToDb(MsQl $msql, string $id, object $value): bool
@@ -94,6 +94,6 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
         $query = "UPDATE " . $me_object_table . " SET " . $this->relationedBy . " = NULL WHERE id = " . $id;
         $result = $msql->prepare($query);
         $msql->execute($result);
-        return $msql->get_last_query_success();
+        return $msql->getLastQuerySuccess();
     }
 }

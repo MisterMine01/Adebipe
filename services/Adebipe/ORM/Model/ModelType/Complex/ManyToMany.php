@@ -130,7 +130,7 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
         $query = "INSERT INTO " . $this->middle_table_name . " (" . $this->named_me . "_id, " . $this->named_object . "_id) VALUES (" . $id . ", " . $value->id . ")";
         $result = $msql->prepare($query);
         $msql->execute($result);
-        return $msql->get_last_query_success();
+        return $msql->getLastQuerySuccess();
     }
 
     public function deleteToDb(MsQl $msql, string $id, object $value): bool
@@ -138,6 +138,6 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
         $query = "DELETE FROM " . $this->middle_table_name . " WHERE " . $this->named_me . "_id = " . $id . " AND " . $this->named_object . "_id = " . $value->id;
         $result = $msql->prepare($query);
         $msql->execute($result);
-        return $msql->get_last_query_success();
+        return $msql->getLastQuerySuccess();
     }
 }

@@ -61,7 +61,7 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
 
     public function update(): void
     {
-        $already_existed = $this->msql->get_table();
+        $already_existed = $this->msql->getTable();
         $already_table_name = array();
         foreach ($already_existed as $table) {
             $already_table_name[] = $table['TABLE_NAME'];
