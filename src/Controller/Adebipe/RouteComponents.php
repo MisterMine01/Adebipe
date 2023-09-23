@@ -2,18 +2,16 @@
 
 namespace App\Components;
 
-use Adebipe\Annotations\ValidatePost;
 use Adebipe\Components\Interfaces\ComponentInterface;
 use Adebipe\Router\Annotations\Route;
-use Adebipe\Router\JsonResponse;
 use Adebipe\Router\Response;
 use Adebipe\Services\Renderer;
-use Adebipe\Services\RouteKeeper;
+use Adebipe\Services\RouteKeeper as RouteKeeperAlias;
 
 class RouteComponents implements ComponentInterface
 {
-    #[Route(path: '/adebipe/routes', method: 'GET', env: 'DEV')]
-    public static function index(Renderer $renderer, RouteKeeper $routeKeeper): Response
+    #[Route(path: '/adebipe/routes', method: 'GET')]
+    public static function index(Renderer $renderer, RouteKeeperAlias $routeKeeper): Response
     {
         $routes = $routeKeeper->getRoutes();
 

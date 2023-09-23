@@ -6,7 +6,7 @@ use Adebipe\Router\Annotations\BeforeRoute;
 use Adebipe\Router\Request;
 use Adebipe\Router\Response;
 use Attribute;
-use ReflectionMethod;
+use NoBuildable;
 
 #[Attribute]
 class ValidatePost extends BeforeRoute

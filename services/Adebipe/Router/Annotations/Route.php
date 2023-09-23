@@ -3,11 +3,13 @@
 namespace Adebipe\Router\Annotations;
 
 use Attribute;
+use NoBuildable;
 
 /**
  * Annotation for routes
  */
 #[Attribute]
+#[NoBuildable]
 class Route
 {
     public function __construct(
@@ -20,7 +22,7 @@ class Route
          */
         public string $method,
         public array $regex = [],
-        public string $env = 'PROD',
+        public string $env = 'prod',
     ) {
     }
 }

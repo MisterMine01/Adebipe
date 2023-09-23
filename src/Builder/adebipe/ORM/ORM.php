@@ -1,11 +1,12 @@
 <?php
 
-namespace Adebipe\Services;
+namespace Adebipe\Services\Generated;
 
 use Adebipe\Model\Model;
 use Adebipe\Model\Repository;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
 use Adebipe\Services\Interfaces\StarterServiceInterface;
+use Adebipe\Services\MsQl;
 
 class ORM implements RegisterServiceInterface, StarterServiceInterface
 {

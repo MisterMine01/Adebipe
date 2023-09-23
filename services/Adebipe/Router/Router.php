@@ -3,14 +3,13 @@
 namespace Adebipe\Services;
 
 use Adebipe\Router\Annotations\BeforeRoute;
-use Adebipe\Router\Annotations\RegexSimple;
-use Adebipe\Router\Annotations\Route;
 use Adebipe\Router\Request;
 use Adebipe\Router\Response;
 use Adebipe\Services\Interfaces\BuilderServiceInterface;
+use Adebipe\Services\Interfaces\CreatorInterface;
 use ReflectionMethod;
 
-class Router implements BuilderServiceInterface
+class Router implements CreatorInterface, BuilderServiceInterface
 {
 
     private RouteKeeper $routeKeeper;
@@ -36,61 +35,9 @@ class Router implements BuilderServiceInterface
      * @param string $classCode
      * @return string The prod router
      */
-    public function build(string $classCode): ?string
+    public function build(): string
     {
-        $this->updateRoutes();
-        include_once __DIR__ . '/RouterBuild';
-        return (new \RouterBuild($this->logger, $this->routes))->getBuilderRouter();
-    }
-
-    public function appendFiles(): array
-    {
-        return [];
-    }
-
-    /**
-     * Update the routes
-     */
-    private function updateRoutes(): void
-    {
-        $this->routeKeeper->deleteAllRoutes();
-        foreach (get_declared_classes() as $class) {
-            if (preg_match('/^App\\\\Components\\\\/', $class) === 0) {
-                // Don't check the class if it's not a component
-                continue;
-            }
-            $reflection = new \ReflectionClass($class);
-            $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
-            // Check all public methods
-            foreach ($methods as $method) {
-                if (!$method->isStatic()) {
-                    throw new \Exception('Method ' . $method->getName() . ' in class ' . $class . ' is not static');
-                }
-                $attributes = $method->getAttributes(Route::class);
-                // Check if the method has a route
-                if (count($attributes) === 0) {
-                    throw new \Exception('Method ' . $method->getName() . ' in class ' . $class . ' has no route');
-                }
-                $route = $attributes[0]->newInstance();
-                // Check if the route already exists
-                if ($this->routeKeeper->routeAlreadyExist($route->path, $route->method)) {
-                    throw new \Exception('Route ' . $route->path . ' with method ' . $route->method . ' already exists');
-                }
-                $regex_decoded = $route->path;
-                if ($route->regex !== null) {
-                    foreach ($route->regex as $param => $regex) {
-                        if ($regex::class == RegexSimple::class) {
-                            $regex = $regex->value;
-                        }
-                        $regex_decoded = str_replace('{' . $param . '}', '(' . $regex . ')', $regex_decoded);
-                        $regex_decoded = str_replace('/', '\/', $regex_decoded);
-                        $regex_decoded = "/^" . $regex_decoded . "$/";
-                    }
-                }
-                // Add the route
-                $this->routeKeeper->addRoute($route->path, $route->method, $method, $regex_decoded);
-            }
-        }
+        return "adebipe/Router/RouterBuilder.php";
     }
 
     private function executeRoute(ReflectionMethod $method, array $parameters, Injector $injector): mixed
@@ -141,7 +88,7 @@ class Router implements BuilderServiceInterface
             ]);
         }
         // update the routes
-        $this->updateRoutes();
+        $this->routeKeeper->updateRoutes();
         $this->logger->info('Get response for request: ' . $request->uri);
         $add_to_injector = [
             Request::class => $request,

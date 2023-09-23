@@ -32,6 +32,11 @@ class Repository implements RepositoryInterface
         return $this->table_name;
     }
 
+    public function getClassName(): string
+    {
+        return $this->class_name;
+    }
+
     public function findOneById(int $id): ?object
     {
         return $this->findOneBy(['id' => $id], [\PDO::PARAM_INT]);

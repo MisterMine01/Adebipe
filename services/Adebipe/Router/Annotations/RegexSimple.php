@@ -2,6 +2,9 @@
 
 namespace Adebipe\Router\Annotations;
 
+use NoBuildable;
+
+#[NoBuildable]
 enum RegexSimple: string
 {
     case int = '[0-9]+';

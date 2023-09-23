@@ -6,8 +6,9 @@ $time_start = microtime(true);
 
 //putenv('ENV=dev'); // For test the prod router
 
+chdir(__DIR__);
 try {
-    include_once __DIR__ . '/services/loader.php';
+    include_once __DIR__ . '/services.php';
 
     $request = new \Adebipe\Router\Request(
         $_SERVER['REQUEST_METHOD'],
@@ -22,14 +23,19 @@ try {
         $_SERVER['REMOTE_ADDR']
     );
 
-    $Router->getResponse($request, $Injector)->send();
+    $router = getAdebipe_Services_Router();
+    $injector = getAdebipe_Services_Injector();
+
+    $router->getResponse($request, $injector)->send();
 } catch (\Throwable $e) {
-    $Logger->error($e->getMessage());
-    $Logger->error($e->getTraceAsString());
+    $logger = getAdebipe_Services_Logger();
+    $logger->error($e->getMessage());
+    $logger->error($e->getTraceAsString());
     $Response = new \Adebipe\Router\Response("Internal server error", 500);
     $Response->send();
 }
 
+$logger = getAdebipe_Services_Logger();
 $time_end = microtime(true);
-$Logger->info('Execution time: ' . ($time_end - $time_start) * 1000 . 'ms');
+$logger->info('Execution time: ' . ($time_end - $time_start) * 1000 . 'ms');
 atEnd();

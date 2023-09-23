@@ -1,9 +1,12 @@
 <?php
 
-namespace Adebipe\Services;
+namespace Adebipe\Services\Generated;
 
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
+use Adebipe\Services\Logger;
+use Reflection;
 use ReflectionMethod;
+// CODE OF USES GOES HERE
 
 class RouteKeeper implements RegisterServiceInterface
 {
@@ -24,8 +27,9 @@ class RouteKeeper implements RegisterServiceInterface
     public function __construct(Logger $logger)
     {
         $this->logger = $logger;
-        
     }
+
+    // CODE OF ROUTES GOES HERE
 
     /**
      * Get the the id of the route and assign is value from the uri
@@ -60,7 +64,8 @@ class RouteKeeper implements RegisterServiceInterface
     {
         if (isset($this->routes[$path])) {
             if (isset($this->routes[$path][$method])) {
-                return [$this->routes[$path][$method][0], []];
+                $reflection = new ReflectionMethod($this, $this->routes[$path][$method][0]);
+                return [$reflection, []];
             }
             return [405, "Method not allowed"];
         }
@@ -90,6 +95,7 @@ class RouteKeeper implements RegisterServiceInterface
             $this->logger->info('Route not found');
             return [404, "Not found"];
         }
-        return [$this->routes[$route][$method][0], $regex];
+        $reflection = new ReflectionMethod($this, $this->routes[$route][$method][0]);
+        return [$reflection, $regex];
     }
 }

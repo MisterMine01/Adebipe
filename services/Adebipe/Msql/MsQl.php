@@ -56,7 +56,7 @@ class MsQl implements RegisterServiceInterface
         try {
             $this->connection = new PDO($connection_string, $this->user, $this->password);
         } catch (PDOException $e) {
-            $logger->critical("PDO can't be opened");
+            $logger->error("PDO can't be opened");
         }
     }
 
@@ -67,6 +67,10 @@ class MsQl implements RegisterServiceInterface
      */
     public function prepare(string $query): PDOStatement|false
     {
+        if (!$this->connection) {
+            $this->logger->error("No connection to database");
+            return false;
+        }
         return $this->connection->prepare($query);
     }
 

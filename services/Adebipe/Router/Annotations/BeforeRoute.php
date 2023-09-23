@@ -2,8 +2,6 @@
 
 namespace Adebipe\Router\Annotations;
 
-use Adebipe\Router\Response;
-use Attribute;
 use ReflectionMethod;
 
 abstract class BeforeRoute
