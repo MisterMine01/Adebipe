@@ -7,16 +7,11 @@ use Adebipe\Services\Interfaces\StarterServiceInterface;
 /**
  * Initialize the environment variables
  *
- * @package Adebipe\Services
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 class Dotenv implements StarterServiceInterface
 {
-    /**
-     * all environment variables from the .env file
-     *
-     * @var array<string> $variable
-     */
-    private $variable = array();
+    private $_variable = array();
 
 
     public function atStart(Logger $logger = null): void

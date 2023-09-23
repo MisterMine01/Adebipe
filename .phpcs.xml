@@ -4,7 +4,10 @@
 
 
     <!-- Code MUST follow all rules outlined in PSR-1. -->
-    <rule ref="PSR12"/>
+    <rule ref="PSR12">
+        <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+    </rule>
 
     <rule ref="PEAR">
         <exclude name="PEAR.Commenting.FileComment.Missing"/>
@@ -12,6 +15,12 @@
         <exclude name="PEAR.Commenting.ClassComment.MissingLicenseTag"/>
         <exclude name="PEAR.Commenting.ClassComment.MissingLinkTag"/>
         <exclude name="PEAR.Commenting.ClassComment.MissingPackageTag"/>
-        
+    </rule>
+
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="0"/>
+        </properties>
     </rule>
 </ruleset>
