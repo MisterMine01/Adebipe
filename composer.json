@@ -10,6 +10,13 @@
       }
     ],
     "require-dev": {
-        "squizlabs/php_codesniffer": "^3.7"
+        "squizlabs/php_codesniffer": "^3.7",
+        "phpunit/phpunit": "^10.3",
+        "infection/infection": "^0.27.2"
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
     }
 }

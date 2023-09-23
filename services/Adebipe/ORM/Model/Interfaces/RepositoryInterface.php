@@ -2,21 +2,78 @@
 
 namespace Adebipe\Model;
 
+/**
+ * Repository object of the ORM
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
+ */
 interface RepositoryInterface
 {
-    function getObjectClass($data): object;
+    /**
+     * Get the class of the object
+     *
+     * @param array $data The data to create the object
+     *
+     * @return object
+     */
+    public function getObjectClass(array $data): object;
 
-    function getTableName(): string;
+    /**
+     * Get the name of the table
+     *
+     * @return string
+     */
+    public function getTableName(): string;
 
-    function findOneById(int $id): ?object;
+    /**
+     * Find an object by his id
+     *
+     * @param int $id The id of the object
+     *
+     * @return object|null
+     */
+    public function findOneById(int $id): ?object;
 
-    function findOneBy(array $conditions, ?array $type = null): ?object;
+    /**
+     * Find an object by conditions
+     *
+     * @param array      $conditions The conditions to search
+     * @param array|null $type       The type of the conditions (PDO::PARAM_*)
+     *
+     * @return object|null
+     */
+    public function findOneBy(array $conditions, ?array $type = null): ?object;
 
-    function findAllBy(array $conditions, ?array $type = null): CollectionInterface;
+    /**
+     * Find all objects by conditions
+     *
+     * @param array      $conditions The conditions to search
+     * @param array|null $type       The type of the conditions (PDO::PARAM_*)
+     *
+     * @return CollectionInterface
+     */
+    public function findAllBy(array $conditions, ?array $type = null): CollectionInterface;
 
-    function findAll(): CollectionInterface;
+    /**
+     * Find all objects
+     *
+     * @return CollectionInterface
+     */
+    public function findAll(): CollectionInterface;
 
-    function save($object): bool;
+    /**
+     * Save an object in the database
+     *
+     * @param object $object The object to save
+     *
+     * @return bool
+     */
+    public function save($object): bool;
 
-    function create_table(): array;
+    /**
+     * Create the table of the repository
+     *
+     * @return array
+     */
+    public function createTable(): array;
 }

@@ -163,7 +163,7 @@ class Repository implements RepositoryInterface
         return $this->msql->getLastQuerySuccess();
     }
 
-    public function create_table(): array
+    public function createTable(): array
     {
         $query = "CREATE TABLE " . $this->table_name . " (";
         $for_now = [];

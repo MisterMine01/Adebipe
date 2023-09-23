@@ -71,7 +71,7 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
         $fixtures = $class_init->getFixtures();
         foreach ($this->repository as $table_name => $repository) {
             if (!in_array($table_name, $already_table_name)) {
-                $repository->create_table();
+                $repository->createTable();
                 if (array_key_exists($table_name, $fixtures)) {
                     foreach ($fixtures[$table_name] as $fixture) {
                         $object = $repository->getObjectClass($fixture);
