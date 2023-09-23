@@ -8,50 +8,49 @@ use ReflectionClass;
 /**
  * Contains all classes of the services
  *
- * @package Adebipe\Services
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 class Container implements RegisterServiceInterface
 {
-    /**
-     * all services of the application
-     *
-     * @var array<object> $services
-     */
-    private array $services = [];
+    private array $_services = [];
 
-    /**
-     * ReflectionClass of all class
-     *
-     * @var array<ReflectionClass> $reflections
-     */
-    private array $reflections = [];
+    private array $_reflections_classes = [];
 
     /**
      * Add a service to the container
      *
-     * @param string $name
-     * @param object $service
+     * @param object $service The service to add
+     *
+     * @return void
      */
     public function addService(object $service): void
     {
-        $this->services[$service::class] = $service;
+        $this->_services[$service::class] = $service;
     }
 
     /**
      * Get a service from the container
      *
-     * @param  string $name
+     * @param string $name The name of the service
+     *
      * @return object
      */
     public function getService(string $name): object
     {
-        if (!isset($this->services[$name])) {
-            $this->services[$name] = $this->createClass($this->getReflection($name));
+        if (!isset($this->_services[$name])) {
+            $this->_services[$name] = $this->_createClass($this->getReflection($name));
         }
-        return $this->services[$name];
+        return $this->_services[$name];
     }
 
-    private function createClass(ReflectionClass $reflection): object
+    /**
+     * Create a class with the injector
+     *
+     * @param ReflectionClass $reflection The reflection of the class
+     *
+     * @return object The created class
+     */
+    private function _createClass(ReflectionClass $reflection): object
     {
         $injector = $this->getService(Injector::class);
         return $injector->create_class($reflection);
@@ -64,28 +63,31 @@ class Container implements RegisterServiceInterface
      */
     public function getServices(): array
     {
-        return $this->services;
+        return $this->_services;
     }
 
     /**
      * Add a ReflectionClass to the containera
      *
-     * @param ReflectionClass $reflection
+     * @param ReflectionClass $reflection The reflection to add
+     *
+     * @return void
      */
     public function addReflection(ReflectionClass $reflection): void
     {
-        $this->reflections[$reflection->getName()] = $reflection;
+        $this->_reflections_classes[$reflection->getName()] = $reflection;
     }
 
     /**
      * Get a ReflectionClass from the container
      *
-     * @param  string $name
+     * @param string $name The name of the ReflectionClass
+     *
      * @return ReflectionClass
      */
     public function getReflection(string $name): ReflectionClass
     {
-        return $this->reflections[$name];
+        return $this->_reflections_classes[$name];
     }
 
     /**
@@ -95,19 +97,20 @@ class Container implements RegisterServiceInterface
      */
     public function getReflections(): array
     {
-        return $this->reflections;
+        return $this->_reflections_classes;
     }
 
     /**
      * Get all services who implements an interface
      *
-     * @param  string $interface
+     * @param string $subclass The interface to check
+     *
      * @return array<object>
      */
     public function getSubclassInterfaces(string $subclass): array
     {
         $interfaces = [];
-        foreach ($this->services as $name => $service) {
+        foreach ($this->_services as $name => $service) {
             if (is_subclass_of($service, $subclass)) {
                 $interfaces[$name] = $service;
             }

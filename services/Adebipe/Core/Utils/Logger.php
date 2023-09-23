@@ -8,15 +8,17 @@ use Adebipe\Services\Interfaces\StarterServiceInterface;
 /**
  * Logger of the application
  *
- * @package Adebipe\Services
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 class Logger implements StarterServiceInterface, RegisterServiceInterface
 {
-    private SentryInterfaces $sentry;
+    private ErrorSenderInterface $_sender;
     public $logTrace = array();
-    private $logFile;
-    private $loglevel;
-    private $loglevels = [
+
+
+    private $_logFile;
+    private $_loglevel;
+    private $_loglevels = [
         'DEBUG' => 0,
         'INFO' => 1,
         'WARNING' => 2,
@@ -33,16 +35,21 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         if (!is_dir('logs')) {
             mkdir('logs');
         }
-        $this->loglevel = getenv('LOG_LEVEL') ?? 1;
-        $this->logFile = fopen('logs/' . date('Y-m-d-H-i-s') . '.log', 'wb');
+        $this->_loglevel = getenv('LOG_LEVEL') ?? 1;
+        $this->_logFile = fopen('logs/' . date('Y-m-d-H-i-s') . '.log', 'wb');
         $this->info('Starting Logger');
     }
 
+    /**
+     * Function to run at the start of the application
+     *
+     * @return void
+     */
     public function atStart(): void
     {
-        $class = getenv('SENTRY_CLASS');
+        $class = getenv('ERROR_CLASS');
         if (class_exists($class)) {
-            $this->sentry = new $class();
+            $this->_sender = new $class();
             $this->info($class . ' sentry loaded');
         } else {
             $this->debug("No sentry");
@@ -56,22 +63,28 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         );
     }
 
+    /**
+     * Function to run at the end of the application
+     *
+     * @return void
+     */
     public function atEnd(): void
     {
         $this->info('Stopping Logger');
         restore_error_handler();
-        fclose($this->logFile);
+        fclose($this->_logFile);
     }
 
     /**
      * Get the log string
      * [Date] (Type) Class : Message
      *
-     * @param  string $type
-     * @param  string $message
+     * @param string $type    The type of the log
+     * @param string $message The message of the log
+     *
      * @return string
      */
-    private function getString(string $type, string $message): string
+    private function _getString(string $type, string $message): string
     {
         $trace = debug_backtrace();
         $call_class = "Main";
@@ -96,19 +109,21 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     /**
      * Log a message
      *
-     * @param string $type
-     * @param string $message
+     * @param string $type    The type of the log
+     * @param string $message The message of the log
+     *
+     * @return void
      */
-    private function log(string $type, string $message): void
+    private function _log(string $type, string $message): void
     {
-        if (!isset($this->loglevels[$type])) {
+        if (!isset($this->_loglevels[$type])) {
             throw new \Exception('Invalid log type');
         }
-        if ($this->loglevel > $this->loglevels[$type]) {
+        if ($this->_loglevel > $this->_loglevels[$type]) {
             return;
         }
 
-        $log = $this->getString($type, $message);
+        $log = $this->_getString($type, $message);
 
         $this->logTrace[] = $log;
 
@@ -117,82 +132,97 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
             fflush(STDOUT);
         }
         $log = mb_convert_encoding($log, 'UTF-8');
-        fwrite($this->logFile, $log);
-        fflush($this->logFile);
+        fwrite($this->_logFile, $log);
+        fflush($this->_logFile);
     }
 
     /**
      * Log a debug message
      *
-     * @param string $message
+     * @param string $message The message of the log
+     *
+     * @return void
      */
     public function debug(string $message): void
     {
-        $this->log('DEBUG', $message);
+        $this->_log('DEBUG', $message);
     }
 
     /**
      * Log an info message
      *
-     * @param string $message
+     * @param string $message The message of the log
+     *
+     * @return void
      */
     public function info(string $message): void
     {
-        $this->log('INFO', $message);
+        $this->_log('INFO', $message);
     }
 
     /**
      * Log a warning message
      *
-     * @param string $message
+     * @param string $message The message of the log
+     *
+     * @return void
      */
     public function warning(string $message): void
     {
-        $this->log('WARNING', $message);
+        $this->_log('WARNING', $message);
         $backtrace = debug_backtrace();
         $backtrace[2]["line"] = $backtrace[1]["line"];
         $backtrace[2]["file"] = $backtrace[1]["file"];
-        $this->sendSentry(array_splice($backtrace, 2));
+        $this->_sendError(array_splice($backtrace, 2));
     }
 
     /**
      * Log an error message
      *
-     * @param string $message
+     * @param string $message The message of the log
+     *
+     * @return void
      */
     public function error(string $message): void
     {
-        $this->log('ERROR', $message);
+        $this->_log('ERROR', $message);
         $backtrace = debug_backtrace();
-        $this->sendSentry(array_splice($backtrace, 2));
+        $this->_sendError(array_splice($backtrace, 2));
     }
 
     /**
      * Log a critical message
      *
-     * @param string $message
+     * @param string $message   The message of the log
+     * @param array  $backtrace The backtrace of the error
+     *
+     * @return void
      */
     public function critical(string $message, ?array $backtrace = null): void
     {
-        $this->log('CRITICAL', $message);
+        $this->_log('CRITICAL', $message);
         if ($backtrace === null) {
             $backtrace = debug_backtrace();
             $backtrace[2]["line"] = $backtrace[1]["line"];
             $backtrace[2]["file"] = $backtrace[1]["file"];
             $backtrace = array_splice($backtrace, 2);
         }
-        $this->sendSentry($backtrace);
+        $this->_sendError($backtrace);
     }
 
 
     /**
-     * Send to Sentry
+     * Send the error to the sentry
+     *
+     * @param array $backtrace The backtrace of the error
+     *
+     * @return void
      */
-    public function sendSentry($backtrace): void
+    private function _sendError($backtrace): void
     {
-        if (!isset($this->sentry)) {
+        if (!isset($this->_sender)) {
             return;
         }
-        $this->sentry->sendSentry($this, $backtrace);
+        $this->_sender->sendError($this, $backtrace);
     }
 }
