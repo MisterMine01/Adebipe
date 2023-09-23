@@ -9,24 +9,28 @@ use ReflectionClass;
 
 /**
  * Contains all classes of the services
+ *
  * @package Adebipe\Services
  */
 class Container implements RegisterServiceInterface
 {
     /**
      * all services of the application
+     *
      * @var array<object> $services
      */
     private array $services = [];
 
     /**
      * ReflectionClass of all class
+     *
      * @var array<ReflectionClass> $reflections
      */
     private array $reflections = [];
 
     /**
      * Add a service to the container
+     *
      * @param string $name
      * @param object $service
      */
@@ -37,7 +41,8 @@ class Container implements RegisterServiceInterface
 
     /**
      * Get a service from the container
-     * @param string $name
+     *
+     * @param  string $name
      * @return object
      */
     public function getService(string $name): object
@@ -56,6 +61,7 @@ class Container implements RegisterServiceInterface
 
     /**
      * Get all services from the container
+     *
      * @return array<object>
      */
     public function getServices(): array
@@ -65,6 +71,7 @@ class Container implements RegisterServiceInterface
 
     /**
      * Add a ReflectionClass to the containera
+     *
      * @param ReflectionClass $reflection
      */
     public function addReflection(ReflectionClass $reflection): void
@@ -74,7 +81,8 @@ class Container implements RegisterServiceInterface
 
     /**
      * Get a ReflectionClass from the container
-     * @param string $name
+     *
+     * @param  string $name
      * @return ReflectionClass
      */
     public function getReflection(string $name): ReflectionClass
@@ -84,6 +92,7 @@ class Container implements RegisterServiceInterface
 
     /**
      * Get all ReflectionClass from the container
+     *
      * @return array<ReflectionClass>
      */
     public function getReflections(): array
@@ -93,7 +102,8 @@ class Container implements RegisterServiceInterface
 
     /**
      * Get all services who implements an interface
-     * @param string $interface
+     *
+     * @param  string $interface
      * @return array<object>
      */
     public function getSubclassInterfaces(string $subclass): array

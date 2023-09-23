@@ -18,8 +18,7 @@ abstract class BeforeRoute
      */
     public function __construct(
         private $function = new ReflectionMethod(self::class, 'execute')
-    )
-    {
+    ) {
         
     }
 

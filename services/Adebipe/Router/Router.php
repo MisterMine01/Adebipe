@@ -16,12 +16,14 @@ class Router implements CreatorInterface, BuilderServiceInterface
 
     /**
      * Logger
+     *
      * @var Logger
      */
     private Logger $logger;
 
     /**
      * Constructor
+     *
      * @param Logger $logger
      */
     public function __construct(Logger $logger, RouteKeeper $routeKeeper)
@@ -32,7 +34,8 @@ class Router implements CreatorInterface, BuilderServiceInterface
 
     /**
      * build the prod router
-     * @param string $classCode
+     *
+     * @param  string $classCode
      * @return string The prod router
      */
     public function build(): string
@@ -70,8 +73,9 @@ class Router implements CreatorInterface, BuilderServiceInterface
 
     /**
      * Get the response for a request
-     * @param Request $request
-     * @param Injector $injector
+     *
+     * @param  Request  $request
+     * @param  Injector $injector
      * @return Response
      */
     public function getResponse(Request $request, Injector $injector): Response
@@ -83,9 +87,11 @@ class Router implements CreatorInterface, BuilderServiceInterface
             // The request is a file
             $this->logger->info('Get file: ' . $request->uri);
             $mime = json_decode(file_get_contents(__DIR__ . '/mime.json'), true);
-            return new Response(file_get_contents("public" . $request->uri), 200, [
+            return new Response(
+                file_get_contents("public" . $request->uri), 200, [
                 'Content-Type' => $mime[pathinfo("public" . $request->uri, PATHINFO_EXTENSION)]
-            ]);
+                ]
+            );
         }
         // update the routes
         $this->routeKeeper->updateRoutes();

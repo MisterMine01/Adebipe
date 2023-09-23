@@ -9,6 +9,7 @@ use PDOStatement;
 
 /**
  * Execute queries on a MySQl database
+ *
  * @package Adebipe\Services
  */
 class MsQl implements RegisterServiceInterface
@@ -62,7 +63,8 @@ class MsQl implements RegisterServiceInterface
 
     /**
      * Prepare a query
-     * @param string $query
+     *
+     * @param  string $query
      * @return PDOStatement|false
      */
     public function prepare(string $query): PDOStatement|false
@@ -76,9 +78,10 @@ class MsQl implements RegisterServiceInterface
 
     /**
      * Execute a query and return the result as an array
-     * @param PDOStatement $statement
-     * @param array|null $params
-     * @param array|null $types
+     *
+     * @param  PDOStatement $statement
+     * @param  array|null   $params
+     * @param  array|null   $types
      * @return array
      */
     public function execute(PDOStatement $statement, array|null $params = null, array|null $types = null): array
@@ -124,6 +127,7 @@ class MsQl implements RegisterServiceInterface
 
     /**
      * Test if the last query was successful
+     *
      * @return bool
      */
     public function get_last_query_success(): bool
@@ -134,7 +138,8 @@ class MsQl implements RegisterServiceInterface
     /**
      * Get the list of tables in the database
      */
-    public function get_table() {
+    public function get_table()
+    {
         $query = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_CATALOG=?";
         $statement = $this->prepare($query);
         $data = $this->execute($statement, [$this->database]);

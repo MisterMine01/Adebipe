@@ -2,8 +2,9 @@
 
 /**
  * Recursively copy files from one directory to another
- * @param string $src
- * @param string $dst
+ *
+ * @param  string $src
+ * @param  string $dst
  * @return void
  */
 function recurse_copy($src, $dst): void
@@ -25,6 +26,7 @@ function recurse_copy($src, $dst): void
 
 /**
  * Recursively remove a directory
+ *
  * @param string $path
  */
 function removeDir(string $path): void

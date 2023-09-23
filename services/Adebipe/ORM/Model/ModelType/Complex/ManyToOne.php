@@ -13,12 +13,14 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
 {
     /**
      * The object that has the relation
+     *
      * @var string
      */
     private $me_object;
 
     /**
      * The column that is related (this column)
+     *
      * @var string
      */
     private string $relationedBy;
@@ -31,9 +33,10 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
     /**
      * Many to one relation
      * Himself is the many, the other is the one
-     * @param string $me_object
-     * @param string $relationedBy
-     * @param string $object
+     *
+     * @param  string $me_object
+     * @param  string $relationedBy
+     * @param  string $object
      * @return void
      */
     public function __construct($me_object, $relationedBy, $object)

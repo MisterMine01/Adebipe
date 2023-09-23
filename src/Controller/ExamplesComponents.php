@@ -19,11 +19,13 @@ class ExampleComponent implements ComponentInterface
     public static function index(ORM $orm): Response
     {
         $userRepo = $orm->getRepository(User::class);
-        $user = new User([
+        $user = new User(
+            [
             'username' => 'test',
             'password' => 'test',
             'email' => 'test@test.fr',
-        ]);
+            ]
+        );
         $userRepo->save($user);
         return new Response('Hello World');
     }
@@ -36,11 +38,13 @@ class ExampleComponent implements ComponentInterface
     }
 
     #[Route(path: '/test', method: 'POST')]
-    #[ValidatePost(schema: [
+    #[ValidatePost(
+        schema: [
         'username' => 'string',
         'password' => 'string',
         'email' => '?string',
-    ])]
+        ]
+    )]
     public static function test(Renderer $renderer, Request $request): Response
     {
         return $renderer->render('test.php', ['post' => $request->post]);

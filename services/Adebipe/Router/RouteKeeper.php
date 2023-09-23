@@ -18,6 +18,7 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
      *          route    
      *      ]
      * ]]
+     *
      * @var array
      */
     private array $routes = [];
@@ -36,10 +37,11 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
 
     /**
      * Add a route
-     * @param string $path
-     * @param string $method
+     *
+     * @param string   $path
+     * @param string   $method
      * @param callable $function
-     * @param string $route
+     * @param string   $route
      */
     public function addRoute(string $path, string $method, ReflectionMethod $function, string $route): void
     {
@@ -139,8 +141,9 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
 
     /**
      * Find a route
-     * @param string $path
-     * @param string $method
+     *
+     * @param  string $path
+     * @param  string $method
      * @return array|null [function, [regex_result]] or null or [string, string]
      */
     public function findRoute(string $path, string $method): ?array

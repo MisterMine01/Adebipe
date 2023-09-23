@@ -18,6 +18,7 @@ class RouteKeeper implements RegisterServiceInterface
      *          route    
      *      ]
      * ]]
+     *
      * @var array
      */
     private array $routes = ["ROUTES GO HERE"];
@@ -56,8 +57,9 @@ class RouteKeeper implements RegisterServiceInterface
 
     /**
      * Find a route
-     * @param string $path
-     * @param string $method
+     *
+     * @param  string $path
+     * @param  string $method
      * @return array|null [function, [regex_result]] or null or [string, string]
      */
     public function findRoute(string $path, string $method): ?array

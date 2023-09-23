@@ -7,6 +7,7 @@ use NoBuildable;
 
 /**
  * Create the schema of the database
+ *
  * @package Adebipe\Model
  */
 #[NoBuildable]
@@ -14,6 +15,7 @@ abstract class ORMTableCreator
 {
     /**
      * The schema of the database
+     *
      * @var array
      */
     public array $database_schema = [];
@@ -25,7 +27,8 @@ abstract class ORMTableCreator
 
     /**
      * Create a model
-     * @param string $object_class
+     *
+     * @param  string $object_class
      * @return void
      */
     public function create_model(string $object_class)
@@ -35,6 +38,7 @@ abstract class ORMTableCreator
 
     /**
      * Get the schema of the database
+     *
      * @return array
      */
     public function getSchema(): array
@@ -44,6 +48,7 @@ abstract class ORMTableCreator
 
     /**
      * Get the fixtures of the database
+     *
      * @return array
      */
     public abstract function getFixtures(): array;

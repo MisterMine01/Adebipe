@@ -6,8 +6,8 @@ use Adebipe\Router\Request;
 use Adebipe\Services\Logger;
 use Adebipe\Services\Router as ServicesRouter;
 
-include_once __DIR__ . '/Includer/Includer.php';
-include_once __DIR__ . '/MakeClasses.php';
+require_once __DIR__ . '/Includer/Includer.php';
+require_once __DIR__ . '/MakeClasses.php';
 
 /**
  * Router of the CLI for development environment.

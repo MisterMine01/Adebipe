@@ -14,12 +14,14 @@ class Router implements CreatorInterface
 {
     /**
      * Mime types
+     *
      * @var array
      */
     private array $_mime = ["MIME TYPES GO HERE"];
 
     /**
      * Logger
+     *
      * @var Logger
      */
     private Logger $logger;
@@ -28,6 +30,7 @@ class Router implements CreatorInterface
 
     /**
      * Constructor
+     *
      * @param Logger $logger
      */
     public function __construct(Logger $logger, RouteKeeper $routeKeeper)
@@ -65,8 +68,9 @@ class Router implements CreatorInterface
 
     /**
      * Get the response for a request
-     * @param Request $request
-     * @param Injector $injector
+     *
+     * @param  Request  $request
+     * @param  Injector $injector
      * @return Response
      */
     public function getResponse(\Adebipe\Router\Request $request, Injector $injector): Response
@@ -77,9 +81,11 @@ class Router implements CreatorInterface
         if (is_file("public" . $request->uri)) {
             // The request is a file
             $this->logger->info('Get file: ' . $request->uri);
-            return new \Adebipe\Router\Response(file_get_contents("public" . $request->uri), 200, [
+            return new \Adebipe\Router\Response(
+                file_get_contents("public" . $request->uri), 200, [
                 'Content-Type' => $this->_mime[pathinfo("public" . $request->uri, PATHINFO_EXTENSION)]
-            ]);
+                ]
+            );
         }
         // update the routes
         $this->logger->info('Get response for request: ' . $request->uri);

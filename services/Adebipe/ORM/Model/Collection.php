@@ -7,12 +7,14 @@ class Collection implements CollectionInterface
 
     /**
      * The data from the database
+     *
      * @var array
      */
     private array $sql_data = [];
 
     /**
      * The data that is already converted to objects (lazy loading)
+     *
      * @var array
      */
     private array $data = [];

@@ -9,24 +9,28 @@ use Adebipe\Services\ORM;
 /**
  * One to many relation
  * Himself is the one, the other is the many
+ *
  * @package Adebipe\Model\Type
  */
 class OneToMany extends AbstractType implements SqlBasedTypeInterface
 {
     /**
      * The object that has the relation
+     *
      * @var string
      */
     private string $me_object;
 
     /**
      * The object that is related
+     *
      * @var string
      */
     private string $object;
 
     /**
      * The column that is related  (in the other object)
+     *
      * @var string
      */
     private string $relationedBy;
@@ -34,9 +38,10 @@ class OneToMany extends AbstractType implements SqlBasedTypeInterface
     /**
      * One to many relation
      * Himself is the one, the other is the many
-     * @param string $me_object
-     * @param string $object
-     * @param string $relationedBy
+     *
+     * @param  string $me_object
+     * @param  string $object
+     * @param  string $relationedBy
      * @return void
      */
     public function __construct(string $me_object, string $object, string $relationedBy)

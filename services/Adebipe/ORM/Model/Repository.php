@@ -45,9 +45,13 @@ class Repository implements RepositoryInterface
     public function findOneBy(array $conditions, ?array $type = null) : ?object
     {
         $query = "SELECT * FROM " . $this->table_name . " WHERE ";
-        $query .= implode(" AND ", array_map(function ($key) {
-            return "$key = ?";
-        }, array_keys($conditions)));
+        $query .= implode(
+            " AND ", array_map(
+                function ($key) {
+                    return "$key = ?";
+                }, array_keys($conditions)
+            )
+        );
         $statement = $this->msql->prepare($query);
         if ($type === null) {
             $type = array_fill(0, count($conditions), \PDO::PARAM_STR);
@@ -65,9 +69,13 @@ class Repository implements RepositoryInterface
     public function findAllBy(array $conditions, ?array $type = null) : Collection
     {
         $query = "SELECT * FROM ? WHERE ";
-        $query .= implode(" AND ", array_map(function ($key) {
-            return "$key = ?";
-        }, array_keys($conditions)));
+        $query .= implode(
+            " AND ", array_map(
+                function ($key) {
+                    return "$key = ?";
+                }, array_keys($conditions)
+            )
+        );
         $statement = $this->msql->prepare($query);
         if ($type === null) {
             $type = array_fill(0, count($conditions), \PDO::PARAM_STR);
@@ -137,9 +145,13 @@ class Repository implements RepositoryInterface
         $sql .= ") VALUES (";
         $sql .= implode(", ", array_fill(0, count($keys), "?"));
         $sql .= ") ON DUPLICATE KEY UPDATE ";
-        $sql .= implode(", ", array_map(function ($key) {
-            return "$key = VALUES($key)";
-        }, $keys));
+        $sql .= implode(
+            ", ", array_map(
+                function ($key) {
+                    return "$key = VALUES($key)";
+                }, $keys
+            )
+        );
         $result = $this->msql->prepare($sql);
         $this->msql->execute($result, array_values($values));
         return $this->msql->get_last_query_success();

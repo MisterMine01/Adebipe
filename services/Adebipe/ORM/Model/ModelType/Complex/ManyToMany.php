@@ -9,12 +9,14 @@ use Adebipe\Services\ORM;
 /**
  * Many to many relation
  * Himself is the many, the other is the many
+ *
  * @package Adebipe\Model\Type
  */
 class ManyToMany extends AbstractType implements SqlBasedTypeInterface
 {
     /**
      * The object that has this column
+     *
      * @var string
      */
     private string $me_object;
@@ -26,18 +28,21 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
 
     /**
      * Is the first object in the middle table?
+     *
      * @var bool
      */
     private bool $is_first;
 
     /**
      * The name of the table for myself
+     *
      * @var string
      */
     private string $named_me;
 
     /**
      * The name of the table for the other object
+     *
      * @var string
      */
     private string $named_object;
@@ -50,9 +55,10 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
     /**
      * Many to many relation
      * Himself is the many, the other is the many
+     *
      * @param string $me_object
      * @param string $object_type
-     * @param bool $is_first
+     * @param bool   $is_first
      */
     public function __construct($me_object, $object_type, bool $is_first)
     {

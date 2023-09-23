@@ -85,7 +85,8 @@ class DiscordSentry implements SentryInterfaces
     }
 
 
-    private function sendMessage(string $message) {
+    private function sendMessage(string $message)
+    {
         $data = [
             "content" => $message,
         ];
@@ -102,14 +103,18 @@ class DiscordSentry implements SentryInterfaces
         $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36';
         $contentType = "Content-type: application/json\r\n" . "Accept-language: en\r\n";
 
-        $result = file_get_contents($this->webhook_url, false, stream_context_create([
-            'http' => [
+        $result = file_get_contents(
+            $this->webhook_url, false, stream_context_create(
+                [
+                'http' => [
                 'method' => 'POST',
                 'user_agent' => $userAgent,
                 'header' => $contentType,
                 'content' => $json_data
-            ]
-        ]));
+                ]
+                ]
+            )
+        );
         if ($result === false) {
             var_dump($json_data);
         }

@@ -16,7 +16,8 @@ use ReflectionClass;
  * 
  * @package Adebipe\Cli
  */
-class MakeClasses {
+class MakeClasses
+{
     public static Injector $injector;
     public static Container $container;
 
@@ -50,32 +51,31 @@ class MakeClasses {
         foreach ($classes as $class) {
             $reflection = new ReflectionClass($class);
             $all_class[] = $reflection;
-            if (strpos($class, 'Adebipe\\Services\\') !== 0)
-            {
+            if (strpos($class, 'Adebipe\\Services\\') !== 0) {
                 continue;
             }
             $container->addReflection($reflection);
-            if (in_array($class, [
+            if (in_array(
+                $class, [
                 Dotenv::class,
                 Logger::class,
                 Injector::class,
                 Container::class
-            ])) {
+                ]
+            )
+            ) {
                 $logger->info('Skip service: ' . $class);
                 continue;
             }
-            if ($reflection->isAbstract() || $reflection->isInterface() || $reflection->isTrait())
-            {
+            if ($reflection->isAbstract() || $reflection->isInterface() || $reflection->isTrait()) {
                 continue;
             }
             if ($reflection->implementsInterface(CreatorInterface::class)) {
                 $class = $injector->create_class($reflection);
-                if ($reflection->implementsInterface(RegisterServiceInterface::class))
-                {
+                if ($reflection->implementsInterface(RegisterServiceInterface::class)) {
                     $injector->addService($class);
                 }
-                if ($reflection->implementsInterface(StarterServiceInterface::class))
-                {
+                if ($reflection->implementsInterface(StarterServiceInterface::class)) {
                     $atStart_function = $reflection->getMethod('atStart');
                     $atStart[] = [$atStart_function, $class];
                 }

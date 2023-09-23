@@ -7,6 +7,7 @@ use Adebipe\Services\Interfaces\StarterServiceInterface;
 
 /**
  * Logger of the application
+ *
  * @package Adebipe\Services
  */
 class Logger implements StarterServiceInterface, RegisterServiceInterface
@@ -47,9 +48,11 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
             $this->debug("No sentry");
         }
 
-        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
-            $this->warning($errstr . ' in ' . $errfile . ' on line ' . $errline);
-        }, E_WARNING);
+        set_error_handler(
+            function ($errno, $errstr, $errfile, $errline) {
+                $this->warning($errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }, E_WARNING
+        );
     }
 
     public function atEnd(): void
@@ -63,8 +66,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      * Get the log string
      * [Date] (Type) Class : Message
      * 
-     * @param string $type
-     * @param string $message
+     * @param  string $type
+     * @param  string $message
      * @return string
      */
     private function getString(string $type, string $message): string

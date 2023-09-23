@@ -33,7 +33,7 @@ class Renderer implements RegisterServiceInterface
     {
         extract($environements);
         ob_start();
-        require $this->dir . $path;
+        include $this->dir . $path;
         return ob_get_clean();
     }
 }

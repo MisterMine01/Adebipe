@@ -28,11 +28,13 @@ abstract class Model implements ModelInterface
             $this->properties[$key] = $value;
         }
     }
-    public function getSchema(): array {
+    public function getSchema(): array
+    {
         return $this->schema;
     }
 
-    public function getKey(): array {
+    public function getKey(): array
+    {
         return array_keys($this->schema);
     }
 
@@ -78,7 +80,8 @@ abstract class Model implements ModelInterface
 
     /**
      * Get the value of a property
-     * @param string $name
+     *
+     * @param  string $name
      * @return mixed
      */
     public function __get(string $name)
@@ -100,8 +103,9 @@ abstract class Model implements ModelInterface
 
     /**
      * Set the value of a property
+     *
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function __set(string $name, $value)
     {

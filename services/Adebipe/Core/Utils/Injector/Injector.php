@@ -6,23 +6,27 @@ use Adebipe\Services\Interfaces\RegisterServiceInterface;
 
 /**
  * Injector of the services
+ *
  * @package Adebipe\Services
  */
 class Injector implements RegisterServiceInterface
 {
     /**
      * all services can be injected
+     *
      * @var array<RegisterServiceInterface> $services
      */
     private array $services = [];
 
     /**
      * Injector of the services
+     *
      * @param Logger $logger
      */
     public function __construct(
         /**
          * Logger of the application
+         *
          * @var Logger $logger
          */
         private Logger $logger
@@ -32,9 +36,9 @@ class Injector implements RegisterServiceInterface
     /**
      * Add a service to the injector
      * 
-     * @param string $name The name of the service
-     * @param string $class The class of the service
-     * @param array $params The params of the service
+     * @param string $name   The name of the service
+     * @param string $class  The class of the service
+     * @param array  $params The params of the service
      * 
      * @return void
      */
@@ -60,7 +64,7 @@ class Injector implements RegisterServiceInterface
      * Inject the params of a method
      * 
      * @param \ReflectionMethod $method The method to inject
-     * @param array $params The params to inject
+     * @param array             $params The params to inject
      * 
      * @return array The params with the injected params
      */
@@ -106,8 +110,8 @@ class Injector implements RegisterServiceInterface
      * Execute a function with the injected services
      * 
      * @param \ReflectionMethod $method The method to execute
-     * @param object|null $class The class of the method
-     * @param array $params The params who can be injected
+     * @param object|null       $class  The class of the method
+     * @param array             $params The params who can be injected
      */
     public function execute(\ReflectionMethod $method, ?object $class, array $params = []): mixed
     {
@@ -119,8 +123,8 @@ class Injector implements RegisterServiceInterface
     /**
      * Create a class with the injected services
      * 
-     * @param \ReflectionClass $class The class to create
-     * @param array $params The params who can be injected
+     * @param \ReflectionClass $class  The class to create
+     * @param array            $params The params who can be injected
      * 
      * @return object The created class
      */
