@@ -2,6 +2,7 @@
     "name": "abouget/adebipe",
     "description": "PHP Framework",
     "type": "project",
+    "license": "MIT",
     "authors": [
       {
         "name": "BOUGET Alexandre",
