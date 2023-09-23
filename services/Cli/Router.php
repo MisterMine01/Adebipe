@@ -12,7 +12,7 @@ require_once __DIR__ . '/MakeClasses.php';
 /**
  * Router of the CLI for development environment.
  * More information about the router in the README.md
- * 
+ *
  * @package Adebipe\Cli
  */
 class Router

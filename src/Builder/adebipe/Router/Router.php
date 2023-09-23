@@ -50,7 +50,7 @@ class Router implements CreatorInterface
         $this->logger->info('Perform regex for route: ' . $route);
 
         $to_inject = [];
-        
+
         preg_match_all('/\{([a-zA-Z0-9_]+)\}/', $route, $matches);
         $id = $matches[0];
         $this->logger->info('Get id: ' . json_encode($id));
@@ -82,7 +82,9 @@ class Router implements CreatorInterface
             // The request is a file
             $this->logger->info('Get file: ' . $request->uri);
             return new \Adebipe\Router\Response(
-                file_get_contents("public" . $request->uri), 200, [
+                file_get_contents("public" . $request->uri),
+                200,
+                [
                 'Content-Type' => $this->_mime[pathinfo("public" . $request->uri, PATHINFO_EXTENSION)]
                 ]
             );
@@ -132,6 +134,5 @@ class Router implements CreatorInterface
             throw new \Exception('Response is not an instance of Response');
         }
         return $response;
-
     }
 }

@@ -7,7 +7,6 @@ use Adebipe\Services\MsQl;
 
 abstract class Model implements ModelInterface
 {
-
     public static MsQl $msql;
     private array $properties = [];
     private array $schema = [];

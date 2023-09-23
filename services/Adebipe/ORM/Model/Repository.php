@@ -42,14 +42,16 @@ class Repository implements RepositoryInterface
         return $this->findOneBy(['id' => $id], [\PDO::PARAM_INT]);
     }
 
-    public function findOneBy(array $conditions, ?array $type = null) : ?object
+    public function findOneBy(array $conditions, ?array $type = null): ?object
     {
         $query = "SELECT * FROM " . $this->table_name . " WHERE ";
         $query .= implode(
-            " AND ", array_map(
+            " AND ",
+            array_map(
                 function ($key) {
                     return "$key = ?";
-                }, array_keys($conditions)
+                },
+                array_keys($conditions)
             )
         );
         $statement = $this->msql->prepare($query);
@@ -66,14 +68,16 @@ class Repository implements RepositoryInterface
         return new $this->class_name($result[0]);
     }
 
-    public function findAllBy(array $conditions, ?array $type = null) : Collection
+    public function findAllBy(array $conditions, ?array $type = null): Collection
     {
         $query = "SELECT * FROM ? WHERE ";
         $query .= implode(
-            " AND ", array_map(
+            " AND ",
+            array_map(
                 function ($key) {
                     return "$key = ?";
-                }, array_keys($conditions)
+                },
+                array_keys($conditions)
             )
         );
         $statement = $this->msql->prepare($query);
@@ -146,10 +150,12 @@ class Repository implements RepositoryInterface
         $sql .= implode(", ", array_fill(0, count($keys), "?"));
         $sql .= ") ON DUPLICATE KEY UPDATE ";
         $sql .= implode(
-            ", ", array_map(
+            ", ",
+            array_map(
                 function ($key) {
                     return "$key = VALUES($key)";
-                }, $keys
+                },
+                $keys
             )
         );
         $result = $this->msql->prepare($sql);

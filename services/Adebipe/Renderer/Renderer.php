@@ -12,7 +12,6 @@ class Renderer implements RegisterServiceInterface
     public function __construct()
     {
         $this->dir = getenv('VIEW_DIR');
-        
     }
     public function render(string $path, array $environements): Response
     {

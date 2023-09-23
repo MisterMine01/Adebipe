@@ -2,7 +2,6 @@
 
 namespace Adebipe\Model\Type;
 
-
 class IntType extends AbstractType
 {
     public function __construct(bool $not_null = false, bool $auto_increment = false)

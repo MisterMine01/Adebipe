@@ -52,7 +52,6 @@ class RouteKeeperBuilder implements BuilderInterface
         $file_code = str_replace("// CODE OF USES GOES HERE", $this->getUsesCode(), $file_code);
 
         file_put_contents($tmp_file, $file_code);
-
     }
 
     private function getRoutesCode(): string

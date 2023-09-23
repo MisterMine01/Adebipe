@@ -35,7 +35,8 @@ class RouteComponents implements ComponentInterface
             }
         }
         return $renderer->render(
-            'Adebipe/routes/routes.php', [
+            'Adebipe/routes/routes.php',
+            [
             'routes' => $routes_after,
             ]
         );

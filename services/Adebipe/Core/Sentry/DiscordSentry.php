@@ -24,7 +24,6 @@ class DiscordSentry implements SentryInterfaces
         if (!$this->avatar_url) {
             $this->avatar_url = null;
         }
-
     }
 
     public function sendSentry(Logger $logger, array $backtrace): void
@@ -33,7 +32,7 @@ class DiscordSentry implements SentryInterfaces
             return;
         }
         $logger->info('Sending to Discord');
-        
+
         $logData = $logger->logTrace;
 
         $all_sending = [];
@@ -99,12 +98,14 @@ class DiscordSentry implements SentryInterfaces
 
         $json_data = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
-             
+
         $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36';
         $contentType = "Content-type: application/json\r\n" . "Accept-language: en\r\n";
 
         $result = file_get_contents(
-            $this->webhook_url, false, stream_context_create(
+            $this->webhook_url,
+            false,
+            stream_context_create(
                 [
                 'http' => [
                 'method' => 'POST',
@@ -118,8 +119,5 @@ class DiscordSentry implements SentryInterfaces
         if ($result === false) {
             var_dump($json_data);
         }
-
-        
     }
-
 }

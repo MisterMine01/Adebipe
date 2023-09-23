@@ -2,7 +2,6 @@
 
 class RouterBuilder implements BuilderInterface
 {
-
     public function includeFiles(): array
     {
         return [];

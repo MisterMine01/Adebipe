@@ -11,7 +11,6 @@ use ReflectionMethod;
 
 class Router implements CreatorInterface, BuilderServiceInterface
 {
-
     private RouteKeeper $routeKeeper;
 
     /**
@@ -68,7 +67,6 @@ class Router implements CreatorInterface, BuilderServiceInterface
             throw new \Exception('Response is not an instance of Response');
         }
         return $response;
-
     }
 
     /**
@@ -88,7 +86,9 @@ class Router implements CreatorInterface, BuilderServiceInterface
             $this->logger->info('Get file: ' . $request->uri);
             $mime = json_decode(file_get_contents(__DIR__ . '/mime.json'), true);
             return new Response(
-                file_get_contents("public" . $request->uri), 200, [
+                file_get_contents("public" . $request->uri),
+                200,
+                [
                 'Content-Type' => $mime[pathinfo("public" . $request->uri, PATHINFO_EXTENSION)]
                 ]
             );

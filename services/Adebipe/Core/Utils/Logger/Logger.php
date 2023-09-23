@@ -51,7 +51,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         set_error_handler(
             function ($errno, $errstr, $errfile, $errline) {
                 $this->warning($errstr . ' in ' . $errfile . ' on line ' . $errline);
-            }, E_WARNING
+            },
+            E_WARNING
         );
     }
 
@@ -65,7 +66,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     /**
      * Get the log string
      * [Date] (Type) Class : Message
-     * 
+     *
      * @param  string $type
      * @param  string $message
      * @return string
@@ -94,7 +95,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
 
     /**
      * Log a message
-     * 
+     *
      * @param string $type
      * @param string $message
      */
@@ -122,7 +123,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
 
     /**
      * Log a debug message
-     * 
+     *
      * @param string $message
      */
     public function debug(string $message): void
@@ -132,7 +133,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
 
     /**
      * Log an info message
-     * 
+     *
      * @param string $message
      */
     public function info(string $message): void
@@ -142,7 +143,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
 
     /**
      * Log a warning message
-     * 
+     *
      * @param string $message
      */
     public function warning(string $message): void
@@ -156,7 +157,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
 
     /**
      * Log an error message
-     * 
+     *
      * @param string $message
      */
     public function error(string $message): void
@@ -168,7 +169,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
 
     /**
      * Log a critical message
-     * 
+     *
      * @param string $message
      */
     public function critical(string $message, ?array $backtrace = null): void

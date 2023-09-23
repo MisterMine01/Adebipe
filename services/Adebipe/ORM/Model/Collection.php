@@ -4,7 +4,6 @@ namespace Adebipe\Model;
 
 class Collection implements CollectionInterface
 {
-
     /**
      * The data from the database
      *

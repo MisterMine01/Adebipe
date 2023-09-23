@@ -35,11 +35,11 @@ class Injector implements RegisterServiceInterface
 
     /**
      * Add a service to the injector
-     * 
+     *
      * @param string $name   The name of the service
      * @param string $class  The class of the service
      * @param array  $params The params of the service
-     * 
+     *
      * @return void
      */
     public function addService(RegisterServiceInterface $class): void
@@ -50,9 +50,9 @@ class Injector implements RegisterServiceInterface
 
     /**
      * Get a service from the injector
-     * 
+     *
      * @param string $name The name of the service
-     * 
+     *
      * @return object The service
      */
     public function getService(string $name): ?RegisterServiceInterface
@@ -62,10 +62,10 @@ class Injector implements RegisterServiceInterface
 
     /**
      * Inject the params of a method
-     * 
+     *
      * @param \ReflectionMethod $method The method to inject
      * @param array             $params The params to inject
-     * 
+     *
      * @return array The params with the injected params
      */
     public function injectParams(\ReflectionMethod $method, array $params = []): array
@@ -108,7 +108,7 @@ class Injector implements RegisterServiceInterface
 
     /**
      * Execute a function with the injected services
-     * 
+     *
      * @param \ReflectionMethod $method The method to execute
      * @param object|null       $class  The class of the method
      * @param array             $params The params who can be injected
@@ -122,10 +122,10 @@ class Injector implements RegisterServiceInterface
 
     /**
      * Create a class with the injected services
-     * 
+     *
      * @param \ReflectionClass $class  The class to create
      * @param array            $params The params who can be injected
-     * 
+     *
      * @return object The created class
      */
     public function create_class(\ReflectionClass $class, array $params = []): object

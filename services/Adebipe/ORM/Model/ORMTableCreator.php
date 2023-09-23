@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Adebipe\Model;
 
 use NoBuildable;
@@ -51,5 +50,5 @@ abstract class ORMTableCreator
      *
      * @return array
      */
-    public abstract function getFixtures(): array;
+    abstract public function getFixtures(): array;
 }

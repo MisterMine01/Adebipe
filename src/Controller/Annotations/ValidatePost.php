@@ -14,7 +14,6 @@ class ValidatePost extends BeforeRoute
     public function __construct(
         public array $schema,
     ) {
-        
     }
 
     public function execute(?Request $request = null): mixed

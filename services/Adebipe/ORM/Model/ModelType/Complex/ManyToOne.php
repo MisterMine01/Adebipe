@@ -51,7 +51,7 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
     {
         return [
             "after" => [
-                "ALTER TABLE " . ORM::class_to_table_name($this->me_object) . 
+                "ALTER TABLE " . ORM::class_to_table_name($this->me_object) .
                 " ADD FOREIGN KEY (" . $this->relationedBy . ") REFERENCES " . ORM::class_to_table_name($this->object) . "(id)"
             ]
         ];

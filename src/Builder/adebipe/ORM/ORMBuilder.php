@@ -23,7 +23,7 @@ class ORMBuilder implements BuilderInterface
     {
         $orm = $core->getService(ORM::class);
         $core->includeFolder("src/Entity");
-        
+
         $orm->atStart($core->getService(MsQl::class));
         $this->_repositories = $orm->getRepositories();
 

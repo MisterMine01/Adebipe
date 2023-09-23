@@ -2,7 +2,6 @@
 
 namespace Adebipe\Model\Type;
 
-
 class StringType extends AbstractType
 {
     protected int $size;

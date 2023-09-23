@@ -10,9 +10,9 @@ interface RepositoryInterface
 
     function findOneById(int $id): ?object;
 
-    function findOneBy(array $conditions, ?array $type = null) : ?object;
+    function findOneBy(array $conditions, ?array $type = null): ?object;
 
-    function findAllBy(array $conditions, ?array $type = null) : CollectionInterface;
+    function findAllBy(array $conditions, ?array $type = null): CollectionInterface;
 
     function findAll(): CollectionInterface;
 

@@ -6,7 +6,7 @@ use Adebipe\Services\Interfaces\StarterServiceInterface;
 
 /**
  * Initialize the environment variables
- * 
+ *
  * @package Adebipe\Services
  */
 class Dotenv implements StarterServiceInterface
@@ -50,7 +50,7 @@ class Dotenv implements StarterServiceInterface
 
     /**
      * Get the environment variables from a file
-     * 
+     *
      * @param string $name The name of the file
      */
     private function getEnvFile(string $name): void

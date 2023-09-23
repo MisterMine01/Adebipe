@@ -34,7 +34,7 @@ class OneToMany extends AbstractType implements SqlBasedTypeInterface
      * @var string
      */
     private string $relationedBy;
-    
+
     /**
      * One to many relation
      * Himself is the one, the other is the many

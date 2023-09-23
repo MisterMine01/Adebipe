@@ -4,11 +4,10 @@ namespace Adebipe\Router;
 
 class Request
 {
-
     // Method, url, headers, body, params, files, cookies, post, port, ip
     /**
      * Create a new request
-     * 
+     *
      * @param string                $method  Method of the request
      * @param string                $uri     URI of the request
      * @param array<string, string> $headers Headers of the request

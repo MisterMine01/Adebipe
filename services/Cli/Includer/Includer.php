@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Adebipe\Cli;
 
 require_once __DIR__ . '/IncluderInterface.php';
@@ -8,7 +7,7 @@ use IncluderInterface;
 
 /**
  * Get all files from a directory and his subdirectories
- * 
+ *
  * @package Adebipe\Cli
  */
 class Includer implements IncluderInterface

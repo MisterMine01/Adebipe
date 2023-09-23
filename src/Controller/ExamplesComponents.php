@@ -14,7 +14,6 @@ use App\Model\User;
 
 class ExampleComponent implements ComponentInterface
 {
-
     #[Route(path: '/hello', method: 'GET')]
     public static function index(ORM $orm): Response
     {

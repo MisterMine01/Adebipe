@@ -15,7 +15,7 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
      * [path => [
      *      method => [
      *          function,
-     *          route    
+     *          route
      *      ]
      * ]]
      *
@@ -124,7 +124,7 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
         $this->logger->info('Perform regex for route: ' . $route);
 
         $to_inject = [];
-        
+
         preg_match_all('/\{([a-zA-Z0-9_]+)\}/', $route, $matches);
         $id = $matches[0];
         $this->logger->info('Get id: ' . json_encode($id));

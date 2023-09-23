@@ -85,7 +85,7 @@ class Builder
 
     /**
      * Create the build directory
-     * 
+     *
      * @return void
      */
     private function _createBuildir()
@@ -105,9 +105,9 @@ class Builder
 
     /**
      * Build All interfaces on Adebipe namespace
-     * 
+     *
      * @param IncludeList $include_list The list of the interfaces
-     * 
+     *
      * @return void
      */
     private function _buildInterfaces(IncludeList $include_list): void
@@ -126,10 +126,10 @@ class Builder
 
     /**
      * Build all services
-     * 
+     *
      * @param IncludeList            $include_list The list of the interfaces
      * @param array<ReflectionClass> $all_services The list of all services
-     * 
+     *
      * @return void
      */
     private function _buildServices(IncludeList $include_list, array $all_services): void
@@ -174,7 +174,7 @@ class Builder
         $builder_class = new ReflectionClass($builder_class_name);
 
         $tmp = $this->_build_dir . '/tmp/' . uniqid() . '.php';
-        
+
         $instance = $builder_class->newInstance();
 
         $instance->build($tmp, $this->_builder_helper);
@@ -212,10 +212,10 @@ class Builder
 
     /**
      * Build all other services
-     * 
+     *
      * @param IncludeList     $include_list The list of the interfaces
      * @param ReflectionClass $all_services The list of all services
-     * 
+     *
      * @return void
      */
     private function _buildOther(IncludeList $include_list, ReflectionClass $service): void

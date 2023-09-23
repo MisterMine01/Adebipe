@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Router of the application in production
  */
+
 $time_start = microtime(true);
 
 //putenv('ENV=dev'); // For test the prod router
