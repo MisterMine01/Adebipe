@@ -1,0 +1,14 @@
+{
+    "name": "abouget/adebipe",
+    "description": "PHP Framework",
+    "type": "project",
+    "authors": [
+      {
+        "name": "BOUGET Alexandre",
+        "email": "abouget68@gmail.com"
+      }
+    ],
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.7"
+    }
+}
