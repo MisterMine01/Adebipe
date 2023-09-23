@@ -1,5 +1,6 @@
 <?php
 
+use Adebipe\Builder\CoreBuilderInterface;
 use Adebipe\Cli\Includer;
 use Adebipe\Services\Container;
 

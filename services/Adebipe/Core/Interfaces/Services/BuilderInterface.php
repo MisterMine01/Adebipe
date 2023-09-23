@@ -2,12 +2,12 @@
 
 namespace Adebipe\Services\Interfaces;
 
-use NoBuildable;
+use Adebipe\Builder\NoBuildable;
 
 /**
  * Interface for services who need to set is own build
  *
- * @package Adebipe\Services\Interfaces
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 #[NoBuildable]
 interface BuilderServiceInterface
@@ -15,7 +15,7 @@ interface BuilderServiceInterface
     /**
      * Get the service builder name
      *
-     * @return string The code to add to the build
+     * @return string path to the builder of the service
      */
     public function build(): string;
 }
