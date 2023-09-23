@@ -1,8 +1,10 @@
 <?php
 
-use Adebipe\Router\Annotations\Route;
+use Adebipe\Cli\MakeClasses;
+use Adebipe\Router\Annotations\AfterRoute;
+use Adebipe\Router\Annotations\BeforeRoute;
+use Adebipe\Services\Logger;
 use Adebipe\Services\RouteKeeper;
-use Adebipe\Services\Router;
 
 class RouteKeeperBuilder implements BuilderInterface
 {
@@ -12,7 +14,19 @@ class RouteKeeperBuilder implements BuilderInterface
 
     public function includeFiles(): array
     {
-        return [];
+        $classes = get_declared_classes();
+        $classes = array_filter(
+            $classes,
+            function ($class) {
+                return is_subclass_of($class, AfterRoute::class) || is_subclass_of($class, BeforeRoute::class);
+            }
+        );
+        $classes = array_unique($classes);
+        $files = array();
+        foreach ($classes as $class) {
+            $files[] = (new ReflectionClass($class))->getFileName();
+        }
+        return $files;
     }
 
     public function build(string $tmp_file, CoreBuilderInterface $core): void
@@ -90,6 +104,24 @@ class RouteKeeperBuilder implements BuilderInterface
                 $code = implode("", array_slice($code, $start, $length));
                 // Change name of the function
                 $code = str_replace('function ' . $function->getName(), 'function ' . $this->getFunctionName($route, $method), $code);
+                $attributes = [];
+                foreach ($function->getAttributes() as $attribute) {
+                    MakeClasses::$container->getService(Logger::class)->info($attribute->getName());
+                    if (is_subclass_of($attribute->getName(), BeforeRoute::class)) {
+                        $attributes[] = $attribute;
+                    }
+                    if (is_subclass_of($attribute->getName(), AfterRoute::class)) {
+                        $attributes[] = $attribute;
+                    }
+                }
+                $before_attribute_code = '';
+                foreach ($attributes as $attribute) {
+                    $before_attribute_code .= '#[' . $attribute->getName() . '(';
+                    $before_attribute_code .= $attribute->getArguments() === [] ? '' : var_export($attribute->getArguments(), true);
+                    $before_attribute_code .= ')]' . PHP_EOL;
+                }
+                $code = $before_attribute_code . $code;
+
                 $code_routes .= $code . PHP_EOL;
             }
         }

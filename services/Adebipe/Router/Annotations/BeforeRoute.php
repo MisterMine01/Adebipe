@@ -2,12 +2,8 @@
 
 namespace Adebipe\Router\Annotations;
 
-use Adebipe\Router\Response;
-use Attribute;
-use NoBuildable;
 use ReflectionMethod;
 
-#[NoBuildable]
 abstract class BeforeRoute
 {
     /**

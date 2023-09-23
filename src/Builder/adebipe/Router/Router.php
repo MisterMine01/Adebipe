@@ -104,7 +104,7 @@ class Router implements CreatorInterface
     private function executeRoute(ReflectionMethod $method, array $parameters, Injector $injector): mixed
     {
         // Execute before Annotations
-        /*foreach ($method->getAttributes() as $attribute) {
+        foreach ($method->getAttributes() as $attribute) {
             if (is_subclass_of($attribute->getName(), BeforeRoute::class)) {
                 $beforeRoute = $attribute->newInstance();
                 $execute = new ReflectionMethod($beforeRoute, 'execute');
@@ -119,7 +119,7 @@ class Router implements CreatorInterface
                     throw new \Exception('BeforeRoute ' . $attribute->getName() . ' returned an invalid value');
                 }
             }
-        }*/
+        }
         $response = $injector->execute($method, null, $parameters);
         // Check if the response is an instance of Response
         if (!($response instanceof Response)) {

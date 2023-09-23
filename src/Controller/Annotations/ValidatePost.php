@@ -9,7 +9,6 @@ use Attribute;
 use NoBuildable;
 
 #[Attribute]
-#[NoBuildable]
 class ValidatePost extends BeforeRoute
 {
     public function __construct(

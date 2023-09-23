@@ -1,7 +1,5 @@
 <?php
 
-use Adebipe\Services\Logger;
-
 class RouterBuilder implements BuilderInterface
 {
 
