@@ -32,7 +32,7 @@ class Injector implements RegisterServiceInterface
      */
     public function addService(RegisterServiceInterface $class): void
     {
-        $this->logger->debug('Add service: ' . $class::class);
+        $this->_logger->debug('Add service: ' . $class::class);
         $this->_services[$class::class] = $class;
     }
 
@@ -72,8 +72,8 @@ class Injector implements RegisterServiceInterface
                 );
             }
             $not_null = str_replace("?", "", $param_type->__toString());
-            if (in_array($not_null, array_keys($this->services))) {
-                $find_params[] = $this->services[$not_null];
+            if (in_array($not_null, array_keys($this->_services))) {
+                $find_params[] = $this->_services[$not_null];
                 continue;
             }
             if (in_array($not_null, array_keys($params))) {
@@ -128,7 +128,7 @@ class Injector implements RegisterServiceInterface
     {
         $constructor = $class->getConstructor();
         if ($constructor === null) {
-            $this->logger->debug('Class ' . $class->getName() . ' has no constructor');
+            $this->_logger->debug('Class ' . $class->getName() . ' has no constructor');
             return $class->newInstance();
         }
         if (!$constructor->isPublic()) {

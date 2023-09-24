@@ -80,7 +80,7 @@ class Dotenv implements StarterServiceInterface
             }
         }
         if (is_file($name . '.local')) {
-            $this->getEnvFile($name . '.local');
+            $this->_getEnvFile($name . '.local');
         }
     }
 }
