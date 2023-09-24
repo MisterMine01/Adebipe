@@ -64,8 +64,8 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
     {
         $this->_me_object = $me_object;
         $this->_object_type = $object_type;
-        $this->_named_me = ORM::class_to_table_name($me_object);
-        $this->_named_object = ORM::class_to_table_name($object_type);
+        $this->_named_me = ORM::classToTableName($me_object);
+        $this->_named_object = ORM::classToTableName($object_type);
         $this->_is_first = $is_first;
         if ($this->_is_first) {
             $this->_middle_table_name = $this->_named_me . '_' . $this->_named_object;
@@ -76,7 +76,7 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
     }
 
     /**
-     * Get The sql creation type
+     * Get the sql creation type
      *
      * @return string|null
      */

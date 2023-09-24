@@ -14,7 +14,7 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
 
     private $repository = array();
 
-    public static function class_to_table_name(string $class_name): string
+    public static function classToTableName(string $class_name): string
     {
         return strtolower(substr($class_name, strrpos($class_name, '\\') + 1));
     }

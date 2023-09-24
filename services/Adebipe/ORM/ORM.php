@@ -8,20 +8,40 @@ use Adebipe\Services\Interfaces\BuilderServiceInterface;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
 use Adebipe\Services\Interfaces\StarterServiceInterface;
 
+/**
+ * The ORM service
+ * This service is used to manage the models, the repositories and the database
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
+ */
 class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderServiceInterface
 {
-    private MsQl $msql;
+    private MsQl $_msql;
 
-    private $repository = array();
+    private $_repository = array();
 
-    public static function class_to_table_name(string $class_name): string
+    /**
+     * Get the table name from a model class name
+     *
+     * @param string $class_name The class name of the model
+     *
+     * @return string
+     */
+    public static function classToTableName(string $class_name): string
     {
         return strtolower(substr($class_name, strrpos($class_name, '\\') + 1));
     }
 
+    /**
+     * Function to run at the start of the application
+     *
+     * @param MsQl $msql The MsQl service
+     *
+     * @return void
+     */
     public function atStart(MsQl $msql = null): void
     {
-        $this->msql = $msql;
+        $this->_msql = $msql;
         $class_creator = getenv("ORM_TABLE_MODELS");
         if (!$class_creator) {
             throw new \Exception("ORM_TABLE_MODELS environment variable not set");
@@ -34,34 +54,62 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
         $class_init = new $class_creator();
         $all_schema = $class_init->getSchema();
         foreach ($all_schema as $table_name => $object_class) {
-            $this->repository[$table_name] = new Repository($object_class, $this->msql);
+            $this->_repository[$table_name] = new Repository($object_class, $this->_msql);
         }
-        Model::$msql = $this->msql;
+        Model::$msql = $this->_msql;
     }
 
-
+    /**
+     * Function to run at the end of the application
+     *
+     * @return void
+     */
     public function atEnd(): void
     {
     }
 
+
+    /**
+     * Get the service builder name
+     *
+     * @return string path to the builder of the service
+     */
     public function build(): string
     {
         return "adebipe/ORM/ORMBuilder.php";
     }
 
+    /**
+     * Get the repositories
+     *
+     * @return array<Repository>
+     */
     public function getRepositories(): array
     {
-        return $this->repository;
+        return $this->_repository;
     }
 
+    /**
+     * Get a repository
+     *
+     * @param string $object_class The class name of the model
+     *
+     * @return Repository
+     */
     public function getRepository(string $object_class): Repository
     {
-        return $this->repository[$object_class];
+        return $this->_repository[$object_class];
     }
 
+    /**
+     * Update the database
+     * (for the moment, only create the tables, can't drop or alter)
+     *
+     * @return void
+     */
     public function update(): void
     {
-        $already_existed = $this->msql->getTable();
+        $already_existed = $this->_msql->getTable();
         $already_table_name = array();
         foreach ($already_existed as $table) {
             $already_table_name[] = $table['TABLE_NAME'];
@@ -69,7 +117,7 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
         $class_creator = getenv("ORM_TABLE_MODELS");
         $class_init = new $class_creator();
         $fixtures = $class_init->getFixtures();
-        foreach ($this->repository as $table_name => $repository) {
+        foreach ($this->_repository as $table_name => $repository) {
             if (!in_array($table_name, $already_table_name)) {
                 $repository->createTable();
                 if (array_key_exists($table_name, $fixtures)) {

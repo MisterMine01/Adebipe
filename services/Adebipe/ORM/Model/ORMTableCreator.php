@@ -2,12 +2,12 @@
 
 namespace Adebipe\Model;
 
-use NoBuildable;
+use Adebipe\Builder\NoBuildable;
 
 /**
  * Create the schema of the database
  *
- * @package Adebipe\Model
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 #[NoBuildable]
 abstract class ORMTableCreator
@@ -27,10 +27,11 @@ abstract class ORMTableCreator
     /**
      * Create a model
      *
-     * @param  string $object_class
+     * @param string $object_class The class of the object
+     *
      * @return void
      */
-    public function create_model(string $object_class)
+    public function createModel(string $object_class): void
     {
         $this->database_schema[$object_class] = $object_class;
     }

@@ -25,6 +25,14 @@ interface RepositoryInterface
      */
     public function getTableName(): string;
 
+
+    /**
+     * Get the name of the model class
+     *
+     * @return string
+     */
+    public function getClassName(): string;
+
     /**
      * Find an object by his id
      *
