@@ -1,30 +1,29 @@
 <?php
 
-namespace Adebipe\Cli;
+namespace Adebipe\Cli\Router;
 
+use Adebipe\Cli\Includer\Includer;
+use Adebipe\Cli\MakeClasses;
 use Adebipe\Router\Request;
 use Adebipe\Services\Logger;
 use Adebipe\Services\Router as ServicesRouter;
-
-require_once __DIR__ . '/Includer/Includer.php';
-require_once __DIR__ . '/MakeClasses.php';
 
 /**
  * Router of the CLI for development environment.
  * More information about the router in the README.md
  *
- * @package Adebipe\Cli
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 class Router
 {
-    private float $time_start = 0;
+    private float $_time_start = 0;
 
     /**
      * Router constructor.
      */
     public function __construct()
     {
-        $this->time_start = microtime(true);
+        $this->_time_start = microtime(true);
         if (!defined('STDOUT')) {
             define('STDOUT', fopen('php://stdout', 'w'));
         }
@@ -38,6 +37,13 @@ class Router
         }
     }
 
+    /**
+     * Run the router
+     *
+     * @param string $cwd The current working directory
+     *
+     * @return void
+     */
     public function run($cwd = __DIR__): void
     {
         $includer = new Includer();
@@ -76,7 +82,7 @@ class Router
             'information about dev Router: ' . PHP_EOL .
             'Peak memory usage: ' . memory_get_peak_usage() / 1024 / 1024 . 'MB' . PHP_EOL .
             'Memory usage: ' . memory_get_usage() / 1024 / 1024 . 'MB' . PHP_EOL .
-            'Time: ' . ($time_end - $this->time_start) * 1000 . 'ms'
+            'Time: ' . ($time_end - $this->_time_start) * 1000 . 'ms'
         );
 
         MakeClasses::stopServices();

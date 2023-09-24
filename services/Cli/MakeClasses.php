@@ -13,8 +13,8 @@ use ReflectionClass;
 
 /**
  * Make the classes from the Application namespace
- * 
- * @package Adebipe\Cli
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 class MakeClasses
 {
@@ -23,8 +23,10 @@ class MakeClasses
 
     /**
      * Make the classes from the Application namespace
-     * 
+     *
      * @param array<string> $classes The list of the classes
+     *
+     * @return array<ReflectionClass>
      */
     public static function makeClasses(array $classes): array
     {
@@ -34,9 +36,8 @@ class MakeClasses
         $injector = new Injector($logger);
         MakeClasses::$injector = $injector;
         $injector->addService($logger);
-        
 
-        $container = $injector->create_class(new ReflectionClass(Container::class));
+        $container = $injector->createClass(new ReflectionClass(Container::class));
         MakeClasses::$container = $container;
         $injector->addService($container);
         $injector->addService($injector);
@@ -55,15 +56,7 @@ class MakeClasses
                 continue;
             }
             $container->addReflection($reflection);
-            if (in_array(
-                $class, [
-                Dotenv::class,
-                Logger::class,
-                Injector::class,
-                Container::class
-                ]
-            )
-            ) {
+            if (in_array($class, [Dotenv::class, Logger::class, Injector::class, Container::class])) {
                 $logger->info('Skip service: ' . $class);
                 continue;
             }
@@ -71,7 +64,7 @@ class MakeClasses
                 continue;
             }
             if ($reflection->implementsInterface(CreatorInterface::class)) {
-                $class = $injector->create_class($reflection);
+                $class = $injector->createClass($reflection);
                 if ($reflection->implementsInterface(RegisterServiceInterface::class)) {
                     $injector->addService($class);
                 }
@@ -91,6 +84,8 @@ class MakeClasses
 
     /**
      * Stop all the services
+     *
+     * @return void
      */
     public static function stopServices(): void
     {
