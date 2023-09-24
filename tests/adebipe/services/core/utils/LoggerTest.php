@@ -10,5 +10,6 @@ class LoggerTest extends TestCase
     public function testLogger()
     {
         $logger = new Logger();
+        
     }
 }
