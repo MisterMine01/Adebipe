@@ -1,20 +1,23 @@
 <?php
 
+namespace Adebipe\Cli\Builder;
+
 /**
  * Recursively copy files from one directory to another
  *
- * @param  string $src
- * @param  string $dst
+ * @param string $src Source of files being moved
+ * @param string $dst Destination of files being moved
+ *
  * @return void
  */
-function recurse_copy($src, $dst): void
+function recurseCopy($src, $dst): void
 {
     $dir = opendir($src);
     @mkdir($dst);
     while (false !== ($file = readdir($dir))) {
         if (($file != '.') && ($file != '..')) {
             if (is_dir($src . '/' . $file)) {
-                recurse_copy($src . '/' . $file, $dst . '/' . $file);
+                recurseCopy($src . '/' . $file, $dst . '/' . $file);
             } else {
                 copy($src . '/' . $file, $dst . '/' . $file);
             }
@@ -27,7 +30,9 @@ function recurse_copy($src, $dst): void
 /**
  * Recursively remove a directory
  *
- * @param string $path
+ * @param string $path Path of the directory to remove
+ *
+ * @return void
  */
 function removeDir(string $path): void
 {

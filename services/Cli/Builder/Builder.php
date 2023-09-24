@@ -1,5 +1,7 @@
 <?php
 
+namespace Adebipe\Cli\Builder;
+
 use Adebipe\Cli\Includer;
 use Adebipe\Cli\MakeClasses;
 use Adebipe\Services\Container;
@@ -200,7 +202,7 @@ class Builder
     {
         $this->_buildFile($include_list, $service, '/services/');
         $service_builder = new ServicesBuilder($service);
-        $include_list->addFunction($service_builder->generate_function_constructor());
+        $include_list->addFunction($service_builder->generateFunctionConstructor());
         $name = ServicesBuilder::getName($service->getName());
         $this->_at_end[] = $service_builder->atEnd();
         if (in_array(RegisterServiceInterface::class, $service->getInterfaceNames())) {
