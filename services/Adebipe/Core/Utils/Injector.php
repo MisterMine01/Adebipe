@@ -6,62 +6,54 @@ use Adebipe\Services\Interfaces\RegisterServiceInterface;
 
 /**
  * Injector of the services
- * @package Adebipe\Services
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 class Injector implements RegisterServiceInterface
 {
-    /**
-     * all services can be injected
-     * @var array<RegisterServiceInterface> $services
-     */
-    private array $services = [];
+    private array $_services = [];
 
     /**
      * Injector of the services
-     * @param Logger $logger
+     *
+     * @param Logger $_logger The logger to use
      */
     public function __construct(
-        /**
-         * Logger of the application
-         * @var Logger $logger
-         */
-        private Logger $logger
+        private Logger $_logger
     ) {
     }
 
     /**
      * Add a service to the injector
-     * 
-     * @param string $name The name of the service
+     *
      * @param string $class The class of the service
-     * @param array $params The params of the service
-     * 
+     *
      * @return void
      */
     public function addService(RegisterServiceInterface $class): void
     {
-        $this->logger->info('Add service: ' . $class::class);
-        $this->services[$class::class] = $class;
+        $this->logger->debug('Add service: ' . $class::class);
+        $this->_services[$class::class] = $class;
     }
 
     /**
      * Get a service from the injector
-     * 
+     *
      * @param string $name The name of the service
-     * 
+     *
      * @return object The service
      */
     public function getService(string $name): ?RegisterServiceInterface
     {
-        return $this->services[$name];
+        return $this->_services[$name];
     }
 
     /**
      * Inject the params of a method
-     * 
+     *
      * @param \ReflectionMethod $method The method to inject
-     * @param array $params The params to inject
-     * 
+     * @param array             $params The params to inject
+     *
      * @return array The params with the injected params
      */
     public function injectParams(\ReflectionMethod $method, array $params = []): array
@@ -74,7 +66,10 @@ class Injector implements RegisterServiceInterface
             $param_type = $param->getType();
 
             if ($param_type === null) {
-                throw new \Exception('Param ' . $param_name . ' in method ' . $method->getName() . ' in class ' . $method->getDeclaringClass()->getName() . ' has no type');
+                throw new \Exception(
+                    'Param ' . $param_name . ' in method ' . $method->getName() .
+                    ' in class ' . $method->getDeclaringClass()->getName() . ' has no type'
+                );
             }
             $not_null = str_replace("?", "", $param_type->__toString());
             if (in_array($not_null, array_keys($this->services))) {
@@ -97,17 +92,22 @@ class Injector implements RegisterServiceInterface
                 $find_params[] = null;
                 continue;
             }
-            throw new \Exception('Param ' . $param_name . ' in method ' . $method->getName() . ' in class ' . $method->getDeclaringClass()->getName() . ' can\'t be injected');
+            throw new \Exception(
+                'Param ' . $param_name . ' in method ' . $method->getName() .
+                ' in class ' . $method->getDeclaringClass()->getName() . ' can\'t be injected'
+            );
         }
         return $find_params;
     }
 
     /**
      * Execute a function with the injected services
-     * 
+     *
      * @param \ReflectionMethod $method The method to execute
-     * @param object|null $class The class of the method
-     * @param array $params The params who can be injected
+     * @param object|null       $class  The class of the method
+     * @param array             $params The params who can be injected
+     *
+     * @return mixed The result of the function
      */
     public function execute(\ReflectionMethod $method, ?object $class, array $params = []): mixed
     {
@@ -118,13 +118,13 @@ class Injector implements RegisterServiceInterface
 
     /**
      * Create a class with the injected services
-     * 
-     * @param \ReflectionClass $class The class to create
-     * @param array $params The params who can be injected
-     * 
+     *
+     * @param \ReflectionClass $class  The class to create
+     * @param array            $params The params who can be injected
+     *
      * @return object The created class
      */
-    public function create_class(\ReflectionClass $class, array $params = []): object
+    public function createClass(\ReflectionClass $class, array $params = []): object
     {
         $constructor = $class->getConstructor();
         if ($constructor === null) {

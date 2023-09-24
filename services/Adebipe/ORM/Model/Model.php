@@ -2,18 +2,33 @@
 
 namespace Adebipe\Model;
 
+use Adebipe\Model\Type\ModelTypeInterface;
 use Adebipe\Model\Type\SqlBasedTypeInterface;
 use Adebipe\Services\MsQl;
 
+/**
+ * Abstract class for models
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
+ */
 abstract class Model implements ModelInterface
 {
-
     public static MsQl $msql;
-    private array $properties = [];
-    private array $schema = [];
+    private array $_properties = [];
+    private array $_schema = [];
 
+    /**
+     * Create the schema of the model
+     *
+     * @return array<string, ModelTypeInterface>
+     */
     abstract public static function createSchema(): array;
 
+    /**
+     * Create a model
+     *
+     * @param array $data The data of the model
+     */
     public function __construct(array $data)
     {
         $this->schema = static::createSchema();
@@ -28,14 +43,32 @@ abstract class Model implements ModelInterface
             $this->properties[$key] = $value;
         }
     }
-    public function getSchema(): array {
+
+    /**
+     * Get the schema of the model
+     *
+     * @return array
+     */
+    public function getSchema(): array
+    {
         return $this->schema;
     }
 
-    public function getKey(): array {
+    /**
+     * Get the key of the model (the columns)
+     *
+     * @return array
+     */
+    public function getKey(): array
+    {
         return array_keys($this->schema);
     }
 
+    /**
+     * Get the values of the model
+     *
+     * @return array
+     */
     public function getValues(): array
     {
         $schema = $this->getSchema();
@@ -49,6 +82,14 @@ abstract class Model implements ModelInterface
         return $values;
     }
 
+    /**
+     * Add a value to a complex type (like a relation)
+     *
+     * @param string $name  The name of the column
+     * @param object $value The value to add
+     *
+     * @return bool
+     */
     public function addTo(string $name, object $value): bool
     {
         $schema = $this->getSchema();
@@ -62,6 +103,14 @@ abstract class Model implements ModelInterface
         return $schema->addToDb(Model::$msql, $this->id, $value);
     }
 
+    /**
+     * Delete a value to a complex type (like a relation)
+     *
+     * @param string $name  The name of the column
+     * @param object $value The value to delete
+     *
+     * @return bool
+     */
     public function deleteTo(string $name, object $value): bool
     {
         $schema = $this->getSchema();
@@ -78,7 +127,9 @@ abstract class Model implements ModelInterface
 
     /**
      * Get the value of a property
-     * @param string $name
+     *
+     * @param string $name The name of the property
+     *
      * @return mixed
      */
     public function __get(string $name)
@@ -100,10 +151,15 @@ abstract class Model implements ModelInterface
 
     /**
      * Set the value of a property
-     * @param string $name
-     * @param mixed $value
+     *
+     * @param string $name  The name of the property
+     * @param mixed  $value The value of the property
+     *
+     * @throws \Exception
+     *
+     * @return void
      */
-    public function __set(string $name, $value)
+    public function __set(string $name, $value): void
     {
         if (!isset($this->properties[$name])) {
             throw new \Exception("Unknown key $name");
@@ -115,7 +171,14 @@ abstract class Model implements ModelInterface
         $this->properties[$name] = $value;
     }
 
-    public function __isset(string $name)
+    /**
+     * Check if a property is set
+     *
+     * @param string $name The name of the property
+     *
+     * @return bool
+     */
+    public function __isset(string $name): bool
     {
         return isset($this->{$name});
     }

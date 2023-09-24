@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Components;
 
 use Adebipe\Router\Annotations\Route;
@@ -30,5 +29,4 @@ class ORMComponents implements ComponentInterface
         }
         return new Response('');
     }
-
 }

@@ -13,17 +13,20 @@ use ReflectionClass;
 
 /**
  * Make the classes from the Application namespace
- * 
- * @package Adebipe\Cli
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
-class MakeClasses {
+class MakeClasses
+{
     public static Injector $injector;
     public static Container $container;
 
     /**
      * Make the classes from the Application namespace
-     * 
+     *
      * @param array<string> $classes The list of the classes
+     *
+     * @return array<ReflectionClass>
      */
     public static function makeClasses(array $classes): array
     {
@@ -33,9 +36,8 @@ class MakeClasses {
         $injector = new Injector($logger);
         MakeClasses::$injector = $injector;
         $injector->addService($logger);
-        
 
-        $container = $injector->create_class(new ReflectionClass(Container::class));
+        $container = $injector->createClass(new ReflectionClass(Container::class));
         MakeClasses::$container = $container;
         $injector->addService($container);
         $injector->addService($injector);
@@ -50,32 +52,23 @@ class MakeClasses {
         foreach ($classes as $class) {
             $reflection = new ReflectionClass($class);
             $all_class[] = $reflection;
-            if (strpos($class, 'Adebipe\\Services\\') !== 0)
-            {
+            if (strpos($class, 'Adebipe\\Services\\') !== 0) {
                 continue;
             }
             $container->addReflection($reflection);
-            if (in_array($class, [
-                Dotenv::class,
-                Logger::class,
-                Injector::class,
-                Container::class
-            ])) {
+            if (in_array($class, [Dotenv::class, Logger::class, Injector::class, Container::class])) {
                 $logger->info('Skip service: ' . $class);
                 continue;
             }
-            if ($reflection->isAbstract() || $reflection->isInterface() || $reflection->isTrait())
-            {
+            if ($reflection->isAbstract() || $reflection->isInterface() || $reflection->isTrait()) {
                 continue;
             }
             if ($reflection->implementsInterface(CreatorInterface::class)) {
-                $class = $injector->create_class($reflection);
-                if ($reflection->implementsInterface(RegisterServiceInterface::class))
-                {
+                $class = $injector->createClass($reflection);
+                if ($reflection->implementsInterface(RegisterServiceInterface::class)) {
                     $injector->addService($class);
                 }
-                if ($reflection->implementsInterface(StarterServiceInterface::class))
-                {
+                if ($reflection->implementsInterface(StarterServiceInterface::class)) {
                     $atStart_function = $reflection->getMethod('atStart');
                     $atStart[] = [$atStart_function, $class];
                 }
@@ -91,6 +84,8 @@ class MakeClasses {
 
     /**
      * Stop all the services
+     *
+     * @return void
      */
     public static function stopServices(): void
     {

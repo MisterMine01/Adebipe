@@ -13,9 +13,7 @@ class ValidatePost extends BeforeRoute
 {
     public function __construct(
         public array $schema,
-    )
-    {
-        
+    ) {
     }
 
     public function execute(?Request $request = null): mixed
@@ -25,12 +23,15 @@ class ValidatePost extends BeforeRoute
             $message = getenv('HTTP_BAD_REQUEST_MESSAGE');
             $code = getenv('HTTP_BAD_REQUEST_CODE');
             $header = getenv('HTTP_BAD_REQUEST_HEADER');
-            if ($message === false)
+            if ($message === false) {
                 $message = "Bad request";
-            if ($code === false)
+            }
+            if ($code === false) {
                 $code = 400;
-            if ($header === false)
+            }
+            if ($header === false) {
                 $header = [];
+            }
             return new Response($message, $code, $header);
         }
         return true;

@@ -1,3 +1,4 @@
 logs
 builddir
 .env.*
+vendor

@@ -4,9 +4,9 @@ namespace Adebipe\Services\Interfaces;
 
 /**
  * Interface for registered services
- * Can be used in routes
- * 
- * @package Adebipe\Services\Interfaces
+ * Injected in routes and services
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 interface RegisterServiceInterface extends CreatorInterface
 {

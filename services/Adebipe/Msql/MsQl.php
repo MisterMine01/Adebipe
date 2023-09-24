@@ -9,85 +9,91 @@ use PDOStatement;
 
 /**
  * Execute queries on a MySQl database
- * @package Adebipe\Services
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 class MsQl implements RegisterServiceInterface
 {
-    private Logger $logger;
-    private PDO $connection;
-    private string $driver;
-    private string $host;
-    private string $database;
-    private string $user;
-    private string $password;
-    private bool $last_query_success;
+    private PDO $_connection;
+    private string $_driver;
+    private string $_host;
+    private string $_database;
+    private string $_user;
+    private string $_password;
+    private bool $_last_query_success;
 
     /**
-     * Execute queries on a MySQl database
+     * MsQl constructor.
+     *
+     * @param Logger $_logger The logger
      */
-    public function __construct(Logger $logger)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        private Logger $_logger
+    ) {
         $connection_string = getenv('DB_CONNECTION');
         if (!$connection_string) {
-            $this->logger->warning('DB_CONNECTION environment variable not set');
+            $this->_logger->warning('DB_CONNECTION environment variable not set');
             return;
         }
         // Extracting connection parameters
         // Format: driver://user:password@host/database
         $ptn_start = 0;
         $ptn_end = strpos($connection_string, '://');
-        $this->driver = substr($connection_string, 0, $ptn_end);
+        $this->_driver = substr($connection_string, 0, $ptn_end);
         $ptn_start = $ptn_end + 3;
         $ptn_end = strpos($connection_string, ':', $ptn_start);
-        $this->user = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
+        $this->_user = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
         $ptn_start = $ptn_end + 1;
         $ptn_end = strpos($connection_string, '@', $ptn_start);
-        $this->password = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
+        $this->_password = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
         $ptn_start = $ptn_end + 1;
         $ptn_end = strpos($connection_string, '/', $ptn_start);
-        $this->host = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
+        $this->_host = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
         $ptn_start = $ptn_end + 1;
-        $this->database = substr($connection_string, $ptn_start);
-        $connection_string = "$this->driver:host=$this->host;dbname=$this->database";
-        $this->logger->info("Connecting to database: $connection_string");
-        $this->logger->info("User: $this->user");
-        $this->logger->info("Password: $this->password");
+        $this->_database = substr($connection_string, $ptn_start);
+        $connection_string = "$this->_driver:host=$this->_host;dbname=$this->_database";
+        $this->_logger->info("Connecting to database: $connection_string");
+        $this->_logger->info("User: $this->_user");
+        $this->_logger->info("Password: $this->_password");
         try {
-            $this->connection = new PDO($connection_string, $this->user, $this->password);
+            $this->_connection = new PDO($connection_string, $this->_user, $this->_password);
         } catch (PDOException $e) {
-            $logger->error("PDO can't be opened");
+            $this->_logger->error("PDO can't be opened");
         }
     }
 
     /**
      * Prepare a query
-     * @param string $query
+     *
+     * @param string $query The query to prepare
+     *
      * @return PDOStatement|false
      */
     public function prepare(string $query): PDOStatement|false
     {
-        if (!$this->connection) {
-            $this->logger->error("No connection to database");
+        if (!$this->_connection) {
+            $this->_logger->error("No connection to database");
             return false;
         }
-        return $this->connection->prepare($query);
+        return $this->_connection->prepare($query);
     }
 
     /**
      * Execute a query and return the result as an array
-     * @param PDOStatement $statement
-     * @param array|null $params
-     * @param array|null $types
+     *
+     * @param PDOStatement $statement The statement to execute
+     * @param array|null   $params    The parameters to bind
+     * @param array|null   $types     The types of the parameters
+     *
      * @return array
      */
     public function execute(PDOStatement $statement, array|null $params = null, array|null $types = null): array
     {
         $data = null;
         if ($params !== null && $types !== null) {
-            $this->logger->info("Binding params");
-            $this->logger->info("Params: " . json_encode($params));
-            $this->logger->info("Types: " . json_encode($types));
+            $this->_logger->info("Binding params");
+            $this->_logger->info("Params: " . json_encode($params));
+            $this->_logger->info("Types: " . json_encode($types));
             $i = 0;
             foreach ($params as $param) {
                 $statement->bindValue($i + 1, $param, $types[$i]);
@@ -108,36 +114,40 @@ class MsQl implements RegisterServiceInterface
             if (getenv('ENV') === 'dev') {
                 $statement->debugDumpParams();
             }
-            $this->logger->critical("Error executing query: " . $e->getMessage());
+            $this->_logger->critical("Error executing query: " . $e->getMessage());
             exit(1);
         }
         if ($data === false) {
-            $this->logger->error("Error executing query: " . $statement->errorInfo()[2]);
-            $this->last_query_success = false;
+            $this->_logger->error("Error executing query: " . $statement->errorInfo()[2]);
+            $this->_last_query_success = false;
             return [];
         }
-        $this->logger->info("Query executed successfully");
-        $this->logger->info("Query: " . $statement->queryString);
-        $this->last_query_success = true;
+        $this->_logger->info("Query executed successfully");
+        $this->_logger->info("Query: " . $statement->queryString);
+        $this->_last_query_success = true;
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
      * Test if the last query was successful
+     *
      * @return bool
      */
-    public function get_last_query_success(): bool
+    public function getLastQuerySuccess(): bool
     {
-        return $this->last_query_success;
+        return $this->_last_query_success;
     }
 
     /**
      * Get the list of tables in the database
+     *
+     * @return array
      */
-    public function get_table() {
+    public function getTable(): array
+    {
         $query = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_CATALOG=?";
         $statement = $this->prepare($query);
-        $data = $this->execute($statement, [$this->database]);
+        $data = $this->execute($statement, [$this->_database]);
         return $data;
     }
 }

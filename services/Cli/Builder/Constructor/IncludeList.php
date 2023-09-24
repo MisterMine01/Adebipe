@@ -1,79 +1,147 @@
 <?php
 
+namespace Adebipe\Cli\Builder;
+
+/**
+ * List of includes, functions and other things to be generated
+ * in the services.php file
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
+ */
 class IncludeList
 {
-    private $include_list = [];
+    private $_include_list = [];
 
-    private $function_list = [];
+    private $_function_list = [];
 
-    private $other_list = [];
+    private $_other_list = [];
 
-    public function add(string $file)
+    /**
+     * Add a file to the include list
+     *
+     * @param string $file File to include
+     *
+     * @return void
+     */
+    public function add(string $file): void
     {
-        $this->include_list[] = $file;
+        $this->_include_list[] = $file;
     }
 
+    /**
+     * Get the include list
+     *
+     * @return array<string> List of files to include
+     */
     public function get(): array
     {
-        return $this->include_list;
+        return $this->_include_list;
     }
 
-    public function addFunction(string $function)
+    /**
+     * Add a function to the function list
+     *
+     * @param string $function Function to add
+     *
+     * @return void
+     */
+    public function addFunction(string $function): void
     {
-        $this->function_list[] = $function;
+        $this->_function_list[] = $function;
     }
 
-    public function addOther(string $other)
-    {
-        $this->other_list[] = $other;
-    }
 
-    public function getOther(): array
-    {
-        return $this->other_list;
-    }
-
+    /**
+     * Get the function list
+     *
+     * @return array<string> List of functions to add
+     */
     public function getFunction(): array
     {
-        return $this->function_list;
+        return $this->_function_list;
     }
 
-    private function includeList(): string
+    /**
+     * Add a other line in the services.php file
+     *
+     * @param string $other Other line to add
+     *
+     * @return void
+     */
+    public function addOther(string $other): void
+    {
+        $this->_other_list[] = $other;
+    }
+
+    /**
+     * Get the other list
+     *
+     * @return array<string> List of other lines to add
+     */
+    public function getOther(): array
+    {
+        return $this->_other_list;
+    }
+
+
+    /**
+     * Generate the include list
+     *
+     * @return string
+     */
+    private function _includeList(): string
     {
         $include_list = '';
-        foreach ($this->include_list as $file) {
+        foreach ($this->_include_list as $file) {
             $include_list .= "require_once __DIR__ . '/$file';\n";
         }
         return $include_list;
     }
 
-    private function functionList(): string
+    /**
+     * Generate the function list
+     *
+     * @return string
+     */
+    private function _functionList(): string
     {
         $function_list = '';
-        foreach ($this->function_list as $function) {
+        foreach ($this->_function_list as $function) {
             $function_list .= $function . "\n";
         }
         return $function_list;
     }
 
-    private function otherList(): string
+    /**
+     * Generate the new line list
+     *
+     * @return string
+     */
+    private function _otherList(): string
     {
         $other_list = '';
-        foreach ($this->other_list as $other) {
+        foreach ($this->_other_list as $other) {
             $other_list .= $other . "\n";
         }
         return $other_list;
     }
 
+    /**
+     * Generate the services.php file
+     *
+     * @param string $file services.php path
+     *
+     * @return void
+     */
     public function generate(string $file)
     {
         $content = "<?php";
         $content .= "\n\n";
-        $content .= $this->includeList();
+        $content .= $this->_includeList();
         $content .= "\n\n";
-        $content .= $this->functionList();
+        $content .= $this->_functionList();
         $content .= "\n\n";
-        $content .= $this->otherList();
+        $content .= $this->_otherList();
         file_put_contents($file, $content);
     }
 }

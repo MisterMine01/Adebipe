@@ -1,19 +1,20 @@
 <?php
 
-
 namespace Adebipe\Model;
 
-use NoBuildable;
+use Adebipe\Builder\NoBuildable;
 
 /**
  * Create the schema of the database
- * @package Adebipe\Model
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 #[NoBuildable]
 abstract class ORMTableCreator
 {
     /**
      * The schema of the database
+     *
      * @var array
      */
     public array $database_schema = [];
@@ -25,16 +26,19 @@ abstract class ORMTableCreator
 
     /**
      * Create a model
-     * @param string $object_class
+     *
+     * @param string $object_class The class of the object
+     *
      * @return void
      */
-    public function create_model(string $object_class)
+    public function createModel(string $object_class): void
     {
         $this->database_schema[$object_class] = $object_class;
     }
 
     /**
      * Get the schema of the database
+     *
      * @return array
      */
     public function getSchema(): array
@@ -44,7 +48,8 @@ abstract class ORMTableCreator
 
     /**
      * Get the fixtures of the database
+     *
      * @return array
      */
-    public abstract function getFixtures(): array;
+    abstract public function getFixtures(): array;
 }

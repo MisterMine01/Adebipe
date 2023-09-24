@@ -71,12 +71,11 @@ class ServicesComponents implements ComponentInterface
             }
             $decoded_services[] = $decoded_service;
         }
-        
+
         // $renderer->addGlobal('services', $decoded_services);
         $environment = [
             'services' => $decoded_services,
         ];
         return $renderer->render('Adebipe/services/services.php', $environment);
     }
-
 }

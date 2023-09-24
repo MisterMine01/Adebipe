@@ -2,12 +2,12 @@
 
 namespace Adebipe\Components\Interfaces;
 
-use NoBuildable;
+use Adebipe\Builder\NoBuildable;
 
 /**
  * Interface for all components
- * 
- * @package Adebipe\Services\Interfaces
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 #[NoBuildable]
 interface ComponentInterface

@@ -1,5 +1,7 @@
 <?php
 
+namespace Adebipe\Cli\Builder;
+
 use Adebipe\Cli\Includer;
 use Adebipe\Cli\MakeClasses;
 use Adebipe\Services\Container;
@@ -7,12 +9,15 @@ use Adebipe\Services\Injector;
 use Adebipe\Services\Interfaces\BuilderServiceInterface;
 use Adebipe\Services\Interfaces\CreatorInterface;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
+use ReflectionClass;
+use Throwable;
 
-require_once __DIR__ . '/../Includer/IncluderInterface.php';
-require_once __DIR__ . '/../Includer/Includer.php';
-require_once __DIR__ . '/BuilderUtils.php';
-
-function require_all()
+/**
+ * Require all files after include all services
+ *
+ * @return void
+ */
+function requireAll()
 {
     include_once __DIR__ . '/../MakeClasses.php';
     include_once __DIR__ . '/Constructor/IncludeList.php';
@@ -20,6 +25,11 @@ function require_all()
     include_once __DIR__ . '/BuilderHelper.php';
 }
 
+/**
+ * Build all services
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
+ */
 class Builder
 {
     private string $_build_dir;
@@ -34,21 +44,29 @@ class Builder
 
     private array $_at_end = [];
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->_includer = new Includer();
     }
 
+    /**
+     * Build all services
+     *
+     * @return void
+     */
     public function build()
     {
         $getcwd = getcwd();
         $build_dir = $getcwd . '/builddir';
         $this->_build_dir = $build_dir;
         $this->_createBuildir($build_dir);
-        recurse_copy($getcwd . '/public', $build_dir . '/public');
+        recurseCopy($getcwd . '/public', $build_dir . '/public');
 
         $get_services_classes = $this->_includer->includeAllFile($getcwd . '/services');
-        require_all();
+        requireAll();
         $all_services = MakeClasses::makeClasses($get_services_classes);
 
 
@@ -64,7 +82,7 @@ class Builder
             $include_list->addOther($service_function . '();');
         }
 
-        $this->generateInjectorFunction($include_list);
+        $this->_generateInjectorFunction($include_list);
 
         $include_list->addOther('function atEnd() {' . "\n");
 
@@ -85,7 +103,7 @@ class Builder
 
     /**
      * Create the build directory
-     * 
+     *
      * @return void
      */
     private function _createBuildir()
@@ -105,9 +123,9 @@ class Builder
 
     /**
      * Build All interfaces on Adebipe namespace
-     * 
+     *
      * @param IncludeList $include_list The list of the interfaces
-     * 
+     *
      * @return void
      */
     private function _buildInterfaces(IncludeList $include_list): void
@@ -126,10 +144,10 @@ class Builder
 
     /**
      * Build all services
-     * 
+     *
      * @param IncludeList            $include_list The list of the interfaces
      * @param array<ReflectionClass> $all_services The list of all services
-     * 
+     *
      * @return void
      */
     private function _buildServices(IncludeList $include_list, array $all_services): void
@@ -159,12 +177,19 @@ class Builder
         }
     }
 
+    /**
+     * Build a service with a builder
+     *
+     * @param IncludeList     $include_list The list of the interfaces
+     * @param ReflectionClass $service      The service to build
+     *
+     * @return ReflectionClass The service built
+     */
     private function _buildBuilder(IncludeList $include_list, ReflectionClass $service): ReflectionClass
     {
         $container = MakeClasses::$container;
         $class = $container->getService($service->getName());
 
-        $builder_file = $service->getFileName();
         $builder_name = $class->build();
         try {
             $builder_class_name = $this->_includer->includeFile("src/Builder/" . $builder_name)[0];
@@ -174,7 +199,7 @@ class Builder
         $builder_class = new ReflectionClass($builder_class_name);
 
         $tmp = $this->_build_dir . '/tmp/' . uniqid() . '.php';
-        
+
         $instance = $builder_class->newInstance();
 
         $instance->build($tmp, $this->_builder_helper);
@@ -196,11 +221,19 @@ class Builder
         return $result;
     }
 
+    /**
+     * Build a creator service
+     *
+     * @param IncludeList     $include_list The list of the interfaces
+     * @param ReflectionClass $service      The service to build
+     *
+     * @return void
+     */
     private function _buildCreator(IncludeList $include_list, ReflectionClass $service): void
     {
         $this->_buildFile($include_list, $service, '/services/');
         $service_builder = new ServicesBuilder($service);
-        $include_list->addFunction($service_builder->generate_function_constructor());
+        $include_list->addFunction($service_builder->generateFunctionConstructor());
         $name = ServicesBuilder::getName($service->getName());
         $this->_at_end[] = $service_builder->atEnd();
         if (in_array(RegisterServiceInterface::class, $service->getInterfaceNames())) {
@@ -212,10 +245,10 @@ class Builder
 
     /**
      * Build all other services
-     * 
+     *
      * @param IncludeList     $include_list The list of the interfaces
-     * @param ReflectionClass $all_services The list of all services
-     * 
+     * @param ReflectionClass $service      The list of all services
+     *
      * @return void
      */
     private function _buildOther(IncludeList $include_list, ReflectionClass $service): void
@@ -224,6 +257,15 @@ class Builder
     }
 
 
+    /**
+     * Build a file
+     *
+     * @param IncludeList     $include_list The list of the interfaces
+     * @param ReflectionClass $service      The service to build
+     * @param string          $directory    The directory where to put the file
+     *
+     * @return void
+     */
     private function _buildFile(IncludeList $include_list, ReflectionClass $service, string $directory)
     {
         $file = $service->getFileName();
@@ -241,7 +283,14 @@ class Builder
         $include_list->add($include);
     }
 
-    private function generateInjectorFunction(IncludeList $include_list)
+    /**
+     * Generate the injector function
+     *
+     * @param IncludeList $include_list The list of the interfaces
+     *
+     * @return void
+     */
+    private function _generateInjectorFunction(IncludeList $include_list)
     {
         $include_list->addOther('$injector = ' . ServicesBuilder::getName(Injector::class) . '();' . "\n");
         foreach ($this->_injector_services as $service) {

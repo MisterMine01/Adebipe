@@ -9,38 +9,45 @@ use Adebipe\Services\Interfaces\BuilderServiceInterface;
 use Adebipe\Services\Interfaces\CreatorInterface;
 use ReflectionMethod;
 
+/**
+ * Services to manage routes
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
+ */
 class Router implements CreatorInterface, BuilderServiceInterface
 {
-
-    private RouteKeeper $routeKeeper;
-
-    /**
-     * Logger
-     * @var Logger
-     */
-    private Logger $logger;
-
     /**
      * Constructor
-     * @param Logger $logger
+     *
+     * @param Logger      $_logger      Logger of the application
+     * @param RouteKeeper $_routeKeeper RouteKeeper of the application
      */
-    public function __construct(Logger $logger, RouteKeeper $routeKeeper)
-    {
-        $this->logger = $logger;
-        $this->routeKeeper = $routeKeeper;
+    public function __construct(
+        private Logger $_logger,
+        private RouteKeeper $_routeKeeper
+    ) {
     }
 
     /**
-     * build the prod router
-     * @param string $classCode
-     * @return string The prod router
+     * Get the service builder name
+     *
+     * @return string path to the builder of the service
      */
     public function build(): string
     {
         return "adebipe/Router/RouterBuilder.php";
     }
 
-    private function executeRoute(ReflectionMethod $method, array $parameters, Injector $injector): mixed
+    /**
+     * Execute a route with the parameters
+     *
+     * @param ReflectionMethod $method     Method to execute
+     * @param array            $parameters Parameters to inject
+     * @param Injector         $injector   Injector of the application
+     *
+     * @return Response
+     */
+    private function _executeRoute(ReflectionMethod $method, array $parameters, Injector $injector): Response
     {
         // Execute before Annotations
         foreach ($method->getAttributes() as $attribute) {
@@ -65,13 +72,14 @@ class Router implements CreatorInterface, BuilderServiceInterface
             throw new \Exception('Response is not an instance of Response');
         }
         return $response;
-
     }
 
     /**
      * Get the response for a request
-     * @param Request $request
-     * @param Injector $injector
+     *
+     * @param Request  $request  Request to get the response
+     * @param Injector $injector Injector of the application
+     *
      * @return Response
      */
     public function getResponse(Request $request, Injector $injector): Response
@@ -81,20 +89,24 @@ class Router implements CreatorInterface, BuilderServiceInterface
 
         if (is_file("public" . $request->uri)) {
             // The request is a file
-            $this->logger->info('Get file: ' . $request->uri);
+            $this->_logger->info('Get file: ' . $request->uri);
             $mime = json_decode(file_get_contents(__DIR__ . '/mime.json'), true);
-            return new Response(file_get_contents("public" . $request->uri), 200, [
-                'Content-Type' => $mime[pathinfo("public" . $request->uri, PATHINFO_EXTENSION)]
-            ]);
+            return new Response(
+                file_get_contents("public" . $request->uri),
+                200,
+                [
+                    'Content-Type' => $mime[pathinfo("public" . $request->uri, PATHINFO_EXTENSION)]
+                ]
+            );
         }
         // update the routes
-        $this->routeKeeper->updateRoutes();
-        $this->logger->info('Get response for request: ' . $request->uri);
+        $this->_routeKeeper->updateRoutes();
+        $this->_logger->info('Get response for request: ' . $request->uri);
         $add_to_injector = [
             Request::class => $request,
         ];
         // Find the route
-        $result = $this->routeKeeper->findRoute($request->uri, $request->method);
+        $result = $this->_routeKeeper->findRoute($request->uri, $request->method);
         // Check if the route is not found
         if ($result === null) {
             throw new \Exception('An error occured while finding the route');
@@ -105,6 +117,6 @@ class Router implements CreatorInterface, BuilderServiceInterface
         }
         $route = $result[0];
         $add_to_injector = array_merge($add_to_injector, $result[1]);
-        return $this->executeRoute($route, $add_to_injector, $injector);
+        return $this->_executeRoute($route, $add_to_injector, $injector);
     }
 }

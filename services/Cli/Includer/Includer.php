@@ -1,19 +1,22 @@
 <?php
 
-
-namespace Adebipe\Cli;
-
-require_once __DIR__ . '/IncluderInterface.php';
-use IncluderInterface;
+namespace Adebipe\Cli\Includer;
 
 /**
  * Get all files from a directory and his subdirectories
- * 
- * @package Adebipe\Cli
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 class Includer implements IncluderInterface
 {
-    private function readPath($path): array
+    /**
+     * Find all files in a directory and follow the runtime
+     *
+     * @param string $path The path of the directory
+     *
+     * @return array
+     */
+    private function _readPath($path): array
     {
         $result = [
             "atStart" => [],
@@ -31,21 +34,28 @@ class Includer implements IncluderInterface
                 if ($item === "." || $item === "..") {
                     continue;
                 }
-                $loaded = $this->readPath($path . "/" . $item);
+                $loaded = $this->_readPath($path . "/" . $item);
                 $result["atStart"] = array_merge($result["atStart"], $loaded["atStart"]);
                 $result["middle"] = array_merge($result["middle"], $loaded["middle"]);
                 $result["atEnd"] = array_merge($result["atEnd"], $loaded["atEnd"]);
             }
             return $result;
         }
-        $loaded = $this->decodeDirRuntime($path); // If it's a directory with runtime
+        $loaded = $this->_decodeDirRuntime($path); // If it's a directory with runtime
         $result["atStart"] = array_merge($result["atStart"], $loaded["atStart"]);
         $result["middle"] = array_merge($result["middle"], $loaded["middle"]);
         $result["atEnd"] = array_merge($result["atEnd"], $loaded["atEnd"]);
         return $result;
     }
 
-    private function decodeDirRuntime($path): array
+    /**
+     * Find all files in a directory with the runtime
+     *
+     * @param string $path The path of the directory
+     *
+     * @return array
+     */
+    private function _decodeDirRuntime($path): array
     {
         $decoded_runtime = [
             "atStart" => [],
@@ -69,7 +79,7 @@ class Includer implements IncluderInterface
                 $filename = str_replace('@Last ', '', $item);
                 $new_file = $path . "/" . $filename;
                 $already_process[] = $filename;
-                $new_file = $this->readPath($new_file);
+                $new_file = $this->_readPath($new_file);
                 $decoded_runtime["atEnd"] = array_merge($decoded_runtime["atEnd"], $new_file["atStart"]);
                 $decoded_runtime["atEnd"] = array_merge($decoded_runtime["atEnd"], $new_file["middle"]);
                 $decoded_runtime["atEnd"] = array_merge($decoded_runtime["atEnd"], $new_file["atEnd"]);
@@ -77,7 +87,7 @@ class Includer implements IncluderInterface
             }
             $already_process[] = $item;
             $new_file = $path . '/' . $item;
-            $new_file = $this->readPath($new_file);
+            $new_file = $this->_readPath($new_file);
             $decoded_runtime["atStart"] = array_merge($decoded_runtime["atStart"], $new_file["atStart"]);
             $decoded_runtime["atStart"] = array_merge($decoded_runtime["atStart"], $new_file["middle"]);
             $decoded_runtime["atStart"] = array_merge($decoded_runtime["atStart"], $new_file["atEnd"]);
@@ -89,7 +99,7 @@ class Includer implements IncluderInterface
             }
             $already_process[] = $item;
             $new_file = $path . '/' . $item;
-            $new_file = $this->readPath($new_file);
+            $new_file = $this->_readPath($new_file);
             $decoded_runtime["middle"] = array_merge($decoded_runtime["middle"], $new_file["atStart"]);
             $decoded_runtime["middle"] = array_merge($decoded_runtime["middle"], $new_file["middle"]);
             $decoded_runtime["middle"] = array_merge($decoded_runtime["middle"], $new_file["atEnd"]);
@@ -97,9 +107,16 @@ class Includer implements IncluderInterface
         return $decoded_runtime;
     }
 
+    /**
+     * Find all files in a directory and his subdirectories
+     *
+     * @param string $path The path of the directory
+     *
+     * @return array<string>
+     */
     public function findAllFile($path): array
     {
-        $result = $this->readPath($path);
+        $result = $this->_readPath($path);
         $result = array_merge($result["atStart"], $result["middle"], $result["atEnd"]);
         $result = array_unique($result);
         $result = array_filter(
@@ -111,7 +128,13 @@ class Includer implements IncluderInterface
         return $result;
     }
 
-
+    /**
+     * Include all files in a directory and his subdirectories
+     *
+     * @param string $path The path of the directory
+     *
+     * @return array<string>
+     */
     public function includeAllFile($path): array
     {
         $all_file = $this->findAllFile($path);
@@ -122,6 +145,13 @@ class Includer implements IncluderInterface
         return $initialized_class;
     }
 
+    /**
+     * Include a file
+     *
+     * @param string $path The path of the file
+     *
+     * @return array<string> The classes declared in the file
+     */
     public function includeFile($path): array
     {
         if (!file_exists($path)) {

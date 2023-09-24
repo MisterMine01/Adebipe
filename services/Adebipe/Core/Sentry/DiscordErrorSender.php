@@ -2,44 +2,59 @@
 
 namespace Adebipe\Services;
 
-class DiscordSentry implements SentryInterfaces
+/**
+ * Discord error sender
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
+ */
+class DiscordErrorSender implements ErrorSenderInterface
 {
-    private $indexAlreadySent = 0;
-    private string $webhook_url;
-    private ?string $username;
-    private ?string $avatar_url;
+    private $_indexAlreadySent = 0;
+    private string $_webhook_url;
+    private ?string $_username;
+    private ?string $_avatar_url;
 
 
+    /**
+     * Constructor of the DiscordErrorSender
+     */
     public function __construct()
     {
-        $this->webhook_url = getenv('DISCORD_WEBHOOK');
-        if (!$this->webhook_url) {
+        $this->_webhook_url = getenv('DISCORD_WEBHOOK');
+        if (!$this->_webhook_url) {
             throw new \Exception("No webhook url");
         }
-        $this->username = getenv('DISCORD_USERNAME');
-        if (!$this->username) {
-            $this->username = null;
+        $this->_username = getenv('DISCORD_USERNAME');
+        if (!$this->_username) {
+            $this->_username = null;
         }
-        $this->avatar_url = getenv('DISCORD_AVATAR_URL');
-        if (!$this->avatar_url) {
-            $this->avatar_url = null;
+        $this->_avatar_url = getenv('DISCORD_AVATAR_URL');
+        if (!$this->_avatar_url) {
+            $this->_avatar_url = null;
         }
-
     }
 
-    public function sendSentry(Logger $logger, array $backtrace): void
+    /**
+     * Send an error to discord
+     *
+     * @param Logger $logger    The logger to use
+     * @param array  $backtrace The backtrace of the error
+     *
+     * @return void
+     */
+    public function sendError(Logger $logger, array $backtrace): void
     {
         if (getenv('ENV') === 'dev') {
             return;
         }
         $logger->info('Sending to Discord');
-        
+
         $logData = $logger->logTrace;
 
         $all_sending = [];
 
         $firstPart = "```";
-        foreach (array_slice($logData, $this->indexAlreadySent) as $log) {
+        foreach (array_slice($logData, $this->_indexAlreadySent) as $log) {
             if (strlen($firstPart) + strlen($log) > 1800 - 3) {
                 $firstPart .= "```";
                 $all_sending[] = $firstPart;
@@ -47,7 +62,7 @@ class DiscordSentry implements SentryInterfaces
             }
             $firstPart .= $log;
         }
-        $this->indexAlreadySent = count($logData);
+        $this->_indexAlreadySent = count($logData);
         $firstPart .= "```";
         $all_sending[] = $firstPart;
 
@@ -78,43 +93,53 @@ class DiscordSentry implements SentryInterfaces
         $secondPart .= "```";
         $all_sending[] = $secondPart;
 
-        var_dump($all_sending);
         foreach ($all_sending as $message) {
-            $this->sendMessage($message);
+            $this->_sendMessage($message);
         }
     }
 
-
-    private function sendMessage(string $message) {
+    /**
+     * Send a message to the discord webhook
+     *
+     * @param string $message The message to send
+     *
+     * @return void
+     */
+    private function _sendMessage(string $message): void
+    {
         $data = [
             "content" => $message,
         ];
-        if ($this->username) {
-            $data["username"] = $this->username;
+        if ($this->_username) {
+            $data["username"] = $this->_username;
         }
-        if ($this->avatar_url) {
-            $data["avatar_url"] = $this->avatar_url;
+        if ($this->_avatar_url) {
+            $data["avatar_url"] = $this->_avatar_url;
         }
 
         $json_data = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
-             
-        $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36';
+
+        $userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko)' .
+            'Chrome/48.0.2564.109 Safari/537.36';
         $contentType = "Content-type: application/json\r\n" . "Accept-language: en\r\n";
 
-        $result = file_get_contents($this->webhook_url, false, stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'user_agent' => $userAgent,
-                'header' => $contentType,
-                'content' => $json_data
-            ]
-        ]));
+        $result = file_get_contents(
+            $this->_webhook_url,
+            false,
+            stream_context_create(
+                [
+                    'http' => [
+                        'method' => 'POST',
+                        'user_agent' => $userAgent,
+                        'header' => $contentType,
+                        'content' => $json_data
+                    ]
+                ]
+            )
+        );
         if ($result === false) {
             var_dump($json_data);
         }
-
-        
     }
-
 }

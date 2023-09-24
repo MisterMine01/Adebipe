@@ -1,12 +1,12 @@
 <?php
 
-use Adebipe\Cli\Build;
+use Adebipe\Cli\Builder\Builder;
 use Adebipe\Cli\MakeClasses;
 
 putenv('ENV=build');
 
 try {
-    include_once __DIR__ . '/services/Cli/Builder/Builder.php';
+    include_once __DIR__ . '/services/Cli/Builder.php';
     $build = new Builder();
     $build->build();
 } catch (Throwable $e) {
