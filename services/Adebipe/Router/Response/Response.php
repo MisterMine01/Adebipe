@@ -4,6 +4,8 @@ namespace Adebipe\Router;
 
 /**
  * Response class
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
  */
 class Response
 {

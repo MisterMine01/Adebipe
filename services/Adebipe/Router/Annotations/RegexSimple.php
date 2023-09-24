@@ -2,8 +2,13 @@
 
 namespace Adebipe\Router\Annotations;
 
-use NoBuildable;
+use Adebipe\Builder\NoBuildable;
 
+/**
+ * Regex for routes (for simplify the use of regex)
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
+ */
 #[NoBuildable]
 enum RegexSimple: string
 {

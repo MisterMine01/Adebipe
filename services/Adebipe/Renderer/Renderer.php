@@ -5,19 +5,36 @@ namespace Adebipe\Services;
 use Adebipe\Router\Response;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
 
+/**
+ * Render a view
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
+ */
 class Renderer implements RegisterServiceInterface
 {
-    private string $dir;
+    private string $_dir;
 
+    /**
+     * Renderer constructor.
+     */
     public function __construct()
     {
-        $this->dir = getenv('VIEW_DIR');
+        $this->_dir = getenv('VIEW_DIR');
     }
+
+    /**
+     * Render a view with environements variables
+     *
+     * @param string $path          The path of the view
+     * @param array  $environements The environements variables
+     *
+     * @return Response
+     */
     public function render(string $path, array $environements): Response
     {
         $result = 200;
         try {
-            $body = $this->getTemplate($path, $environements);
+            $body = $this->_getTemplate($path, $environements);
         } catch (\Throwable $th) {
             $result = 500;
             $body = $th->getMessage();
@@ -27,12 +44,17 @@ class Renderer implements RegisterServiceInterface
 
     /**
      * Execute php file on path with environements variables and return the result
+     *
+     * @param string $path          The path of the file
+     * @param array  $environements The environements variables
+     *
+     * @return string
      */
-    private function getTemplate(string $path, array $environements): string
+    private function _getTemplate(string $path, array $environements): string
     {
         extract($environements);
         ob_start();
-        include $this->dir . $path;
+        include $this->_dir . $path;
         return ob_get_clean();
     }
 }
