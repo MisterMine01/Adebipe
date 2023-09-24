@@ -3,7 +3,7 @@
 namespace Adebipe\Cli\Builder;
 
 use Adebipe\Builder\CoreBuilderInterface;
-use Adebipe\Cli\Includer;
+use Adebipe\Cli\Includer\Includer;
 use Adebipe\Services\Container;
 
 /**
