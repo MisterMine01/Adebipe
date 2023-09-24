@@ -10,6 +10,11 @@ use ReflectionMethod;
 
 // CODE OF USES GOES HERE
 
+/**
+ * Services to manage routes
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
+ */
 class Router implements CreatorInterface
 {
     /**
@@ -20,57 +25,25 @@ class Router implements CreatorInterface
     private array $_mime = ["MIME TYPES GO HERE"];
 
     /**
-     * Logger
-     *
-     * @var Logger
-     */
-    private Logger $logger;
-
-    private RouteKeeper $routeKeeper;
-
-    /**
      * Constructor
      *
-     * @param Logger $logger
+     * @param Logger      $_logger      Logger of the application
+     * @param RouteKeeper $_routeKeeper RouteKeeper of the application
      */
-    public function __construct(Logger $logger, RouteKeeper $routeKeeper)
-    {
-        $this->logger = $logger;
-        $this->routeKeeper = $routeKeeper;
+    public function __construct(
+        private Logger $_logger,
+        private RouteKeeper $_routeKeeper
+    ) {
     }
 
     // CODE OF ROUTES GOES HERE
 
-
-    /**
-     * Get the the id of the route and assign is value from the uri
-     */
-    public function perform_regex(string $route, string $regex_route, string $uri): array
-    {
-        $this->logger->info('Perform regex for route: ' . $route);
-
-        $to_inject = [];
-
-        preg_match_all('/\{([a-zA-Z0-9_]+)\}/', $route, $matches);
-        $id = $matches[0];
-        $this->logger->info('Get id: ' . json_encode($id));
-        preg_match($regex_route, $uri, $matches);
-        $this->logger->info('Get matches: ' . json_encode($matches));
-
-        for ($i = 0; $i < count($id); $i++) {
-            $id_sub = substr($id[$i], 1, -1);
-            $to_inject[$id_sub] = $matches[$i + 1];
-        }
-        $this->logger->info('Get to inject: ' . json_encode($to_inject));
-        return $to_inject;
-    }
-
-
     /**
      * Get the response for a request
      *
-     * @param  Request  $request
-     * @param  Injector $injector
+     * @param Request  $request  Request to get the response
+     * @param Injector $injector Injector of the application
+     *
      * @return Response
      */
     public function getResponse(\Adebipe\Router\Request $request, Injector $injector): Response
@@ -80,7 +53,7 @@ class Router implements CreatorInterface
 
         if (is_file("public" . $request->uri)) {
             // The request is a file
-            $this->logger->info('Get file: ' . $request->uri);
+            $this->_logger->info('Get file: ' . $request->uri);
             return new \Adebipe\Router\Response(
                 file_get_contents("public" . $request->uri),
                 200,
@@ -90,12 +63,12 @@ class Router implements CreatorInterface
             );
         }
         // update the routes
-        $this->logger->info('Get response for request: ' . $request->uri);
+        $this->_logger->info('Get response for request: ' . $request->uri);
         $add_to_injector = [
             Request::class => $request,
         ];
         // Find the route
-        $result = $this->routeKeeper->findRoute($request->uri, $request->method);
+        $result = $this->_routeKeeper->findRoute($request->uri, $request->method);
         // Check if the route is not found
         if ($result === null) {
             throw new \Exception('An error occured while finding the route');
@@ -106,10 +79,19 @@ class Router implements CreatorInterface
         }
         $route = $result[0];
         $add_to_injector = array_merge($add_to_injector, $result[1]);
-        return $this->executeRoute($route, $add_to_injector, $injector);
+        return $this->_executeRoute($route, $add_to_injector, $injector);
     }
 
-    private function executeRoute(ReflectionMethod $method, array $parameters, Injector $injector): mixed
+    /**
+     * Execute a route with the parameters
+     *
+     * @param ReflectionMethod $method     Method to execute
+     * @param array            $parameters Parameters to inject
+     * @param Injector         $injector   Injector of the application
+     *
+     * @return Response
+     */
+    private function _executeRoute(ReflectionMethod $method, array $parameters, Injector $injector): mixed
     {
         // Execute before Annotations
         foreach ($method->getAttributes() as $attribute) {
