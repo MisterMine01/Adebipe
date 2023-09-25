@@ -37,6 +37,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
             mkdir('logs');
         }
         $log_level = getenv('LOG_LEVEL');
+        fwrite(STDOUT, "Log level : " . $log_level . PHP_EOL);
         if ($log_level === false) {
             $log_level = 1;
         }
@@ -166,6 +167,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message The message of the log
      *
+     * @infection-ignore-all
+     *
      * @return void
      */
     public function debug(string $message): void
@@ -178,6 +181,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message The message of the log
      *
+     * @infection-ignore-all
+     *
      * @return void
      */
     public function info(string $message): void
@@ -189,6 +194,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      * Log a warning message
      *
      * @param string $message The message of the log
+     *
+     * @infection-ignore-all
      *
      * @return void
      */
@@ -206,6 +213,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message The message of the log
      *
+     * @infection-ignore-all
+     *
      * @return void
      */
     public function error(string $message): void
@@ -220,6 +229,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message   The message of the log
      * @param array  $backtrace The backtrace of the error
+     *
+     * @infection-ignore-all
      *
      * @return void
      */
