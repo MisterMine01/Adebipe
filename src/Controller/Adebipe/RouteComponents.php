@@ -26,7 +26,7 @@ class RouteComponents implements ComponentInterface
                 ];
                 foreach ($function[0]->getAttributes() as $attribute) {
                     if ($attribute->getName() === Route::class) {
-                        $route['env'] = $attribute->getArguments()['env'];
+                        $route['env'] = $attribute->getArguments()['env'] ?? 'prod';
                         continue;
                     }
                     $route['more'][$attribute->getName()] = $attribute->getArguments();

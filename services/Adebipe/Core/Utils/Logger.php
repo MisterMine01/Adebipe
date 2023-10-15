@@ -71,6 +71,10 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     public function atStart(): void
     {
         $class = Settings::getConfig("CORE.LOGGER.ERROR_CLASS");
+        if (!$class) {
+            $this->debug("No sentry");
+            return;
+        }
         if (class_exists($class)) {
             $this->_sender = new $class();
             $this->info($class . ' sentry loaded');
