@@ -9,7 +9,7 @@ use Adebipe\Services\Interfaces\StarterServiceInterface;
  *
  * @author BOUGET Alexandre <abouget68@gmail.com>
  */
-class Dotenv implements StarterServiceInterface
+class ConfigRunner implements StarterServiceInterface
 {
     private $_variable = array();
 
