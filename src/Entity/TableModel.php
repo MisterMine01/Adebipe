@@ -8,8 +8,8 @@ class TableModel extends ORMTableCreator
 {
     public function __construct()
     {
-        $this->create_model(User::class);
-        $this->create_model(Party::class);
+        $this->createModel(User::class);
+        $this->createModel(Party::class);
     }
 
     public function getFixtures(): array

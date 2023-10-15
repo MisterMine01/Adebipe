@@ -2,7 +2,7 @@
 
 namespace Adebipe\Cli\Builder;
 
-use Adebipe\Cli\Includer;
+use Adebipe\Cli\Includer\Includer;
 use Adebipe\Cli\MakeClasses;
 use Adebipe\Services\Container;
 use Adebipe\Services\Injector;
@@ -97,7 +97,7 @@ class Builder
 
         file_put_contents(
             $build_dir . '/router.php',
-            file_get_contents("src/Builder/adebipe/router.php")
+            file_get_contents("src/Builder/adebipe/router")
         );
     }
 
