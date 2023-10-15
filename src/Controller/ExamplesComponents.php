@@ -44,7 +44,7 @@ class ExampleComponent implements ComponentInterface
         'email' => '?string',
         ]
     )]
-    public static function test(Renderer $renderer, Request $request): Response
+    public static function render(Renderer $renderer, Request $request): Response
     {
         return $renderer->render('test.php', ['post' => $request->post]);
     }

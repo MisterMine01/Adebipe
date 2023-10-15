@@ -45,7 +45,10 @@ class Injector implements RegisterServiceInterface
      */
     public function getService(string $name): ?RegisterServiceInterface
     {
-        return $this->_services[$name];
+        if (isset($this->_services[$name])) {
+            return $this->_services[$name];
+        }
+        return null;
     }
 
     /**

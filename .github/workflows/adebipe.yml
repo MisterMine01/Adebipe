@@ -35,6 +35,12 @@ jobs:
     
     - name: Check for sniffs
       run: vendor/bin/phpcs src/Builder services --colors --report=summary
+    
+    - name: Check for tests
+      run: vendor/bin/phpunit --colors=always --testdox
+
+    #- name: Check for infection
+    #  run: vendor/bin/infection --min-msi=95 --min-covered-msi=95 --threads=4 --show-mutations --only-covered
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md

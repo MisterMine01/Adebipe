@@ -2,6 +2,12 @@
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Adebipe Ruleset">
     <description>Adebipe ruleset for phpcs (use PSR-12)</description>
 
+    <exclude-pattern>*/src/Controller/*</exclude-pattern>
+    <exclude-pattern>*/src/Entity/*</exclude-pattern>
+    <exclude-pattern>*/src/Views/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+
 
     <!-- Code MUST follow all rules outlined in PSR-1. -->
     <rule ref="PSR12">

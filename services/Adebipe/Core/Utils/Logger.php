@@ -12,19 +12,20 @@ use Adebipe\Services\Interfaces\StarterServiceInterface;
  */
 class Logger implements StarterServiceInterface, RegisterServiceInterface
 {
-    private ErrorSenderInterface $_sender;
-    public $logTrace = array();
-
-
-    private $_logFile;
-    private $_loglevel;
-    private $_loglevels = [
+    private static array $_loglevels = [
         'DEBUG' => 0,
         'INFO' => 1,
         'WARNING' => 2,
         'ERROR' => 3,
         'CRITICAL' => 4
     ];
+
+    private ErrorSenderInterface $_sender;
+    public $logTrace = array();
+
+
+    private $_logFile;
+    private int $_loglevel;
 
 
     /**
@@ -35,9 +36,31 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         if (!is_dir('logs')) {
             mkdir('logs');
         }
-        $this->_loglevel = getenv('LOG_LEVEL') ?? 1;
-        $this->_logFile = fopen('logs/' . date('Y-m-d-H-i-s') . '.log', 'wb');
+        $log_level = getenv('LOG_LEVEL');
+        fwrite(STDOUT, "Log level : " . $log_level . PHP_EOL);
+        if ($log_level === false) {
+            $log_level = 1;
+        }
+        $this->_loglevel = intval($log_level);
+        if ($this->_loglevel < 0 || $this->_loglevel > 4) {
+            throw new \Exception('Invalid log level');
+        }
+        if (!getenv('LOG_IN_FILE')) {
+            $this->_logFile = STDOUT;
+        } else {
+            $this->_logFile = fopen('logs/' . date('Y-m-d-H-i-s') . '.log', 'wb');
+        }
         $this->info('Starting Logger');
+    }
+
+    /**
+     * Get the log levels
+     *
+     * @return string
+     */
+    public function getLogLevels(): string
+    {
+        return array_keys(self::$_loglevels)[$this->_loglevel];
     }
 
     /**
@@ -116,10 +139,10 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      */
     private function _log(string $type, string $message): void
     {
-        if (!isset($this->_loglevels[$type])) {
+        if (!isset(self::$_loglevels[$type])) {
             throw new \Exception('Invalid log type');
         }
-        if ($this->_loglevel > $this->_loglevels[$type]) {
+        if ($this->_loglevel > self::$_loglevels[$type]) {
             return;
         }
 
@@ -132,6 +155,9 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
             fflush(STDOUT);
         }
         $log = mb_convert_encoding($log, 'UTF-8');
+        if ($this->_logFile === STDOUT) {
+            return;
+        }
         fwrite($this->_logFile, $log);
         fflush($this->_logFile);
     }
@@ -140,6 +166,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      * Log a debug message
      *
      * @param string $message The message of the log
+     *
+     * @infection-ignore-all
      *
      * @return void
      */
@@ -153,6 +181,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message The message of the log
      *
+     * @infection-ignore-all
+     *
      * @return void
      */
     public function info(string $message): void
@@ -164,6 +194,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      * Log a warning message
      *
      * @param string $message The message of the log
+     *
+     * @infection-ignore-all
      *
      * @return void
      */
@@ -181,6 +213,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message The message of the log
      *
+     * @infection-ignore-all
+     *
      * @return void
      */
     public function error(string $message): void
@@ -195,6 +229,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message   The message of the log
      * @param array  $backtrace The backtrace of the error
+     *
+     * @infection-ignore-all
      *
      * @return void
      */
