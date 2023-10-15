@@ -2,6 +2,7 @@
 
 namespace Adebipe\Services;
 
+use Adebipe\Services\Interfaces\BuilderServiceInterface;
 use Adebipe\Services\Interfaces\StarterServiceInterface;
 
 /**
@@ -9,7 +10,7 @@ use Adebipe\Services\Interfaces\StarterServiceInterface;
  *
  * @author BOUGET Alexandre <abouget68@gmail.com>
  */
-class ConfigRunner implements StarterServiceInterface
+class ConfigRunner implements StarterServiceInterface, BuilderServiceInterface
 {
     private $_variable = array();
 
@@ -43,9 +44,30 @@ class ConfigRunner implements StarterServiceInterface
                 Settings::addConfigArray($config['config'] ?? [], false);
                 foreach ($config['env_var'] ?? [] as $key => $value) {
                     Settings::addEnvVariable($key, $value);
+                    $this->_variable[$key] = $value;
                 }
             }
         }
+    }
+
+    /**
+     * Get Environment variables
+     *
+     * @return array
+     */
+    public function getEnv(): array
+    {
+        return $this->_variable;
+    }
+
+    /**
+     * Get the service builder name
+     *
+     * @return string path to the builder of the service
+     */
+    public function build(): string
+    {
+        return "adebipe/ConfigRunner/RunnerBuilder.php";
     }
 
     /**

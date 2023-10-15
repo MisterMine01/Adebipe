@@ -69,8 +69,11 @@ class Settings
      *
      * @return mixed
      */
-    public static function getConfig(string $key): mixed
+    public static function getConfig(?string $key): mixed
     {
+        if ($key === null) {
+            return self::$_config;
+        }
         $keys = explode('.', $key);
         $config = self::$_config;
         foreach ($keys as $key) {

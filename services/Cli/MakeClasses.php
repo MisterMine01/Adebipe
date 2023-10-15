@@ -24,12 +24,16 @@ class MakeClasses
     /**
      * Make the classes from the Application namespace
      *
-     * @param array<string> $classes The list of the classes
+     * @param array<string> $classes       The list of the classes
+     * @param ConfigRunner  $config_runner The config runner
      *
      * @return array<ReflectionClass>
      */
-    public static function makeClasses(array $classes, ConfigRunner $config_runner): array
+    public static function makeClasses(array $classes, ?ConfigRunner $config_runner = null): array
     {
+        if ($config_runner === null) {
+            $config_runner = new ConfigRunner();
+        }
         $logger = new Logger();
         $logger->info('Initialize the services');
         $injector = new Injector($logger);
