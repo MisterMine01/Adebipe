@@ -16,7 +16,7 @@ return [
             "LOGGER" => [
                 "LOG_IN_FILE" => true,
                 "LOG_LEVEL" => 0,
-                "ERROR_CLASS" => "Adebipe\Services\DiscordSentry",
+                //"ERROR_CLASS" => "Adebipe\Services\DiscordErrorSender",
             ],
             "ORM" => [
                 "TABLE_MODELS" => "App\Model\TableModel",
