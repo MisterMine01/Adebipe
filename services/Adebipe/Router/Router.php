@@ -119,11 +119,13 @@ class Router implements CreatorInterface, BuilderServiceInterface
         $add_to_injector = array_merge($add_to_injector, $result[1]);
         $response = $this->_executeRoute($route, $add_to_injector, $injector);
         $allowedOrigin = Settings::getConfig('APP.CORS');
-        if ($allowedOrigin === "*") {
-            $allowedOrigin = [$request->origin];
-        }
-        if (in_array($request->origin, $allowedOrigin)) {
-            $response->headers['Access-Control-Allow-Origin'] = $request->origin;
+        if ($request->origin) {
+            if ($allowedOrigin === "*") {
+                $allowedOrigin = [$request->origin];
+            }
+            if (in_array($request->origin, $allowedOrigin)) {
+                $response->headers['Access-Control-Allow-Origin'] = $request->origin;
+            }
         }
         return $response;
     }
