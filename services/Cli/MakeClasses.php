@@ -29,7 +29,7 @@ class MakeClasses
      *
      * @return array<ReflectionClass>
      */
-    public static function makeClasses(array $classes, ?ConfigRunner $config_runner = null): array
+    public static function makeClasses(array $classes, ConfigRunner $config_runner = null): array
     {
         if ($config_runner === null) {
             $config_runner = new ConfigRunner();

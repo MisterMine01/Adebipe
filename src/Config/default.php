@@ -33,8 +33,10 @@ return [
                 "DISCORD" => [
                     "USERNAME" => "Adebipe",
                 ]
+            ],
+            "CORS" => [
+                "*"
             ]
-
         ]
     ],
 ];

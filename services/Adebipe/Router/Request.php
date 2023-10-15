@@ -13,6 +13,7 @@ class Request
     /**
      * Create a new request
      *
+     * @param string                $origin  Origin of the request
      * @param string                $method  Method of the request
      * @param string                $uri     URI of the request
      * @param array<string, string> $headers Headers of the request
@@ -25,6 +26,12 @@ class Request
      * @param string                $ip      IP of the request
      */
     public function __construct(
+        /**
+         * Origin of the request
+         *
+         * @var string
+         */
+        public string $origin,
         /**
          * Method of the request
          *
