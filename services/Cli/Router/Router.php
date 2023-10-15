@@ -59,6 +59,7 @@ class Router
         $logger->info('Router running');
 
         $request = new Request(
+            $_SERVER['HTTP_ORIGIN'],
             $_SERVER['REQUEST_METHOD'],
             parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH),
             getallheaders(),

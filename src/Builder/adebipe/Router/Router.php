@@ -6,6 +6,7 @@ use Adebipe\Router\Response;
 use Adebipe\Services\Injector;
 use Adebipe\Services\Interfaces\CreatorInterface;
 use Adebipe\Services\Logger;
+use Adebipe\Services\Settings;
 use ReflectionMethod;
 
 // CODE OF USES GOES HERE
@@ -48,6 +49,16 @@ class Router implements CreatorInterface
      */
     public function getResponse(\Adebipe\Router\Request $request, Injector $injector): Response
     {
+        $header = [];
+        $allowedOrigin = Settings::getConfig('APP.CORS');
+        if ($allowedOrigin === "*") {
+            $allowedOrigin = [$request->origin];
+        }
+        if (in_array($request->origin, $allowedOrigin)) {
+            $header['Access-Control-Allow-Origin'] = $request->origin;
+        } else {
+            return new \Adebipe\Router\Response('Not allowed', 403);
+        }
         // Remove double slashes or more in the uri
         $request->uri = preg_replace('(\/+)', '/', $request->uri);
 
