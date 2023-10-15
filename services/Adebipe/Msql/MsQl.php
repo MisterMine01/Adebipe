@@ -30,7 +30,7 @@ class MsQl implements RegisterServiceInterface
     public function __construct(
         private Logger $_logger
     ) {
-        $connection_string = getenv('DB_CONNECTION');
+        $connection_string = Settings::getEnvVariable('DB_CONNECTION');
         if (!$connection_string) {
             $this->_logger->warning('DB_CONNECTION environment variable not set');
             return;
@@ -111,7 +111,7 @@ class MsQl implements RegisterServiceInterface
         try {
             $data = $statement->execute();
         } catch (PDOException $e) {
-            if (getenv('ENV') === 'dev') {
+            if (Settings::getEnvVariable('ENV') === 'dev') {
                 $statement->debugDumpParams();
             }
             $this->_logger->critical("Error executing query: " . $e->getMessage());

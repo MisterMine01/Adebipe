@@ -2,8 +2,8 @@
 
 namespace Adebipe\Cli;
 
+use Adebipe\Services\ConfigRunner;
 use Adebipe\Services\Container;
-use Adebipe\Services\Dotenv;
 use Adebipe\Services\Injector;
 use Adebipe\Services\Interfaces\CreatorInterface;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
@@ -24,13 +24,16 @@ class MakeClasses
     /**
      * Make the classes from the Application namespace
      *
-     * @param array<string> $classes The list of the classes
+     * @param array<string> $classes       The list of the classes
+     * @param ConfigRunner  $config_runner The config runner
      *
      * @return array<ReflectionClass>
      */
-    public static function makeClasses(array $classes): array
+    public static function makeClasses(array $classes, ?ConfigRunner $config_runner = null): array
     {
-        $dotenv = new Dotenv();
+        if ($config_runner === null) {
+            $config_runner = new ConfigRunner();
+        }
         $logger = new Logger();
         $logger->info('Initialize the services');
         $injector = new Injector($logger);
@@ -42,7 +45,7 @@ class MakeClasses
         $injector->addService($container);
         $injector->addService($injector);
 
-        $container->addService($dotenv);
+        $container->addService($config_runner);
         $container->addService($logger);
         $container->addService($injector);
         $container->addService($container);
@@ -56,7 +59,7 @@ class MakeClasses
                 continue;
             }
             $container->addReflection($reflection);
-            if (in_array($class, [Dotenv::class, Logger::class, Injector::class, Container::class])) {
+            if (in_array($class, [ConfigRunner::class, Logger::class, Injector::class, Container::class])) {
                 $logger->info('Skip service: ' . $class);
                 continue;
             }

@@ -19,7 +19,7 @@ class Renderer implements RegisterServiceInterface
      */
     public function __construct()
     {
-        $this->_dir = getenv('VIEW_DIR');
+        $this->_dir = Settings::getConfig('DIR') . Settings::getConfig('CORE.RENDERER.VIEW_DIR');
     }
 
     /**

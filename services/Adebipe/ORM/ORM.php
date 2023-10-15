@@ -42,12 +42,12 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
     public function atStart(MsQl $msql = null): void
     {
         $this->_msql = $msql;
-        $class_creator = getenv("ORM_TABLE_MODELS");
+        $class_creator = Settings::getConfig("CORE.ORM.TABLE_MODELS");
         if (!$class_creator) {
-            throw new \Exception("ORM_TABLE_MODELS environment variable not set");
+            throw new \Exception("TABLE_MODELS config not set");
         }
         if (!class_exists($class_creator)) {
-            if (getenv("ENV") == 'build') {
+            if (Settings::getEnvVariable('ENV') == 'build') {
                 return;
             }
         }
@@ -114,7 +114,7 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
         foreach ($already_existed as $table) {
             $already_table_name[] = $table['TABLE_NAME'];
         }
-        $class_creator = getenv("ORM_TABLE_MODELS");
+        $class_creator = Settings::getConfig("CORE.ORM.TABLE_MODELS");
         $class_init = new $class_creator();
         $fixtures = $class_init->getFixtures();
         foreach ($this->_repository as $table_name => $repository) {

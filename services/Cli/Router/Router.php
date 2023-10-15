@@ -5,8 +5,10 @@ namespace Adebipe\Cli\Router;
 use Adebipe\Cli\Includer\Includer;
 use Adebipe\Cli\MakeClasses;
 use Adebipe\Router\Request;
+use Adebipe\Services\ConfigRunner;
 use Adebipe\Services\Logger;
 use Adebipe\Services\Router as ServicesRouter;
+use Adebipe\Services\Settings;
 
 /**
  * Router of the CLI for development environment.
@@ -46,12 +48,13 @@ class Router
      */
     public function run($cwd = __DIR__): void
     {
+        chdir($cwd);
         $includer = new Includer();
         $data = $includer->includeAllFile($cwd . '/services');
-        $data2 = $includer->includeAllFile($cwd . '/src');
-        chdir($cwd);
+        $config_runner = new ConfigRunner();
+        $data2 = $includer->includeAllFile($cwd . '/' . Settings::getConfig('DIR'));
 
-        MakeClasses::makeClasses(array_merge($data, $data2));
+        MakeClasses::makeClasses(array_merge($data, $data2), $config_runner);
         $logger = MakeClasses::$container->getService(Logger::class);
         $logger->info('Router running');
 
