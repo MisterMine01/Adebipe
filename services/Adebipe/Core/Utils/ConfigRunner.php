@@ -29,10 +29,24 @@ class ConfigRunner implements StarterServiceInterface
             $this->_getEnvFile('.env.' . $env);
         }
         foreach ($this->_variable as $key => $value) {
-            putenv($key . '=' . $value);
+            Settings::addEnvVariable($key, $value);
+        }
+        // If the config file is set
+        if ($config_file = Settings::getEnvVariable('CONFIG')) {
+            $config_dir = Settings::getEnvVariable('CONFIG_DIR');
+            if ($config_dir === null) {
+                $config_dir = 'config/';
+            }
+            $config_path = $config_dir . $config_file;
+            if (is_file($config_path)) {
+                $config = include_once $config_path;
+                Settings::addConfigArray($config['config'] ?? [], false);
+                foreach ($config['env_var'] ?? [] as $key => $value) {
+                    Settings::addEnvVariable($key, $value);
+                }
+            }
         }
     }
-
 
     /**
      * Function to run at the start of the application

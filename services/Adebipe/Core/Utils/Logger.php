@@ -36,7 +36,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         if (!is_dir('logs')) {
             mkdir('logs');
         }
-        $log_level = getenv('LOG_LEVEL');
+        $log_level = Settings::getConfig("CORE.LOGGER.LOG_LEVEL");
         fwrite(STDOUT, "Log level : " . $log_level . PHP_EOL);
         if ($log_level === false) {
             $log_level = 1;
@@ -45,7 +45,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         if ($this->_loglevel < 0 || $this->_loglevel > 4) {
             throw new \Exception('Invalid log level');
         }
-        if (!getenv('LOG_IN_FILE')) {
+        if (!Settings::getConfig("CORE.LOGGER.LOG_IN_FILE")) {
             $this->_logFile = STDOUT;
         } else {
             $this->_logFile = fopen('logs/' . date('Y-m-d-H-i-s') . '.log', 'wb');
@@ -70,7 +70,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      */
     public function atStart(): void
     {
-        $class = getenv('ERROR_CLASS');
+        $class = Settings::getConfig("CORE.LOGGER.ERROR_CLASS");
         if (class_exists($class)) {
             $this->_sender = new $class();
             $this->info($class . ' sentry loaded');

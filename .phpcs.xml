@@ -21,6 +21,11 @@
         <exclude name="PEAR.Commenting.ClassComment.MissingLicenseTag"/>
         <exclude name="PEAR.Commenting.ClassComment.MissingLinkTag"/>
         <exclude name="PEAR.Commenting.ClassComment.MissingPackageTag"/>
+        <exclude name="PEAR.Commenting.FileComment.MissingCategoryTag"/>
+        <exclude name="PEAR.Commenting.FileComment.MissingPackageTag"/>
+        <exclude name="PEAR.Commenting.FileComment.MissingLicenseTag"/>
+        <exclude name="PEAR.Commenting.FileComment.MissingLinkTag"/>
+        <exclude name="PEAR.Commenting.FileComment.MissingVersion"/>
     </rule>
 
     <rule ref="Generic.Files.LineLength">
