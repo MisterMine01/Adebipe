@@ -15,7 +15,7 @@ return [
         "CORE" => [ // The core configuration
             "LOGGER" => [
                 "LOG_IN_FILE" => true,
-                "LOG_LEVEL" => 0,
+                "LOG_LEVEL" => 1,
                 //"ERROR_CLASS" => "Adebipe\Services\DiscordErrorSender",
             ],
             "ORM" => [
