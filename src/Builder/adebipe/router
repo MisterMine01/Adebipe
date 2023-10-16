@@ -13,6 +13,7 @@ try {
     include_once __DIR__ . '/services.php';
 
     $request = new \Adebipe\Router\Request(
+        $_SERVER['HTTP_ORIGIN'] ?? null,
         $_SERVER['REQUEST_METHOD'],
         $_SERVER['REQUEST_URI'],
         getallheaders(),
