@@ -31,16 +31,16 @@ abstract class Model implements ModelInterface
      */
     public function __construct(array $data)
     {
-        $this->schema = static::createSchema();
-        $all_key = array_keys($this->schema);
+        $this->_schema = static::createSchema();
+        $all_key = array_keys($this->_schema);
         foreach ($data as $key => $value) {
             if (!in_array($key, $all_key)) {
                 throw new \Exception("Unknown key $key");
             }
-            if (is_subclass_of($this->schema[$key], SqlBasedTypeInterface::class)) {
+            if (is_subclass_of($this->_schema[$key], SqlBasedTypeInterface::class)) {
                 continue;
             }
-            $this->properties[$key] = $value;
+            $this->_properties[$key] = $value;
         }
     }
 
@@ -51,7 +51,7 @@ abstract class Model implements ModelInterface
      */
     public function getSchema(): array
     {
-        return $this->schema;
+        return $this->_schema;
     }
 
     /**
@@ -61,7 +61,7 @@ abstract class Model implements ModelInterface
      */
     public function getKey(): array
     {
-        return array_keys($this->schema);
+        return array_keys($this->_schema);
     }
 
     /**
@@ -77,7 +77,7 @@ abstract class Model implements ModelInterface
             if (is_subclass_of($value, SqlBasedTypeInterface::class)) {
                 continue;
             }
-            $values[$key] = $this->properties[$key];
+            $values[$key] = $this->_properties[$key];
         }
         return $values;
     }
@@ -139,14 +139,14 @@ abstract class Model implements ModelInterface
             throw new \Exception("Unknown key $name");
         }
         $schema = $schema[$name];
-        if (!isset($this->properties[$name])) {
+        if (!isset($this->_properties[$name])) {
             if (!is_subclass_of($schema, SqlBasedTypeInterface::class)) {
                 return null;
             }
-            $this->properties[$name] = $schema->getResultFromDb(Model::$msql, $this->id);
+            $this->_properties[$name] = $schema->getResultFromDb(Model::$msql, $this->id);
         }
         $schema = $this->getSchema()[$name];
-        return $this->properties[$name];
+        return $this->_properties[$name];
     }
 
     /**
@@ -161,14 +161,14 @@ abstract class Model implements ModelInterface
      */
     public function __set(string $name, $value): void
     {
-        if (!isset($this->properties[$name])) {
+        if (!isset($this->_properties[$name])) {
             throw new \Exception("Unknown key $name");
         }
         $schema = $this->getSchema()[$name];
         if (is_subclass_of($schema, SqlBasedTypeInterface::class)) {
             throw new \Exception("You can't set value to $name");
         }
-        $this->properties[$name] = $value;
+        $this->_properties[$name] = $value;
     }
 
     /**
