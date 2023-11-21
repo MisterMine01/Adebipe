@@ -78,7 +78,8 @@ class ORMBuilder implements BuilderInterface
     {
         $init = array();
         foreach ($this->_repositories as $key => $repository) {
-            $init[] = '$this->repository["' . $key . '"] = new Repository("' . $key . '", $this->msql);';
+            $repository = $key::$repository;
+            $init[] = '$this->_repository["' . $key . '"] = new ' . $repository . '("' . $key . '", $this->_msql);';
         }
         return implode(PHP_EOL, $init);
     }

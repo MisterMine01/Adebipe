@@ -54,7 +54,8 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
         $class_init = new $class_creator();
         $all_schema = $class_init->getSchema();
         foreach ($all_schema as $table_name => $object_class) {
-            $this->_repository[$table_name] = new Repository($object_class, $this->_msql);
+            $repository = $object_class::$repository;
+            $this->_repository[$table_name] = new $repository($object_class, $this->_msql);
         }
         Model::$msql = $this->_msql;
     }
