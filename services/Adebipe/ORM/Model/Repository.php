@@ -228,7 +228,8 @@ class Repository implements RepositoryInterface
         if ($succeed === false) {
             return false;
         }
-        $sql = 
+        $object = $this->findOneById($this->_msql->getLastInsertId());
+        return $succeed;
     }
 
     /**
