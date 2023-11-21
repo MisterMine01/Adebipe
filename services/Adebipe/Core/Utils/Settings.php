@@ -63,6 +63,30 @@ class Settings
     }
 
     /**
+     * Add a configuration with a key and a value
+     *
+     * @param string $key   The key of the configuration
+     * @param mixed  $value The value of the configuration
+     *
+     * @return void
+     */
+    public static function addConfig(string $key, mixed $value): void
+    {
+        if ($key === null) {
+            return;
+        }
+        $keys = explode('.', $key);
+        $config = self::$_config;
+        foreach ($keys as $key) {
+            if (!isset($config[$key])) {
+                $config[$key] = array();
+            }
+        }
+        $config[$key] = $value;
+        return;
+    }
+
+    /**
      * Get a configuration value
      *
      * @param string $key The key of the configuration to get (if in a sub-array, use a dot to separate the keys)

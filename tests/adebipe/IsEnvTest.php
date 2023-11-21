@@ -7,6 +7,6 @@ class IsEnvTest extends TestCase
 {
     public function testIsEnv()
     {
-        $this->assertEquals('tests', Settings::getEnvVariable('ENV'));
+        $this->assertEquals('test', Settings::getEnvVariable('ENV'));
     }
 }
