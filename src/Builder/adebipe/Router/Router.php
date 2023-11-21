@@ -77,9 +77,6 @@ class Router implements CreatorInterface
         }
         // update the routes
         $this->_logger->info('Get response for request: ' . $request->uri);
-        $add_to_injector = [
-            Request::class => $request,
-        ];
         // Find the route
         $result = $this->_routeKeeper->findRoute($request->uri, $request->method);
         // Check if the route is not found
@@ -91,6 +88,10 @@ class Router implements CreatorInterface
             return new \Adebipe\Router\Response($result[1], $result[0]);
         }
         $route = $result[0];
+        $request->router_params = $result[1];
+        $add_to_injector = [
+            Request::class => $request,
+        ];
         $add_to_injector = array_merge($add_to_injector, $result[1]);
         return $this->_executeRoute($route, $add_to_injector, $injector);
     }

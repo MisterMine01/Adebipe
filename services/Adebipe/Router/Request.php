@@ -13,17 +13,18 @@ class Request
     /**
      * Create a new request
      *
-     * @param ?string               $origin  Origin of the request
-     * @param string                $method  Method of the request
-     * @param string                $uri     URI of the request
-     * @param array<string, string> $headers Headers of the request
-     * @param string                $body    Body of the request
-     * @param array<string, string> $get     Params of the request
-     * @param array<string, string> $files   Files of the request
-     * @param array<string, string> $cookies Cookies of the request
-     * @param array<string, string> $post    POST of the request
-     * @param int                   $port    Port of the request
-     * @param string                $ip      IP of the request
+     * @param ?string               $origin        Origin of the request
+     * @param string                $method        Method of the request
+     * @param string                $uri           URI of the request
+     * @param array<string, string> $headers       Headers of the request
+     * @param string                $body          Body of the request
+     * @param array<string, string> $get           Params of the request
+     * @param array<string, string> $files         Files of the request
+     * @param array<string, string> $cookies       Cookies of the request
+     * @param array<string, string> $post          POST of the request
+     * @param int                   $port          Port of the request
+     * @param string                $ip            IP of the request
+     * @param array<string, string> $router_params Params of the router
      */
     public function __construct(
         /**
@@ -91,7 +92,13 @@ class Request
          *
          * @var string
          */
-        public string $ip
+        public string $ip,
+        /**
+         * Params of the router
+         *
+         * @var array<string, string>
+         */
+        public array $router_params = []
     ) {
         if (self::_isJson($this->body)) {
             $data = json_decode($this->body, true);

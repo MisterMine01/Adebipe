@@ -84,6 +84,18 @@ class Router implements CreatorInterface, BuilderServiceInterface
      */
     public function getResponse(Request $request, Injector $injector): Response
     {
+        $header = [];
+        $allowedOrigin = Settings::getConfig('APP.CORS');
+        if ($request->origin) {
+            if ($allowedOrigin === "*") {
+                $allowedOrigin = [$request->origin];
+            }
+            if (in_array($request->origin, $allowedOrigin)) {
+                $header['Access-Control-Allow-Origin'] = $request->origin;
+            } else {
+                return new \Adebipe\Router\Response('Not allowed', 403);
+            }
+        }
         // Remove double slashes or more in the uri
         $request->uri = preg_replace('(\/+)', '/', $request->uri);
 
@@ -102,9 +114,6 @@ class Router implements CreatorInterface, BuilderServiceInterface
         // update the routes
         $this->_routeKeeper->updateRoutes();
         $this->_logger->info('Get response for request: ' . $request->uri);
-        $add_to_injector = [
-            Request::class => $request,
-        ];
         // Find the route
         $result = $this->_routeKeeper->findRoute($request->uri, $request->method);
         // Check if the route is not found
@@ -116,17 +125,12 @@ class Router implements CreatorInterface, BuilderServiceInterface
             return new Response($result[1], $result[0]);
         }
         $route = $result[0];
+        $request->router_params = $result[1];
+        $add_to_injector = [
+            Request::class => $request,
+        ];
         $add_to_injector = array_merge($add_to_injector, $result[1]);
         $response = $this->_executeRoute($route, $add_to_injector, $injector);
-        $allowedOrigin = Settings::getConfig('APP.CORS');
-        if ($request->origin) {
-            if ($allowedOrigin === "*") {
-                $allowedOrigin = [$request->origin];
-            }
-            if (in_array($request->origin, $allowedOrigin)) {
-                $response->headers['Access-Control-Allow-Origin'] = $request->origin;
-            }
-        }
         return $response;
     }
 }
