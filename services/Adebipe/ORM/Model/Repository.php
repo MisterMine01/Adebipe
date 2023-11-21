@@ -159,7 +159,7 @@ class Repository implements RepositoryInterface
      *
      * @return bool
      */
-    public function save($object): bool
+    public function save(&$object): bool
     {
         if (!is_a($object, $this->_class_name)) {
             throw new \Exception("You can't save object of class " . get_class($object) . " as " . $this->_class_name);
@@ -207,7 +207,8 @@ class Repository implements RepositoryInterface
             $param_type[] = $model_type->getPDOParamType();
         }
 
-        $sql = "INSERT INTO " . $this->_table_name . " (";
+        $sql = "INSERT INTO " . $this->_table_name;
+        $sql .= " (";
         $sql .= implode(", ", $keys);
         $sql .= ") VALUES (";
         $sql .= implode(", ", array_fill(0, count($keys), "?"));
@@ -222,8 +223,13 @@ class Repository implements RepositoryInterface
             )
         );
         $result = $this->_msql->prepare($sql);
-        $this->_msql->execute($result, array_values($values));
-        return $this->_msql->getLastQuerySuccess();
+        $result = $this->_msql->execute($result, array_values($values));
+        $succeed = $this->_msql->getLastQuerySuccess();
+        if ($succeed === false) {
+            return false;
+        }
+        $object = $this->findOneById($this->_msql->getLastInsertId());
+        return $succeed;
     }
 
     /**

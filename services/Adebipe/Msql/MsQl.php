@@ -139,6 +139,16 @@ class MsQl implements RegisterServiceInterface
     }
 
     /**
+     * Get the last insert id
+     *
+     * @return int
+     */
+    public function getLastInsertId(): int
+    {
+        return $this->_connection->lastInsertId();
+    }
+
+    /**
      * Get the list of tables in the database
      *
      * @return array
