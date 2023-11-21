@@ -24,6 +24,7 @@ class Request
      * @param array<string, string> $post    POST of the request
      * @param int                   $port    Port of the request
      * @param string                $ip      IP of the request
+     * @param array<string, string> $router_params Params of the router
      */
     public function __construct(
         /**
