@@ -76,7 +76,7 @@ interface RepositoryInterface
      *
      * @return bool
      */
-    public function save($object): bool;
+    public function save(&$object): bool;
 
     /**
      * Create the table of the repository
