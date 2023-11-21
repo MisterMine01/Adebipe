@@ -14,6 +14,8 @@ use Adebipe\Services\MsQl;
 abstract class Model implements ModelInterface
 {
     public static MsQl $msql;
+    public static string $repository = Repository::class;
+
     private array $_properties = [];
     private array $_schema = [];
 
