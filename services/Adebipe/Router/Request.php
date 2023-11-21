@@ -91,7 +91,13 @@ class Request
          *
          * @var string
          */
-        public string $ip
+        public string $ip,
+        /**
+         * Params of the router
+         *
+         * @var array<string, string>
+         */
+        public array $router_params = []
     ) {
         if (self::_isJson($this->body)) {
             $data = json_decode($this->body, true);

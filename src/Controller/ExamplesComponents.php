@@ -6,6 +6,7 @@ use Adebipe\Annotations\ValidatePost;
 use Adebipe\Components\Interfaces\ComponentInterface;
 use Adebipe\Router\Annotations\RegexSimple;
 use Adebipe\Router\Annotations\Route;
+use Adebipe\Router\JsonResponse;
 use Adebipe\Router\Request;
 use Adebipe\Router\Response;
 use Adebipe\Services\ORM;
@@ -31,9 +32,9 @@ class ExampleComponent implements ComponentInterface
 
 
     #[Route(path: '/{id}', method: 'GET', regex: ['id' => RegexSimple::int])]
-    public static function identifier(int $id): Response
+    public static function identifier(int $id, Request $request): Response
     {
-        return new Response(strval($id));
+        return new JsonResponse(["id" => $id, "request" => $request]);
     }
 
     #[Route(path: '/test', method: 'POST')]
