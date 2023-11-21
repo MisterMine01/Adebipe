@@ -3,7 +3,8 @@
 <phpunit bootstrap="bootstrap.php" executionOrder="default">
   <testsuites>
     <testsuite name="Adebipe">
-      <directory suffix=".php">tests</directory>
+      <directory suffix=".php">tests/adebipe</directory>
+      <directory suffix=".php">tests/app</directory>
     </testsuite>
   </testsuites>
 </phpunit>

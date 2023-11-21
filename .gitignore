@@ -1,6 +1,6 @@
 logs
 builddir
 .env.*
+!.env.test
 vendor
-.phpunit.result.cache
-.phpdoc
+.phpunit.result.cache.phpdoc
