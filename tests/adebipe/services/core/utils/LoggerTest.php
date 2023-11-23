@@ -4,7 +4,6 @@ use Adebipe\Cli\MakeClasses;
 use Adebipe\Services\Logger;
 use Adebipe\Services\Settings;
 use PHPUnit\Framework\AdebipeCoreTestCase;
-use PHPUnit\Framework\TestCase;
 
 class LoggerTest extends AdebipeCoreTestCase
 {
@@ -149,5 +148,19 @@ class LoggerTest extends AdebipeCoreTestCase
         $this->assertMatchesRegularExpression("/Stopping Logger/", $logger->logTrace[count($logger->logTrace) - 1]);
         $array[1];
         $this->assertDoesNotMatchRegularExpression("/Undefined array key 1 in/", $logger->logTrace[count($logger->logTrace) - 1]);
+    }
+
+    public function testString()
+    {
+        $string = invokeMethod($this->logger, "_getString", ["INFO", "Ceci est une info"]);
+        //[2023-11-23 14:10:07] (   INFO)      LoggerTest : Ceci est une info\n
+        $this->assertMatchesRegularExpression("/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \(( )+INFO\)( )+LoggerTest : Ceci est une info\n$/", $string);
+    }
+
+    public function testMultilineString()
+    {
+        $string = invokeMethod($this->logger, "_getString", ["INFO", "Ceci est une info\nCeci est une autre info"]);
+        //[2023-11-23 14:10:07] (   INFO)      LoggerTest : Ceci est une info\n        Ceci est une autre info\n
+        $this->assertMatchesRegularExpression("/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \(( )+INFO\)( )+LoggerTest : Ceci est une info\n( ){50}Ceci est une autre info\n( ){50}$/", $string);
     }
 }
