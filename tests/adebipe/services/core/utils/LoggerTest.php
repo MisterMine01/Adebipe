@@ -21,4 +21,17 @@ class LoggerTest extends TestCase
         Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 2);
         $this->assertEquals("INFO", $this->logger->getLogLevels());
     }
+
+    public function testIfLogFolderExists()
+    {
+        $logger = new Logger();
+        $isFolder = is_dir("logs");
+        $this->assertTrue($isFolder);
+
+        Settings::addConfig("CORE.LOGGER.LOG_FOLDER", "test_logs");
+        $logger = new Logger();
+        $isFolder = is_dir("test_logs");
+        $this->assertTrue($isFolder);
+        rmdir("test_logs");
+    }
 }

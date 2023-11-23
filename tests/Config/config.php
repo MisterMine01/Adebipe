@@ -16,6 +16,7 @@ return [
             "LOGGER" => [
                 "LOG_IN_FILE" => false,
                 "LOG_LEVEL" => 1,
+                "LOG_FOLDER" => "logs",
                 //"ERROR_CLASS" => "Adebipe\Services\DiscordErrorSender",
             ],
             "ORM" => [

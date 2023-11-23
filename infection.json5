@@ -13,4 +13,5 @@
     },
     html: "infection.html",
   },
+  timeout: 90,
 }

@@ -40,6 +40,9 @@ jobs:
       - name: Check for tests
         run: vendor/bin/phpunit --colors=always --testdox
 
+      - name: Check for infection
+        run: vendor/bin/infection --min-msi=95 --min-covered-msi=95 --threads=4 --show-mutations --only-covered
+
   buildDoc:
     runs-on: ubuntu-latest
     needs: [test]

@@ -76,13 +76,14 @@ class Settings
             return;
         }
         $keys = explode('.', $key);
-        $config = self::$_config;
+        $config = &self::$_config;
         foreach ($keys as $key) {
             if (!isset($config[$key])) {
                 $config[$key] = array();
             }
+            $config = &$config[$key];
         }
-        $config[$key] = $value;
+        $config = $value;
         return;
     }
 
