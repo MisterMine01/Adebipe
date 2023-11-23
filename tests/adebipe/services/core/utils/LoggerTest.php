@@ -78,4 +78,76 @@ class LoggerTest extends AdebipeCoreTestCase
         Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 4);
         $logger = new Logger();
     }
+
+    public function testLogStartingInfo()
+    {
+        $logger = new Logger();
+        $this->assertMatchesRegularExpression("/Starting Logger/", $logger->logTrace[0]);
+    }
+
+    public function testStdoutLog()
+    {
+        $logger = new Logger();
+        $this->assertIsResource(getProperty($logger, "_logFile"));
+        $this->assertEquals(STDOUT, getProperty($logger, "_logFile"));
+    }
+
+    public function testFileLog()
+    {
+        Settings::addConfig("CORE.LOGGER.LOG_IN_FILE", true);
+        $logger = new Logger();
+        $this->assertIsResource(getProperty($logger, "_logFile"));
+        $this->assertNotEquals(STDOUT, getProperty($logger, "_logFile"));
+    }
+
+    public function testFileName()
+    {
+        Settings::addConfig("CORE.LOGGER.LOG_IN_FILE", true);
+        $logger = new Logger();
+        $this->assertIsResource(getProperty($logger, "_logFile"));
+        $fileName = stream_get_meta_data(getProperty($logger, "_logFile"))['uri'];
+        $this->assertMatchesRegularExpression("/^logs\/\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}.log$/", $fileName);
+    }
+
+    public function testNoSentryConnectionDebug()
+    {
+        $logger = new Logger();
+        $logger->atStart();
+        $this->assertDoesNotMatchRegularExpression("/No sentry/", $logger->logTrace[count($logger->logTrace) - 1]);
+        $logger->atEnd();
+    }
+
+    public function testNoSentryConnection()
+    {
+        Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 0);
+        $logger = new Logger();
+        $logger->atStart();
+        $this->assertMatchesRegularExpression("/No sentry/", $logger->logTrace[count($logger->logTrace) - 1]);
+        $logger->atEnd();
+    }
+
+    public function testNotExistSentryClass()
+    {
+        Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 0);
+        Settings::addConfig("CORE.LOGGER.ERROR_CLASS", "NotExistentClass");
+        $logger = new Logger();
+        $logger->atStart();
+        $this->assertMatchesRegularExpression("/No sentry/", $logger->logTrace[count($logger->logTrace) - 1]);
+        $logger->atEnd();
+    }
+
+    // TODO TEST SENTRY REAL CLASS
+
+    public function testEndLogger()
+    {
+        $array = [];
+        $logger = new Logger();
+        $logger->atStart();
+        $array[1];
+        $this->assertMatchesRegularExpression("/Undefined array key 1 in/", $logger->logTrace[count($logger->logTrace) - 1]);
+        $logger->atEnd();
+        $this->assertMatchesRegularExpression("/Stopping Logger/", $logger->logTrace[count($logger->logTrace) - 1]);
+        $array[1];
+        $this->assertDoesNotMatchRegularExpression("/Undefined array key 1 in/", $logger->logTrace[count($logger->logTrace) - 1]);
+    }
 }

@@ -51,7 +51,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         if (!Settings::getConfig("CORE.LOGGER.LOG_IN_FILE")) {
             $this->_logFile = STDOUT;
         } else {
-            $this->_logFile = fopen('logs/' . date('Y-m-d-H-i-s') . '.log', 'wb');
+            $this->_logFile = fopen($log_folder . "/" . date('Y-m-d-H-i-s') . '.log', 'wb');
         }
         $this->info('Starting Logger');
     }
@@ -74,10 +74,6 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     public function atStart(): void
     {
         $class = Settings::getConfig("CORE.LOGGER.ERROR_CLASS");
-        if (!$class) {
-            $this->debug("No sentry");
-            return;
-        }
         if (class_exists($class)) {
             $instance = new $class();
             if (!$instance instanceof ErrorSenderInterface) {
@@ -107,7 +103,9 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     {
         $this->info('Stopping Logger');
         restore_error_handler();
-        fclose($this->_logFile);
+        if ($this->_logFile !== STDOUT) {
+            fclose($this->_logFile);
+        }
     }
 
     /**
