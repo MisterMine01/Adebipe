@@ -6,7 +6,7 @@
   mutators: {
     "@default": true,
   },
-  bootstrap: "./bootstrap.php",
+  bootstrap: "./tests/bootstrap.php",
   logs: {
     stryker: {
       report: "/^release-.*$/",
