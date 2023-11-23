@@ -1,12 +1,16 @@
 {
-    "$schema": "vendor/infection/infection/resources/schema.json",
-    "source": {
-        "directories": [
-            "services"
-        ]
+  $schema: "vendor/infection/infection/resources/schema.json",
+  source: {
+    directories: ["services"],
+  },
+  mutators: {
+    "@default": true,
+  },
+  bootstrap: "./bootstrap.php",
+  logs: {
+    stryker: {
+      report: "/^release-.*$/",
     },
-    "mutators": {
-        "@default": true
-    },
-    "bootstrap":"./bootstrap.php",
+    html: "infection.html",
+  },
 }
