@@ -163,4 +163,12 @@ class LoggerTest extends AdebipeCoreTestCase
         //[2023-11-23 14:10:07] (   INFO)      LoggerTest : Ceci est une info\n        Ceci est une autre info\n
         $this->assertMatchesRegularExpression("/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \(( )+INFO\)( )+LoggerTest : Ceci est une info\n( ){50}Ceci est une autre info\n( ){50}$/", $string);
     }
+
+    public function testClassString()
+    {
+        $class = new LoggerClassTest();
+        $string = $class->logInfo($this->logger, "Ceci est une info");
+        //[2023-11-23 14:10:07] (   INFO)      LoggerClassTest : Ceci est une info\n        Ceci est une autre info\n
+        $this->assertMatchesRegularExpression("/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \(( )+INFO\)( )+LoggerClassTest : Ceci est une info\n$/", $string);
+    }
 }

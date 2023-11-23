@@ -121,6 +121,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     {
         $trace = debug_backtrace();
         $call_class = "Main";
+        /* @infection-ignore-all */
         if (isset($trace[3]['class'])) {
             $call_class = $trace[3]['class'];
         }
@@ -177,8 +178,6 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message The message of the log
      *
-     * @infection-ignore-all
-     *
      * @return void
      */
     public function debug(string $message): void
@@ -191,8 +190,6 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message The message of the log
      *
-     * @infection-ignore-all
-     *
      * @return void
      */
     public function info(string $message): void
@@ -204,8 +201,6 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      * Log a warning message
      *
      * @param string $message The message of the log
-     *
-     * @infection-ignore-all
      *
      * @return void
      */
@@ -223,8 +218,6 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message The message of the log
      *
-     * @infection-ignore-all
-     *
      * @return void
      */
     public function error(string $message): void
@@ -239,8 +232,6 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message   The message of the log
      * @param array  $backtrace The backtrace of the error
-     *
-     * @infection-ignore-all
      *
      * @return void
      */
