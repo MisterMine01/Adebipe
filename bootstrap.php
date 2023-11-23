@@ -9,6 +9,8 @@ putenv('ENV=test');
 
 require __DIR__ . '/vendor/autoload.php';
 
+require __DIR__ . '/tests/abstract/AdebipeCoreTestCase.php';
+
 require __DIR__ . '/services/Cli/Tests.php';
 
 $includer = new Includer();

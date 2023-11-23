@@ -34,12 +34,14 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     public function __construct()
     {
         $log_folder = Settings::getConfig("CORE.LOGGER.LOG_FOLDER");
+        if (!$log_folder) {
+            $log_folder = 'logs';
+        }
         if (!is_dir($log_folder)) {
             mkdir($log_folder);
         }
         $log_level = Settings::getConfig("CORE.LOGGER.LOG_LEVEL");
-        fwrite(STDOUT, "Log level : " . $log_level . PHP_EOL);
-        if ($log_level === false) {
+        if ($log_level === null) {
             $log_level = 1;
         }
         $this->_loglevel = intval($log_level);

@@ -1,10 +1,11 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\AdebipeCoreTestCase;
 
-class ContainerTest extends TestCase
+class ContainerTest extends AdebipeCoreTestCase
 {
-    public function testFake() {
+    public function testFake()
+    {
         $this->assertTrue(true);
     }
 }

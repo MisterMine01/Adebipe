@@ -1,8 +1,8 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\AdebipeCoreTestCase;
 
-class InjectorTest extends TestCase
+class InjectorTest extends AdebipeCoreTestCase
 {
     public function testFake()
     {

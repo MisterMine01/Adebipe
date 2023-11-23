@@ -38,7 +38,7 @@ jobs:
         run: vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=2G
 
       - name: Check for tests
-        run: vendor/bin/phpunit --colors=always --testdox
+        run: vendor/bin/phpunit --colors=always --testdox --display-error-details --display-warnings
 
       - name: Check for infection
         run: vendor/bin/infection --min-msi=95 --min-covered-msi=95 --threads=4 --show-mutations --only-covered
