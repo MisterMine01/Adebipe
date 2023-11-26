@@ -41,7 +41,7 @@ jobs:
         run: vendor/bin/phpunit --colors=always --testdox --display-warnings --display-errors --display-notices
 
       - name: Check for infection
-        run: vendor/bin/infection --min-msi=95 --min-covered-msi=95 --threads=4 --show-mutations --only-covered
+        run: vendor/bin/infection --min-msi=95 --min-covered-msi=95 --threads=4 --show-mutations
 
   buildDoc:
     runs-on: ubuntu-latest
