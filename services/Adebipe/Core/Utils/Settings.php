@@ -37,9 +37,6 @@ class Settings
     {
         if (!isset(self::$_env_variable[$key])) {
             $env = getenv($key);
-            if ($env === false) {
-                return null;
-            }
             self::$_env_variable[$key] = $env;
         }
         return self::$_env_variable[$key];
