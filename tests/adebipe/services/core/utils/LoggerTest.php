@@ -135,7 +135,86 @@ class LoggerTest extends AdebipeCoreTestCase
         $logger->atEnd();
     }
 
-    // TODO TEST SENTRY REAL CLASS
+    public function testSentryClass()
+    {
+        Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 0);
+        Settings::addConfig("CORE.LOGGER.ERROR_CLASS", "SentryMock");
+        $logger = new Logger();
+        $logger->atStart();
+        $this->assertDoesNotMatchRegularExpression("/No sentry/", $logger->logTrace[count($logger->logTrace) - 1]);
+        $this->assertMatchesRegularExpression("/SentryMock sentry loaded/", $logger->logTrace[count($logger->logTrace) - 1]);
+        $logger->atEnd();
+    }
+
+    public function testSentryDebug()
+    {
+        Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 0);
+        Settings::addConfig("CORE.LOGGER.ERROR_CLASS", "SentryMock");
+        $logger = new Logger();
+        $logger->atStart();
+
+        $logger->debug("Ceci est un debug");
+        $sentry = getProperty($logger, "_sender");
+        $this->assertFalse($sentry->isSendErrorCalled);
+
+        $logger->atEnd();
+    }
+
+    public function testSentryInfo()
+    {
+        Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 0);
+        Settings::addConfig("CORE.LOGGER.ERROR_CLASS", "SentryMock");
+        $logger = new Logger();
+        $logger->atStart();
+
+        $logger->info("Ceci est un info");
+        $sentry = getProperty($logger, "_sender");
+        $this->assertFalse($sentry->isSendErrorCalled);
+
+        $logger->atEnd();
+    }
+
+    public function testSentryWarning()
+    {
+        Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 0);
+        Settings::addConfig("CORE.LOGGER.ERROR_CLASS", "SentryMock");
+        $logger = new Logger();
+        $logger->atStart();
+
+        $logger->warning("Ceci est un warning");
+        $sentry = getProperty($logger, "_sender");
+        $this->assertTrue($sentry->isSendErrorCalled);
+
+        $logger->atEnd();
+    }
+
+    public function testSentryError()
+    {
+        Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 0);
+        Settings::addConfig("CORE.LOGGER.ERROR_CLASS", "SentryMock");
+        $logger = new Logger();
+        $logger->atStart();
+
+        $logger->error("Ceci est un error");
+        $sentry = getProperty($logger, "_sender");
+        $this->assertTrue($sentry->isSendErrorCalled);
+
+        $logger->atEnd();
+    }
+
+    public function testSentryCritical()
+    {
+        Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 0);
+        Settings::addConfig("CORE.LOGGER.ERROR_CLASS", "SentryMock");
+        $logger = new Logger();
+        $logger->atStart();
+
+        $logger->critical("Ceci est un critical");
+        $sentry = getProperty($logger, "_sender");
+        $this->assertTrue($sentry->isSendErrorCalled);
+
+        $logger->atEnd();
+    }
 
     public function testEndLogger()
     {
