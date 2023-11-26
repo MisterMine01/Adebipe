@@ -222,7 +222,8 @@ class LoggerTest extends AdebipeCoreTestCase
         $logger = new Logger();
         $logger->atStart();
         $array[1];
-        $this->assertMatchesRegularExpression("/Undefined array key 1 in/", $logger->logTrace[count($logger->logTrace) - 1]);
+        // [2023-11-23 14:10:07] (   ERROR)     LoggerTest : Undefined array key 1 in /home/adebipe/adebipe/tests/adebipe/services/core/utils/LoggerTest.php on line 225
+        $this->assertMatchesRegularExpression("/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \(WARNING\)( )+Logger \: Undefined array key 1 in .+ on line \d{1,}/", $logger->logTrace[count($logger->logTrace) - 1]);
         $logger->atEnd();
         $this->assertMatchesRegularExpression("/Stopping Logger/", $logger->logTrace[count($logger->logTrace) - 1]);
         $array[1];
@@ -249,5 +250,11 @@ class LoggerTest extends AdebipeCoreTestCase
         $string = $class->logInfo($this->logger, "Ceci est une info");
         //[2023-11-23 14:10:07] (   INFO)      LoggerClassTest : Ceci est une info\n        Ceci est une autre info\n
         $this->assertMatchesRegularExpression("/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \(( )+INFO\)( )+LoggerClassTest : Ceci est une info\n$/", $string);
+    }
+
+    public function testLog()
+    {
+        $this->expectExceptionMessage("Invalid log type");
+        invokeMethod($this->logger, "_log", ["TEST", "Ceci est une info"]);
     }
 }

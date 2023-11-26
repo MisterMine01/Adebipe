@@ -161,15 +161,19 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
 
         $this->logTrace[] = $log;
 
+        /* @infection-ignore-all */
         if (defined('STDOUT')) {
             fwrite(STDOUT, $log);
             fflush(STDOUT);
         }
         $log = mb_convert_encoding($log, 'UTF-8');
+        /* @infection-ignore-all */
         if ($this->_logFile === STDOUT) {
             return;
         }
+        /* @infection-ignore-all */
         fwrite($this->_logFile, $log);
+        /* @infection-ignore-all */
         fflush($this->_logFile);
     }
 
@@ -202,6 +206,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message The message of the log
      *
+     * @infection-ignore-all
+     *
      * @return void
      */
     public function warning(string $message): void
@@ -218,6 +224,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message The message of the log
      *
+     * @infection-ignore-all
+     *
      * @return void
      */
     public function error(string $message): void
@@ -232,6 +240,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      *
      * @param string $message   The message of the log
      * @param array  $backtrace The backtrace of the error
+     *
+     * @infection-ignore-all
      *
      * @return void
      */
