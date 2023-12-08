@@ -9,7 +9,7 @@ namespace Adebipe\Services;
  */
 class DiscordErrorSender implements ErrorSenderInterface
 {
-    private $_indexAlreadySent = 0;
+    private int $_indexAlreadySent = 0;
     private string $_webhook_url;
     private ?string $_username;
     private ?string $_avatar_url;

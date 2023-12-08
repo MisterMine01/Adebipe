@@ -10,11 +10,11 @@ namespace Adebipe\Cli\Builder;
  */
 class IncludeList
 {
-    private $_include_list = [];
+    private array $_include_list = [];
 
-    private $_function_list = [];
+    private array $_function_list = [];
 
-    private $_other_list = [];
+    private array $_other_list = [];
 
     /**
      * Add a file to the include list

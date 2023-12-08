@@ -2,6 +2,7 @@
 
 namespace Adebipe\Builder;
 
+use Adebipe\Model\Model;
 use Adebipe\Services\MsQl;
 use Adebipe\Services\ORM;
 use ReflectionClass;
@@ -13,7 +14,7 @@ use ReflectionClass;
  */
 class ORMBuilder implements BuilderInterface
 {
-    private $_repositories;
+    private array $_repositories;
 
     /**
      * Return the files to include in the build
@@ -78,6 +79,9 @@ class ORMBuilder implements BuilderInterface
     {
         $init = array();
         foreach ($this->_repositories as $key => $repository) {
+            if (!is_subclass_of($key, Model::class)) {
+                continue;
+            }
             $repository = $key::$repository;
             $init[] = '$this->_repository["' . $key . '"] = new ' . $repository . '("' . $key . '", $this->_msql);';
         }

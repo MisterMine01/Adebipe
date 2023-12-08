@@ -12,8 +12,8 @@ use Adebipe\Services\Settings;
  */
 class ConfigRunner implements CreatorInterface
 {
-    private $_env = ["HERE GOES ENV"];
-    private $_config = ["HERE GOES CONFIG"];
+    private array $_env = ["HERE GOES ENV"];
+    private array $_config = ["HERE GOES CONFIG"];
 
     /**
      * Load the environment variables

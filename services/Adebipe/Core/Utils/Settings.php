@@ -9,8 +9,8 @@ namespace Adebipe\Services;
  */
 class Settings
 {
-    private static $_env_variable = array();
-    private static $_config = array();
+    private static array $_env_variable = array();
+    private static array $_config = array();
 
     /**
      * Add an environment variable
