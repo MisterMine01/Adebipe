@@ -35,6 +35,9 @@ jobs:
       - name: Check for sniffs
         run: vendor/bin/phpcs --colors --report=summary
 
+      - name: Check for phpstan
+        run: vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=2G
+
       - name: Check for tests
         run: vendor/bin/phpunit --colors=always --testdox
 
