@@ -3,3 +3,4 @@ builddir
 .env.*
 vendor
 .phpunit.result.cache
+.phpdoc

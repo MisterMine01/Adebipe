@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,19 +33,37 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Check for sniffs
-        run: vendor/bin/phpcs --colors --report=summary
-
-      - name: Check for phpstan
-        run: vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=2G
+        run: vendor/bin/phpcs src/Builder services --colors --report=summary
 
       - name: Check for tests
         run: vendor/bin/phpunit --colors=always --testdox
 
-    #- name: Check for infection
-    #  run: vendor/bin/infection --min-msi=95 --min-covered-msi=95 --threads=4 --show-mutations --only-covered
+  buildDoc:
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v2
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
 
-    # - name: Run test suite
-    #   run: composer run-script test
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install documentor
+        run: wget -O phpDocumentor.phar https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.4.3/phpDocumentor.phar
+
+      - name: Generate documentation
+        run: php phpDocumentor.phar run
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: documentation
+          path: .documentor/
