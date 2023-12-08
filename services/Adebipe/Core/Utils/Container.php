@@ -53,7 +53,10 @@ class Container implements RegisterServiceInterface
     private function _createClass(ReflectionClass $reflection): object
     {
         $injector = $this->getService(Injector::class);
-        return $injector->create_class($reflection);
+        if (!$injector instanceof Injector) {
+            throw new \Exception('The injector is not an instance of Injector');
+        }
+        return $injector->createClass($reflection);
     }
 
     /**
@@ -105,7 +108,7 @@ class Container implements RegisterServiceInterface
      *
      * @param string $subclass The interface to check
      *
-     * @return array<object>
+     * @return array
      */
     public function getSubclassInterfaces(string $subclass): array
     {

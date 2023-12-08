@@ -101,8 +101,14 @@ class ConfigRunner implements StarterServiceInterface, BuilderServiceInterface
     private function _getEnvFile(string $name): void
     {
         $file = fopen($name, 'r');
+        if ($file === false) {
+            return;
+        }
         while (!feof($file)) {
             $line = fgets($file);
+            if ($line === false) {
+                continue;
+            }
             $line = trim($line);
             if (empty($line)) {
                 continue;
