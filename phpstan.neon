@@ -1,11 +1,14 @@
 parameters:
-    level: 1
+    level: 6
 
     reportUnmatchedIgnoredErrors: false
 
     # requires exact closure types
     checkMissingCallableSignature: true
     checkGenericClassInNonGenericObjectType: false
+
+    ignoreErrors:
+        - "#.*no value type specified in iterable type array\\.$#"
 
     universalObjectCratesClasses:
         - Adebipe\Model\Model
