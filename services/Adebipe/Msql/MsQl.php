@@ -14,7 +14,7 @@ use PDOStatement;
  */
 class MsQl implements RegisterServiceInterface
 {
-    private PDO $_connection;
+    private ?PDO $_connection;
     private string $_driver;
     private string $_host;
     private string $_database;
@@ -59,6 +59,7 @@ class MsQl implements RegisterServiceInterface
             $this->_connection = new PDO($connection_string, $this->_user, $this->_password);
         } catch (PDOException $e) {
             $this->_logger->error("PDO can't be opened");
+            $this->_connection = null;
         }
     }
 
@@ -71,7 +72,7 @@ class MsQl implements RegisterServiceInterface
      */
     public function prepare(string $query): PDOStatement|false
     {
-        if (!$this->_connection) {
+        if ($this->_connection === null) {
             $this->_logger->error("No connection to database");
             return false;
         }

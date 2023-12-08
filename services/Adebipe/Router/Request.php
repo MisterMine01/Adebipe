@@ -119,7 +119,10 @@ class Request
         if (!isset($this->get[$key])) {
             return $default;
         }
-        return intval($this->get[$key] ?? $default);
+        if (!is_numeric($this->get[$key])) {
+            return $default;
+        }
+        return intval($this->get[$key]);
     }
 
     /**
