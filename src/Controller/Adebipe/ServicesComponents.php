@@ -34,7 +34,6 @@ class ServicesComponents implements ComponentInterface
                 $decoded_comment = array_map(fn ($line) => trim($line, " \t\n\r\0\x0B*"), $decoded_comment);
                 $decoded_comment = array_filter($decoded_comment, fn ($line) => $line !== '');
                 $decoded_comment = array_values($decoded_comment);
-                $parameter_comment = [];
                 foreach ($decoded_comment as $key => $line) {
                     if (strpos($line, '@') === 0) {
                         unset($decoded_comment[$key]);
@@ -53,24 +52,22 @@ class ServicesComponents implements ComponentInterface
                 foreach ($method->getParameters() as $parameter) {
                     $type = $parameter->getType();
                     if ($type === null) {
-                        $comment = $parameter_comment[$parameter->getName()] ?? null;
                         $decoded_parameter = [
                             'name' => $parameter->getName(),
-                            'comment' => $comment,
                             'type' => 'mixed'
                         ];
                         $decoded_method['parameters'][] = $decoded_parameter;
                         continue;
                     }
-                    if (!$type instanceof ReflectionNamedType) {
+                    if ($type instanceof ReflectionNamedType) {
                         $decoded_parameter = [
                             'name' => $parameter->getName(),
-                            'type' => 'unknown',
+                            'type' => $type->getName(),
                         ];
                     } else {
                         $decoded_parameter = [
                             'name' => $parameter->getName(),
-                            'type' => $type->getName(),
+                            'type' => 'unknown',
                         ];
                     }
                     $decoded_method['parameters'][] = $decoded_parameter;

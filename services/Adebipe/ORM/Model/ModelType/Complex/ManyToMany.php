@@ -14,12 +14,12 @@ use Adebipe\Services\ORM;
  */
 class ManyToMany extends AbstractType implements SqlBasedTypeInterface
 {
-    /**
-     * The object that has this column
-     *
-     * @var string
-     */
-    private string $_me_object;
+    // /**
+    //  * The object that has this column
+    //  *
+    //  * @var string
+    //  */
+    // private string $_me_object;
 
     /**
      * The object that is related
@@ -62,7 +62,7 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
      */
     public function __construct($me_object, $object_type, bool $is_first)
     {
-        $this->_me_object = $me_object;
+        // $this->_me_object = $me_object;
         $this->_object_type = $object_type;
         $this->_named_me = ORM::classToTableName($me_object);
         $this->_named_object = ORM::classToTableName($object_type);

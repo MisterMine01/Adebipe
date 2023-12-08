@@ -102,9 +102,6 @@ class Repository implements RepositoryInterface
             $type = array_fill(0, count($conditions), \PDO::PARAM_STR);
         }
         $result = $this->_msql->execute($statement, array_values($conditions), $type);
-        if ($result === null) {
-            return null;
-        }
         if (count($result) === 0) {
             return null;
         }

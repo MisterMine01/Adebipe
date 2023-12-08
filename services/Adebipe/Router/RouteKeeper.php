@@ -25,7 +25,7 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
      *      ]
      * ]]
      *
-     * @var array<string, array<string, array<callable, string>>>
+     * @var array
      */
     private array $_routes = [];
 
@@ -102,7 +102,7 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
     /**
      * Get all routes
      *
-     * @return array<string, array<string, array<callable, string>>>
+     * @return array
      */
     public function getRoutes(): array
     {
