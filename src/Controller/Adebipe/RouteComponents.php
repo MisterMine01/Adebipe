@@ -18,6 +18,9 @@ class RouteComponents implements ComponentInterface
         $routes_after = [];
         foreach ($routes as $route => $methods) {
             foreach ($methods as $method => $function) {
+                if (!isset($function[0]) || !isset($function[1])) {
+                    continue;
+                }
                 $route = [
                     'route_regexed' => $route,
                     'route' => $function[1],
@@ -37,7 +40,7 @@ class RouteComponents implements ComponentInterface
         return $renderer->render(
             'Adebipe/routes/routes.php',
             [
-            'routes' => $routes_after,
+                'routes' => $routes_after,
             ]
         );
     }

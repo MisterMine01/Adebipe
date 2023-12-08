@@ -205,7 +205,10 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
     {
         if (isset($this->_routes[$path])) {
             if (isset($this->_routes[$path][$method])) {
-                return [$this->_routes[$path][$method][0], []];
+                if (isset($this->_routes[$path][$method][0])) {
+                    return [$this->_routes[$path][$method][0], []];
+                }
+                return [500, "Internal server error"];
             }
             return [405, "Method not allowed"];
         }
@@ -219,8 +222,10 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
             if (preg_match($key, $path)) {
                 $this->_logger->info('Regex match');
                 if (!isset($this->_routes[$key][$method])) {
-                    $this->_logger->info('Method not allowed');
                     return [405, "Method not allowed"];
+                }
+                if (!isset($this->_routes[$key][$method][1])) {
+                    return [500, "Internal server error"];
                 }
                 $regex = $this->performRegex($value[$method][1], $key, $path);
                 $route = $key;
