@@ -1,0 +1,15 @@
+parameters:
+    level: 1
+
+    reportUnmatchedIgnoredErrors: false
+
+    # requires exact closure types
+    checkMissingCallableSignature: true
+    checkGenericClassInNonGenericObjectType: false
+
+    paths:
+        - src
+        - services
+
+    excludePaths:
+        - src/Views
