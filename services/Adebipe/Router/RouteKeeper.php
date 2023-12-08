@@ -51,10 +51,10 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
     /**
      * Add a route
      *
-     * @param string   $path     Path of the route
-     * @param string   $method   Method of the route
-     * @param callable $function Function of the route
-     * @param string   $route    Route of the route
+     * @param string           $path     Path of the route
+     * @param string           $method   Method of the route
+     * @param ReflectionMethod $function Function of the route
+     * @param string           $route    Route of the route
      *
      * @return void
      */
@@ -141,7 +141,7 @@ class RouteKeeper implements RegisterServiceInterface, BuilderServiceInterface
                 if ($this->routeAlreadyExist($route->path, $route->method)) {
                     throw new \Exception(
                         'Route ' . $route->path . ' with method ' .
-                        $route->method . ' already exists'
+                            $route->method . ' already exists'
                     );
                 }
                 if ($env_wanted !== "???" && $route->env !== $env_wanted) {

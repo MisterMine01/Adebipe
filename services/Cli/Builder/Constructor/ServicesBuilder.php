@@ -4,6 +4,7 @@ namespace Adebipe\Cli\Builder;
 
 use Adebipe\Services\Interfaces\StarterServiceInterface;
 use ReflectionClass;
+use ReflectionNamedType;
 
 /**
  * Build a service
@@ -57,8 +58,13 @@ class ServicesBuilder
             return;
         }
         foreach ($this->_class->getConstructor()->getParameters() as $param) {
-            $param_class = $param->getType()->getName();
-            $this->_constructor_service_needed[] = $param_class;
+            $type = $param->getType();
+            if ($type instanceof ReflectionNamedType) {
+                $param_class = $type->getName();
+                $this->_constructor_service_needed[] = $param_class;
+                continue;
+            }
+            throw new \Exception('The service ' . $this->_class->getName() . ' has a parameter without type');
         }
     }
 
@@ -87,8 +93,13 @@ class ServicesBuilder
             $function_start = $this->_class->getMethod('atStart');
             $function_parameters = [];
             foreach ($function_start->getParameters() as $param) {
-                $param_class = $param->getType()->getName();
-                $function_parameters[] = ServicesBuilder::getName($param_class) . '()';
+                $type = $param->getType();
+                if ($type instanceof ReflectionNamedType) {
+                    $param_class = $type->getName();
+                    $function_parameters[] = ServicesBuilder::getName($param_class) . '()';
+                    continue;
+                }
+                throw new \Exception('The service ' . $class_name . ' has a parameter without type');
             }
             $function .= '$GLOBALS[\'' . $class_name . '\']->atStart(' . implode(",\n", $function_parameters) . ");\n";
         }
@@ -112,8 +123,13 @@ class ServicesBuilder
         $function_end = $this->_class->getMethod('atEnd');
         $function_parameters = [];
         foreach ($function_end->getParameters() as $param) {
-            $param_class = $param->getType()->getName();
-            $function_parameters[] = ServicesBuilder::getName($param_class) . '()';
+            $type = $param->getType();
+            if ($type instanceof ReflectionNamedType) {
+                $param_class = $type->getName();
+                $function_parameters[] = ServicesBuilder::getName($param_class) . '()';
+                continue;
+            }
+            throw new \Exception('The service ' . $class_name . ' has a parameter without type');
         }
         $function = 'if (isset($GLOBALS[\'' . $class_name . '\'])) {' . "\n";
         $function .= '$GLOBALS[\'' . $class_name . '\']->atEnd(' . implode(",\n", $function_parameters) . ");\n";

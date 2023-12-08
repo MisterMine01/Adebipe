@@ -1,5 +1,5 @@
 parameters:
-    level: 1
+    level: 2
 
     reportUnmatchedIgnoredErrors: false
 
@@ -7,9 +7,19 @@ parameters:
     checkMissingCallableSignature: true
     checkGenericClassInNonGenericObjectType: false
 
+    universalObjectCratesClasses:
+        - Adebipe\Model\Model
+
+    scanDirectories:
+        - src
+        - services
+
     paths:
         - src
         - services
 
     excludePaths:
         - src/Views
+
+    bootstrapFiles:
+        - bootstrap.php

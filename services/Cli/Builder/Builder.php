@@ -2,6 +2,7 @@
 
 namespace Adebipe\Cli\Builder;
 
+use Adebipe\Builder\NoBuildable;
 use Adebipe\Cli\Includer\Includer;
 use Adebipe\Cli\MakeClasses;
 use Adebipe\Services\Container;
@@ -62,7 +63,7 @@ class Builder
         $getcwd = getcwd();
         $build_dir = $getcwd . '/builddir';
         $this->_build_dir = $build_dir;
-        $this->_createBuildir($build_dir);
+        $this->_createBuildir();
         recurseCopy($getcwd . '/public', $build_dir . '/public');
 
         $get_services_classes = $this->_includer->includeAllFile($getcwd . '/services');

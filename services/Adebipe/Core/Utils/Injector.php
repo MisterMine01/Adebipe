@@ -26,7 +26,7 @@ class Injector implements RegisterServiceInterface
     /**
      * Add a service to the injector
      *
-     * @param string $class The class of the service
+     * @param RegisterServiceInterface $class The class of the service
      *
      * @return void
      */
@@ -41,7 +41,7 @@ class Injector implements RegisterServiceInterface
      *
      * @param string $name The name of the service
      *
-     * @return object The service
+     * @return ?RegisterServiceInterface The service
      */
     public function getService(string $name): ?RegisterServiceInterface
     {
@@ -71,7 +71,7 @@ class Injector implements RegisterServiceInterface
             if ($param_type === null) {
                 throw new \Exception(
                     'Param ' . $param_name . ' in method ' . $method->getName() .
-                    ' in class ' . $method->getDeclaringClass()->getName() . ' has no type'
+                        ' in class ' . $method->getDeclaringClass()->getName() . ' has no type'
                 );
             }
             $not_null = str_replace("?", "", $param_type->__toString());
@@ -97,7 +97,7 @@ class Injector implements RegisterServiceInterface
             }
             throw new \Exception(
                 'Param ' . $param_name . ' in method ' . $method->getName() .
-                ' in class ' . $method->getDeclaringClass()->getName() . ' can\'t be injected'
+                    ' in class ' . $method->getDeclaringClass()->getName() . ' can\'t be injected'
             );
         }
         return $find_params;

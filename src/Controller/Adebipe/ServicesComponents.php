@@ -9,6 +9,7 @@ use Adebipe\Router\Response;
 use Adebipe\Services\Container;
 use Adebipe\Services\Logger;
 use Adebipe\Services\Renderer;
+use ReflectionNamedType;
 
 class ServicesComponents implements ComponentInterface
 {
@@ -30,8 +31,8 @@ class ServicesComponents implements ComponentInterface
                 }
                 $comment = $method->getDocComment();
                 $decoded_comment = explode("\n", $comment);
-                $decoded_comment = array_map(fn($line) => trim($line, " \t\n\r\0\x0B*"), $decoded_comment);
-                $decoded_comment = array_filter($decoded_comment, fn($line) => $line !== '');
+                $decoded_comment = array_map(fn ($line) => trim($line, " \t\n\r\0\x0B*"), $decoded_comment);
+                $decoded_comment = array_filter($decoded_comment, fn ($line) => $line !== '');
                 $decoded_comment = array_values($decoded_comment);
                 $parameter_comment = [];
                 foreach ($decoded_comment as $key => $line) {
@@ -61,10 +62,17 @@ class ServicesComponents implements ComponentInterface
                         $decoded_method['parameters'][] = $decoded_parameter;
                         continue;
                     }
-                    $decoded_parameter = [
-                        'name' => $parameter->getName(),
-                        'type' => $type->getName(),
-                    ];
+                    if (!$type instanceof ReflectionNamedType) {
+                        $decoded_parameter = [
+                            'name' => $parameter->getName(),
+                            'type' => 'unknown',
+                        ];
+                    } else {
+                        $decoded_parameter = [
+                            'name' => $parameter->getName(),
+                            'type' => $type->getName(),
+                        ];
+                    }
                     $decoded_method['parameters'][] = $decoded_parameter;
                 }
                 $decoded_service['methods'][] = $decoded_method;
