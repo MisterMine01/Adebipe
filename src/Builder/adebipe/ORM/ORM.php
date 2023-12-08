@@ -18,7 +18,7 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
 {
     private MsQl $_msql;
 
-    private $_repository = array();
+    private array $_repository = array();
 
     /**
      * Get the table name from a model class name

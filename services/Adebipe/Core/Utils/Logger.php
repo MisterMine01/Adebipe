@@ -21,10 +21,10 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     ];
 
     private ErrorSenderInterface $_sender;
-    public $logTrace = array();
+    public array $logTrace = array();
 
 
-    private $_logFile;
+    private mixed $_logFile;
     private int $_loglevel;
 
 

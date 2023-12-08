@@ -12,7 +12,7 @@ use Adebipe\Services\Interfaces\StarterServiceInterface;
  */
 class ConfigRunner implements StarterServiceInterface, BuilderServiceInterface
 {
-    private $_variable = array();
+    private array $_variable = array();
 
     /**
      * Load the environment variables
