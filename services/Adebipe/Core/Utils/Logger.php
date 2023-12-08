@@ -76,14 +76,18 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
             return;
         }
         if (class_exists($class)) {
-            $this->_sender = new $class();
+            $instance = new $class();
+            if (!$instance instanceof ErrorSenderInterface) {
+                throw new \Exception('The error sender must implement ErrorSenderInterface');
+            }
+            $this->_sender = $instance;
             $this->info($class . ' sentry loaded');
         } else {
             $this->debug("No sentry");
         }
 
         set_error_handler(
-            function (int $errno, string $errstr, string $errfile, int $errline): ?bool {
+            function (int $errno, string $errstr, string $errfile, int $errline): bool|null {
                 $this->warning($errstr . ' in ' . $errfile . ' on line ' . $errline);
                 return null;
             },
