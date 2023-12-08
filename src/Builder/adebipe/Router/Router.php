@@ -2,6 +2,8 @@
 
 namespace Adebipe\Services\Generated;
 
+use Adebipe\Router\Annotations\BeforeRoute;
+use Adebipe\Router\Request;
 use Adebipe\Router\Response;
 use Adebipe\Services\Injector;
 use Adebipe\Services\Interfaces\CreatorInterface;
@@ -47,7 +49,7 @@ class Router implements CreatorInterface
      *
      * @return Response
      */
-    public function getResponse(\Adebipe\Router\Request $request, Injector $injector): Response
+    public function getResponse(Request $request, Injector $injector): Response
     {
         $header = [];
         if ($request->origin) {
@@ -58,7 +60,7 @@ class Router implements CreatorInterface
             if (in_array($request->origin, $allowedOrigin)) {
                 $header['Access-Control-Allow-Origin'] = $request->origin;
             } else {
-                return new \Adebipe\Router\Response('Not allowed', 403);
+                return new Response('Not allowed', 403);
             }
         }
         // Remove double slashes or more in the uri
@@ -67,11 +69,11 @@ class Router implements CreatorInterface
         if (is_file("public" . $request->uri)) {
             // The request is a file
             $this->_logger->info('Get file: ' . $request->uri);
-            return new \Adebipe\Router\Response(
+            return new Response(
                 file_get_contents("public" . $request->uri),
                 200,
                 [
-                'Content-Type' => $this->_mime[pathinfo("public" . $request->uri, PATHINFO_EXTENSION)]
+                    'Content-Type' => $this->_mime[pathinfo("public" . $request->uri, PATHINFO_EXTENSION)]
                 ]
             );
         }
@@ -85,7 +87,7 @@ class Router implements CreatorInterface
         }
         // Check if the route is not found
         if (is_numeric($result[0])) {
-            return new \Adebipe\Router\Response($result[1], $result[0]);
+            return new Response($result[1], $result[0]);
         }
         $route = $result[0];
         $request->router_params = $result[1];

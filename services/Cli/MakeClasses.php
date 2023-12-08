@@ -93,6 +93,9 @@ class MakeClasses
     public static function stopServices(): void
     {
         $logger = MakeClasses::$injector->getService(Logger::class);
+        if (!$logger instanceof Logger) {
+            return;
+        }
         $logger->info('Stopping the services');
         foreach (MakeClasses::$container->getSubclassInterfaces(StarterServiceInterface::class) as $service) {
             if ($service::class === Logger::class) {

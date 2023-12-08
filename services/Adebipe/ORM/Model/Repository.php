@@ -119,7 +119,7 @@ class Repository implements RepositoryInterface
      *
      * @return CollectionInterface
      */
-    public function findAllBy(array $conditions, ?array $type = null): Collection
+    public function findAllBy(array $conditions, ?array $type = null): CollectionInterface
     {
         $query = "SELECT * FROM ? WHERE ";
         $query .= implode(
@@ -144,7 +144,7 @@ class Repository implements RepositoryInterface
      *
      * @return CollectionInterface
      */
-    public function findAll(): Collection
+    public function findAll(): CollectionInterface
     {
         $query = "SELECT * FROM " . $this->_table_name;
         $result = $this->_msql->prepare($query);

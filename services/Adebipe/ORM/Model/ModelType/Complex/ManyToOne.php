@@ -92,7 +92,7 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
      * @param MsQl   $msql The connection to the database
      * @param string $id   The id of the object
      *
-     * @return Collection
+     * @return Object|null
      */
     public function getResultFromDb(MsQl $msql, string $id)
     {
