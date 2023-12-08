@@ -83,8 +83,9 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         }
 
         set_error_handler(
-            function ($errno, $errstr, $errfile, $errline) {
+            function (int $errno, string $errstr, string $errfile, int $errline): ?bool {
                 $this->warning($errstr . ' in ' . $errfile . ' on line ' . $errline);
+                return null;
             },
             E_WARNING
         );
