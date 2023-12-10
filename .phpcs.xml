@@ -2,6 +2,9 @@
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Adebipe Ruleset">
     <description>Adebipe ruleset for phpcs (use PSR-12)</description>
 
+    <file>./services</file>
+    <file>./src</file>
+
     <exclude-pattern>*/src/Controller/*</exclude-pattern>
     <exclude-pattern>*/src/Entity/*</exclude-pattern>
     <exclude-pattern>*/src/Views/*</exclude-pattern>

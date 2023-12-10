@@ -6,16 +6,32 @@ use Adebipe\Router\Annotations\BeforeRoute;
 use Adebipe\Router\Request;
 use Adebipe\Router\Response;
 use Attribute;
-use NoBuildable;
 
+/**
+ * Validates the request body against a schema.
+ *
+ * @author BOUGET Alexandre <abouget68@gmail.com>
+ */
 #[Attribute]
 class ValidatePost extends BeforeRoute
 {
+    /**
+     * Validates the request body against a schema.
+     *
+     * @param array $schema The schema to validate against.
+     */
     public function __construct(
         public array $schema,
     ) {
     }
 
+    /**
+     * Validates the request body against a schema.
+     *
+     * @param Request|null $request The request to validate.
+     *
+     * @return bool|Response True if the request is valid, a response otherwise.
+     */
     public function execute(?Request $request = null): mixed
     {
         $result = $request->validatePost($this->schema);
