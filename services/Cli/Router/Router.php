@@ -56,14 +56,17 @@ class Router
 
         MakeClasses::makeClasses(array_merge($data, $data2), $config_runner);
         $logger = MakeClasses::$container->getService(Logger::class);
+        if (!($logger instanceof Logger)) {
+            throw new \Exception("Unable to get the logger");
+        }
         $logger->info('Router running');
 
         $request = new Request(
             $_SERVER['HTTP_ORIGIN'] ?? null,
             $_SERVER['REQUEST_METHOD'],
-            parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH),
+            parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH) ?? '/' ?: '/',
             getallheaders(),
-            file_get_contents('php://input'),
+            file_get_contents('php://input') ?: '',
             $_GET,
             $_FILES,
             $_COOKIE,
@@ -73,6 +76,9 @@ class Router
         );
 
         $router = MakeClasses::$container->getService(ServicesRouter::class);
+        if (!($router instanceof ServicesRouter)) {
+            throw new \Exception("Unable to get the router");
+        }
 
         $response = $router->getResponse($request, MakeClasses::$injector);
 
@@ -84,9 +90,9 @@ class Router
 
         $logger->info(
             'information about dev Router: ' . PHP_EOL .
-            'Peak memory usage: ' . memory_get_peak_usage() / 1024 / 1024 . 'MB' . PHP_EOL .
-            'Memory usage: ' . memory_get_usage() / 1024 / 1024 . 'MB' . PHP_EOL .
-            'Time: ' . ($time_end - $this->_time_start) * 1000 . 'ms'
+                'Peak memory usage: ' . memory_get_peak_usage() / 1024 / 1024 . 'MB' . PHP_EOL .
+                'Memory usage: ' . memory_get_usage() / 1024 / 1024 . 'MB' . PHP_EOL .
+                'Time: ' . ($time_end - $this->_time_start) * 1000 . 'ms'
         );
 
         MakeClasses::stopServices();

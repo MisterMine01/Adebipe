@@ -35,6 +35,9 @@ class RunnerBuilder implements BuilderInterface
         $configRunner = $core->getService(ConfigRunner::class);
         $env = var_export($configRunner->getEnv(), true);
         $file_code = file_get_contents(__DIR__ . '/ConfigRunner.php');
+        if ($file_code === false) {
+            throw new \Exception("Unable to read the file " . __DIR__ . '/ConfigRunner.php');
+        }
         $file_code = str_replace('["HERE GOES ENV"]', $env, $file_code);
         $config = var_export(Settings::getConfig(null), true);
         $file_code = str_replace('["HERE GOES CONFIG"]', $config, $file_code);

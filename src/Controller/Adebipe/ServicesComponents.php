@@ -30,20 +30,23 @@ class ServicesComponents implements ComponentInterface
                     continue;
                 }
                 $comment = $method->getDocComment();
-                $decoded_comment = explode("\n", $comment);
-                $decoded_comment = array_map(fn ($line) => trim($line, " \t\n\r\0\x0B*"), $decoded_comment);
-                $decoded_comment = array_filter($decoded_comment, fn ($line) => $line !== '');
-                $decoded_comment = array_values($decoded_comment);
-                foreach ($decoded_comment as $key => $line) {
-                    if (strpos($line, '@') === 0) {
-                        unset($decoded_comment[$key]);
+                $decoded_comment = '';
+                if ($comment !== false) {
+                    $decoded_comment = explode("\n", $comment);
+                    $decoded_comment = array_map(fn ($line) => trim($line, " \t\n\r\0\x0B*"), $decoded_comment);
+                    $decoded_comment = array_filter($decoded_comment, fn ($line) => $line !== '');
+                    $decoded_comment = array_values($decoded_comment);
+                    foreach ($decoded_comment as $key => $line) {
+                        if (strpos($line, '@') === 0) {
+                            unset($decoded_comment[$key]);
+                        }
+                        if (strpos($line, '@') === 0) {
+                            unset($decoded_comment[$key]);
+                        }
                     }
-                    if (strpos($line, '@') === 0) {
-                        unset($decoded_comment[$key]);
-                    }
+                    $decoded_comment = implode(' ', $decoded_comment);
+                    $decoded_comment = substr($decoded_comment, 1, -2);
                 }
-                $decoded_comment = implode(' ', $decoded_comment);
-                $decoded_comment = substr($decoded_comment, 1, -2);
                 $decoded_method = [
                     'name' => $method->getName(),
                     'comment' => $decoded_comment,

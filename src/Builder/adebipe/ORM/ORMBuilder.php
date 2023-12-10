@@ -28,6 +28,9 @@ class ORMBuilder implements BuilderInterface
             $class_name = $repository->getClassName();
             $reflection = new ReflectionClass($class_name);
             $file = $reflection->getFileName();
+            if ($file === false) {
+                continue;
+            }
             $files[] = $file;
         }
         return $files;
@@ -51,6 +54,9 @@ class ORMBuilder implements BuilderInterface
 
 
         $file_code = file_get_contents(__DIR__ . '/ORM.php');
+        if ($file_code === false) {
+            throw new \Exception("Unable to read the file " . __DIR__ . '/ORM.php');
+        }
         $file_code = str_replace("// CODE OF USES GOES HERE", $this->_getUsesCode(), $file_code);
         $file_code = str_replace("// MODEL INIT GOES HERE", $this->_getInitCode(), $file_code);
         file_put_contents($tmp_file, $file_code);
