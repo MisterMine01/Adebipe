@@ -39,15 +39,31 @@ class MsQl implements RegisterServiceInterface
         // Format: driver://user:password@host/database
         $ptn_start = 0;
         $ptn_end = strpos($connection_string, '://');
+        if ($ptn_end === false) {
+            $this->_logger->error("Invalid connection string: " . $connection_string);
+            return;
+        }
         $this->_driver = substr($connection_string, 0, $ptn_end);
         $ptn_start = $ptn_end + 3;
         $ptn_end = strpos($connection_string, ':', $ptn_start);
+        if ($ptn_end === false) {
+            $this->_logger->error("Invalid connection string: " . $connection_string);
+            return;
+        }
         $this->_user = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
         $ptn_start = $ptn_end + 1;
         $ptn_end = strpos($connection_string, '@', $ptn_start);
+        if ($ptn_end === false) {
+            $this->_logger->error("Invalid connection string: " . $connection_string);
+            return;
+        }
         $this->_password = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
         $ptn_start = $ptn_end + 1;
         $ptn_end = strpos($connection_string, '/', $ptn_start);
+        if ($ptn_end === false) {
+            $this->_logger->error("Invalid connection string: " . $connection_string);
+            return;
+        }
         $this->_host = substr($connection_string, $ptn_start, $ptn_end - $ptn_start);
         $ptn_start = $ptn_end + 1;
         $this->_database = substr($connection_string, $ptn_start);
@@ -163,6 +179,10 @@ class MsQl implements RegisterServiceInterface
     {
         $query = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_CATALOG=?";
         $statement = $this->prepare($query);
+        if ($statement === false) {
+            $this->_logger->error("Error preparing getTable query");
+            return [];
+        }
         $data = $this->execute($statement, [$this->_database]);
         return $data;
     }

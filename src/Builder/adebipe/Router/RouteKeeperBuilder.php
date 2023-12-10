@@ -37,8 +37,9 @@ class RouteKeeperBuilder implements BuilderInterface
         $classes = array_unique($classes);
         $files = array();
         foreach ($classes as $class) {
-            $files[] = (new ReflectionClass($class))->getFileName();
+            $files[] = (new ReflectionClass($class))->getFileName() ?: null;
         }
+        $files = array_values(array_filter($files));
         return $files;
     }
 
@@ -66,6 +67,9 @@ class RouteKeeperBuilder implements BuilderInterface
         );
         $core->includeFolder('src/Controller');
         $file_code = file_get_contents(__DIR__ . '/RouteKeeper.php');
+        if ($file_code === false) {
+            throw new \Exception("Unable to read the file " . __DIR__ . '/RouteKeeper.php');
+        }
         $route_keeper = $core->getService(RouteKeeper::class);
         $route_keeper->updateRoutes("prod");
 
@@ -113,6 +117,9 @@ class RouteKeeperBuilder implements BuilderInterface
         $uses = array();
         foreach ($all_files as $file) {
             $file = file_get_contents($file);
+            if ($file === false) {
+                throw new \Exception("Unable to read the file " . $file);
+            }
             $all_lines = explode(PHP_EOL, $file);
             foreach ($all_lines as $line) {
                 if (preg_match("/^use .+;$/", $line)) {
@@ -139,6 +146,9 @@ class RouteKeeperBuilder implements BuilderInterface
                 $end = $function->getEndLine();
                 $length = $end - $start;
                 $code = file($function->getFileName());
+                if ($code === false) {
+                    throw new \Exception("Unable to read the file " . $function->getFileName());
+                }
                 $code = implode("", array_slice($code, $start, $length));
                 // Change name of the function
                 $code = str_replace(
@@ -148,7 +158,10 @@ class RouteKeeperBuilder implements BuilderInterface
                 );
                 $attributes = [];
                 foreach ($function->getAttributes() as $attribute) {
-                    MakeClasses::$container->getService(Logger::class)->info($attribute->getName());
+                    $logger = MakeClasses::$container->getService(Logger::class);
+                    if ($logger instanceof Logger) {
+                        $logger->info($attribute->getName());
+                    }
                     if (is_subclass_of($attribute->getName(), BeforeRoute::class)) {
                         $attributes[] = $attribute;
                     }

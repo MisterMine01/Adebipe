@@ -99,8 +99,8 @@ abstract class Model implements ModelInterface
             throw new \Exception("Unknown key $name");
         }
         $schema = $schema[$name];
-        if (!is_subclass_of($schema, SqlBasedTypeInterface::class)) {
-            throw new \Exception("You can't add value to $name");
+        if (!$schema instanceof SqlBasedTypeInterface) {
+            throw new \Exception("You can't add value to " . $name);
         }
         return $schema->addToDb(Model::$msql, $this->id, $value);
     }
@@ -120,7 +120,7 @@ abstract class Model implements ModelInterface
             throw new \Exception("Unknown key $name");
         }
         $schema = $schema[$name];
-        if (!is_subclass_of($schema, SqlBasedTypeInterface::class)) {
+        if (!$schema instanceof SqlBasedTypeInterface) {
             throw new \Exception("You can't delete value to $name");
         }
         return $schema->deleteToDb(Model::$msql, $this->id, $value);
@@ -142,7 +142,7 @@ abstract class Model implements ModelInterface
         }
         $schema = $schema[$name];
         if (!isset($this->_properties[$name])) {
-            if (!is_subclass_of($schema, SqlBasedTypeInterface::class)) {
+            if (!$schema instanceof SqlBasedTypeInterface) {
                 return null;
             }
             $this->_properties[$name] = $schema->getResultFromDb(Model::$msql, $this->id);

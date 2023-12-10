@@ -5,6 +5,7 @@ namespace Adebipe\Annotations;
 use Adebipe\Router\Annotations\BeforeRoute;
 use Adebipe\Router\Request;
 use Adebipe\Router\Response;
+use Adebipe\Services\Settings;
 use Attribute;
 
 /**
@@ -36,17 +37,20 @@ class ValidatePost extends BeforeRoute
     {
         $result = $request->validatePost($this->schema);
         if ($result !== true) {
-            $message = getenv('HTTP_BAD_REQUEST_MESSAGE');
-            $code = getenv('HTTP_BAD_REQUEST_CODE');
-            $header = getenv('HTTP_BAD_REQUEST_HEADER');
-            if ($message === false) {
+            $message = Settings::getConfig('CORE.ERROR.HTTP_BAD_REQUEST.MESSAGE');
+            $code = Settings::getConfig('CORE.ERROR.HTTP_BAD_REQUEST.CODE');
+            $header = Settings::getConfig('CORE.ERROR.HTTP_BAD_REQUEST.BAD_REQUEST_HEADER');
+            if (!$message) {
                 $message = "Bad request";
             }
-            if ($code === false) {
+            if (!$code) {
                 $code = 400;
+            } else {
+                $code = intval($code);
             }
-            if ($header === false) {
+            if (!$header) {
                 $header = [];
+            } else {
             }
             return new Response($message, $code, $header);
         }

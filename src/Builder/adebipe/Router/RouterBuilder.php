@@ -31,6 +31,9 @@ class RouterBuilder implements BuilderInterface
     {
 
         $file_code = file_get_contents(__DIR__ . '/Router.php');
+        if ($file_code === false) {
+            throw new \Exception("Unable to read the file " . __DIR__ . '/Router.php');
+        }
         $file_code = str_replace("[\"MIME TYPES GO HERE\"];", $this->_getMimeCode(), $file_code);
         file_put_contents($tmp_file, $file_code);
     }
@@ -42,7 +45,11 @@ class RouterBuilder implements BuilderInterface
      */
     private function _getMimeCode(): string
     {
-        $mime = json_decode(file_get_contents(__DIR__ . '/mime.json'), true);
+        $content = file_get_contents(__DIR__ . '/mime.json');
+        if ($content === false) {
+            throw new \Exception("Unable to read the file " . __DIR__ . '/mime.json');
+        }
+        $mime = json_decode($content, true);
         return var_export($mime, true) . ';';
     }
 }
