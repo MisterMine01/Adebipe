@@ -20,10 +20,11 @@ class DiscordErrorSender implements ErrorSenderInterface
      */
     public function __construct()
     {
-        $this->_webhook_url = Settings::getEnvVariable('DISCORD_WEBHOOK');
-        if (!$this->_webhook_url) {
+        $_webhook_url = Settings::getEnvVariable('DISCORD_WEBHOOK');
+        if (!$_webhook_url) {
             throw new \Exception("No webhook url");
         }
+        $this->_webhook_url = $_webhook_url;
         $this->_username = Settings::getConfig("APP.SENTRY.DISCORD.USERNAME");
         $this->_avatar_url = Settings::getConfig("APP.SENTRY.DISCORD.AVATAR_URL");
     }

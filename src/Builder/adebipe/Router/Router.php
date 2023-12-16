@@ -64,7 +64,7 @@ class Router implements CreatorInterface
             }
         }
         // Remove double slashes or more in the uri
-        $request->uri = preg_replace('(\/+)', '/', $request->uri);
+        $request->uri = preg_replace('(\/+)', '/', $request->uri) ?? '';
 
         if (is_file("public" . $request->uri)) {
             // The request is a file

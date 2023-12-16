@@ -35,6 +35,9 @@ class ValidatePost extends BeforeRoute
      */
     public function execute(?Request $request = null): mixed
     {
+        if (!$request) {
+            throw new \Exception("Request not found");
+        }
         $result = $request->validatePost($this->schema);
         if ($result !== true) {
             $message = Settings::getConfig('CORE.ERROR.HTTP_BAD_REQUEST.MESSAGE');

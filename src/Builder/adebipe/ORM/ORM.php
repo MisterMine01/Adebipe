@@ -41,6 +41,9 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface
      */
     public function atStart(MsQl $msql = null): void
     {
+        if (!$msql) {
+            throw new \Exception("MsQl service not found");
+        }
         $this->_msql = $msql;
         // MODEL INIT GOES HERE
         Model::$msql = $this->_msql;

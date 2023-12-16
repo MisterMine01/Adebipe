@@ -165,6 +165,9 @@ class MsQl implements RegisterServiceInterface
      */
     public function getLastInsertId(): int
     {
+        if ($this->_connection === null) {
+            throw new \Exception("Connection to database not opened");
+        }
         $result = $this->_connection->lastInsertId();
         if ($result === false) {
             $this->_logger->error("Error getting last insert id");
