@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "*" # Push to all branches
+      - "!gh-pages" # Except gh-pages
   pull_request:
     branches: ["main"]
 
@@ -67,3 +68,30 @@ jobs:
         with:
           name: documentation
           path: .documentor/
+
+  deployDoc:
+    runs-on: ubuntu-latest
+    needs: [buildDoc, test]
+    # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Prepare git repository
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git fetch
+          git checkout origin/gh-pages
+          git pull origin gh-pages --force
+
+      - name: Copy artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ./artifacts
+
+      - name: Make gh-pages branch
+        run: |
+          mv ./artifacts/.documentor/* .
+          rm -rf ./artifacts
+          git add .
+          [[ -n $(git status -s) ]] && git commit -m "Update github pages" || echo "No changes to commit"
