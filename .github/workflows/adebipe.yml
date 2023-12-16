@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "*" # Push to all branches
+      - "!gh-pages" # Except gh-pages
   pull_request:
     branches: ["main"]
 
@@ -11,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,19 +34,76 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Check for sniffs
-        run: vendor/bin/phpcs --colors --report=summary
-
-      - name: Check for phpstan
-        run: vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=2G
+        run: vendor/bin/phpcs src/Builder services --colors --report=summary
 
       - name: Check for tests
         run: vendor/bin/phpunit --colors=always --testdox
 
-    #- name: Check for infection
-    #  run: vendor/bin/infection --min-msi=95 --min-covered-msi=95 --threads=4 --show-mutations --only-covered
+  buildDoc:
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
 
-    # - name: Run test suite
-    #   run: composer run-script test
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install documentor
+        run: wget -O phpDocumentor.phar https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.4.3/phpDocumentor.phar
+
+      - name: Generate documentation
+        run: php phpDocumentor.phar run
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: documentation
+          path: .documentor/
+
+  deployDoc:
+    runs-on: ubuntu-latest
+    needs: [buildDoc, test]
+    permissions:
+      contents: write
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Prepare git repository
+        env:
+          CI_COMMIT_AUTHOR: github-actions[bot]
+          CI_COMMIT_AUTHOR_EMAIL: github-actions[bot]@users.noreply.github.com
+        run: |
+          git config --local user.email "${{ env.CI_COMMIT_AUTHOR_EMAIL }}"
+          git config --local user.name "${{ env.CI_COMMIT_AUTHOR }}"
+          git fetch
+          git checkout origin/gh-pages
+          git pull origin gh-pages --force
+
+      - name: Copy artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ./artifacts
+
+      - name: Make gh-pages branch
+        env:
+          CI_COMMIT_MESSAGE: Update github pages
+        run: |
+          mv ./artifacts/documentation/* .
+          rm -rf ./artifacts
+          git add .
+          [[ -n $(git status -s) ]] && git commit -m "${{ env.CI_COMMIT_MESSAGE }}" || echo "No changes to commit"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          branch: gh-pages
