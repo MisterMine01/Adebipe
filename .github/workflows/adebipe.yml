@@ -36,13 +36,16 @@ jobs:
       - name: Check for sniffs
         run: vendor/bin/phpcs src/Builder services --colors --report=summary
 
+      - name: Check for phpstan
+        run: vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=2G
+
       - name: Check for tests
         run: vendor/bin/phpunit --colors=always --testdox
 
   buildDoc:
     runs-on: ubuntu-latest
     needs: [test]
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
 
@@ -74,7 +77,7 @@ jobs:
     needs: [buildDoc, test]
     permissions:
       contents: write
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
 
@@ -98,7 +101,7 @@ jobs:
         env:
           CI_COMMIT_MESSAGE: Update github pages
         run: |
-          mv ./artifacts/documentation/* .
+          mv -f ./artifacts/documentation/* .
           rm -rf ./artifacts
           git add .
           [[ -n $(git status -s) ]] && git commit -m "${{ env.CI_COMMIT_MESSAGE }}" || echo "No changes to commit"
