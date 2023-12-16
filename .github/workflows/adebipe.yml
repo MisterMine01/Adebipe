@@ -74,7 +74,7 @@ jobs:
     needs: [buildDoc, test]
     # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/cheGH_TOKEN
+      - uses: actions/checkout@v3
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
