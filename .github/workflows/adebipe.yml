@@ -101,7 +101,8 @@ jobs:
         env:
           CI_COMMIT_MESSAGE: Update github pages
         run: |
-          mv -f ./artifacts/documentation/* .
+          # mv -f ./artifacts/documentation/* .
+          cp -r ./artifacts/documentation/* . && rm -R /artifacts/documentation/*
           rm -rf ./artifacts
           git add .
           [[ -n $(git status -s) ]] && git commit -m "${{ env.CI_COMMIT_MESSAGE }}" || echo "No changes to commit"
