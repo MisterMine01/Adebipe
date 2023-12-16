@@ -91,7 +91,7 @@ jobs:
 
       - name: Make gh-pages branch
         run: |
-          mv ./artifacts/.documentor/* .
+          mv ./artifacts/documentation/* .
           rm -rf ./artifacts
           git add .
           [[ -n $(git status -s) ]] && git commit -m "Update github pages" || echo "No changes to commit"
