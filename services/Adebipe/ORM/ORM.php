@@ -8,6 +8,7 @@ use Adebipe\Model\Repository;
 use Adebipe\Services\Interfaces\BuilderServiceInterface;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
 use Adebipe\Services\Interfaces\StarterServiceInterface;
+use App\Model\TableModel;
 
 /**
  * The ORM service
@@ -56,8 +57,8 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
             }
         }
         $class_init = new $class_creator();
-        if (!($class_init instanceof Model)) {
-            throw new \Exception("The class $class_creator must extends Model");
+        if (!($class_init instanceof TableModel)) {
+            throw new \Exception("The class {$class_creator} must extends Model");
         }
         $all_schema = $class_init->getSchema();
         foreach ($all_schema as $table_name => $object_class) {
