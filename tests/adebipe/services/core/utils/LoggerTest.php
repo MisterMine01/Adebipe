@@ -146,6 +146,16 @@ class LoggerTest extends AdebipeCoreTestCase
         $logger->atEnd();
     }
 
+    public function testIsNotSentryClass()
+    {
+        Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 0);
+        Settings::addConfig("CORE.LOGGER.ERROR_CLASS", "FalseSentryMock");
+        $this->expectExceptionMessage("The error sender must implement ErrorSenderInterface");
+        $logger = new Logger();
+        $logger->atStart();
+        $logger->atEnd();
+    }
+
     public function testSentryDebug()
     {
         Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 0);

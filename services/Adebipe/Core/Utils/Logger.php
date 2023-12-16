@@ -88,6 +88,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         set_error_handler(
             function (int $errno, string $errstr, string $errfile, int $errline): bool {
                 $this->warning($errstr . ' in ' . $errfile . ' on line ' . $errline);
+                /* @infection-ignore-all */
                 return true;
             },
             E_WARNING
