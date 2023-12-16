@@ -42,6 +42,9 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
      */
     public function atStart(MsQl $msql = null): void
     {
+        if (!$msql) {
+            throw new \Exception("MsQl service not found");
+        }
         $this->_msql = $msql;
         $class_creator = Settings::getConfig("CORE.ORM.TABLE_MODELS");
         if (!$class_creator) {

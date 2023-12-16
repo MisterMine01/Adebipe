@@ -79,6 +79,9 @@ class ConfigRunner implements StarterServiceInterface, BuilderServiceInterface
      */
     public function atStart(Logger $logger = null): void
     {
+        if (!$logger) {
+            throw new \Exception("Logger service not found");
+        }
         $logger->info('Initialize the environment variables');
     }
 
