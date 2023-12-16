@@ -102,9 +102,9 @@ class Router implements CreatorInterface, BuilderServiceInterface
         if (is_file("public" . $request->uri)) {
             // The request is a file
             $this->_logger->info('Get file: ' . $request->uri);
-            $mime = json_decode(file_get_contents(__DIR__ . '/mime.json'), true);
+            $mime = json_decode(file_get_contents(__DIR__ . '/mime.json') ?: "[]", true);
             return new Response(
-                file_get_contents("public" . $request->uri),
+                file_get_contents("public" . $request->uri) ?: "Error",
                 200,
                 [
                     'Content-Type' => $mime[pathinfo("public" . $request->uri, PATHINFO_EXTENSION)]
@@ -121,7 +121,7 @@ class Router implements CreatorInterface, BuilderServiceInterface
             throw new \Exception('An error occured while finding the route');
         }
         // Check if the route is not found
-        if (is_numeric($result[0])) {
+        if (is_int($result[0])) {
             return new Response($result[1], $result[0]);
         }
         $route = $result[0];

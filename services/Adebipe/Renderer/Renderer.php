@@ -55,6 +55,6 @@ class Renderer implements RegisterServiceInterface
         extract($environements);
         ob_start();
         include $this->_dir . $path;
-        return ob_get_clean();
+        return ob_get_clean() ?: '';
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Adebipe\Cli\Builder;
 
+use Adebipe\Builder\BuilderInterface;
 use Adebipe\Builder\NoBuildable;
 use Adebipe\Cli\Includer\Includer;
 use Adebipe\Cli\MakeClasses;
@@ -190,11 +191,16 @@ class Builder
     {
         $container = MakeClasses::$container;
         $class = $container->getService($service->getName());
-
+        if (!$class instanceof BuilderServiceInterface) {
+            return $service;
+        }
         $builder_name = $class->build();
         try {
             $builder_class_name = $this->_includer->includeFile("src/Builder/" . $builder_name)[0];
         } catch (Throwable $e) {
+            return $service;
+        }
+        if (!class_exists($builder_class_name)) {
             return $service;
         }
         $builder_class = new ReflectionClass($builder_class_name);
@@ -202,6 +208,10 @@ class Builder
         $tmp = $this->_build_dir . '/tmp/' . uniqid() . '.php';
 
         $instance = $builder_class->newInstance();
+
+        if (!$instance instanceof BuilderInterface) {
+            return $service;
+        }
 
         $instance->build($tmp, $this->_builder_helper);
 
@@ -218,6 +228,9 @@ class Builder
 
         $result = $this->_includer->includeFile($tmp);
         $result = $result[0];
+        if (!class_exists($result)) {
+            throw new \Exception("The builder must return a class");
+        }
         $result = new ReflectionClass($result);
         return $result;
     }
@@ -270,7 +283,13 @@ class Builder
     private function _buildFile(IncludeList $include_list, ReflectionClass $service, string $directory)
     {
         $file = $service->getFileName();
+        if (!$file) {
+            return;
+        }
         $file_code = file_get_contents($file);
+        if (!$file_code) {
+            return;
+        }
         $file_path = $this->_build_dir . $directory . $service->getShortName() . '.php';
         if (preg_match_all("/namespace (.*)\\\\Generated;/", $file_code, $matches)) {
             $file_code = str_replace(

@@ -3,6 +3,7 @@
 namespace Adebipe\Model\Type;
 
 use Adebipe\Model\Collection;
+use Adebipe\Model\Model;
 use Adebipe\Services\MsQl;
 use Adebipe\Services\ORM;
 
@@ -45,6 +46,18 @@ class OneToMany extends AbstractType implements SqlBasedTypeInterface
      */
     public function __construct(string $me_object, string $object, string $relationedBy)
     {
+        if (!class_exists($me_object)) {
+            throw new \Exception("The class $me_object doesn't exist");
+        }
+        if (!class_exists($object)) {
+            throw new \Exception("The class $object doesn't exist");
+        }
+        if (!is_subclass_of($me_object, Model::class)) {
+            throw new \Exception("The class $me_object must extends Model");
+        }
+        if (!is_subclass_of($object, Model::class)) {
+            throw new \Exception("The class $object must extends Model");
+        }
         $this->_me_object = $me_object;
         $this->_object = $object;
         $this->_relationedBy = $relationedBy;
@@ -115,6 +128,12 @@ class OneToMany extends AbstractType implements SqlBasedTypeInterface
      */
     public function addToDb(MsQl $msql, string $id, object $value): bool
     {
+        if (!$value instanceof $this->_object) {
+            throw new \Exception("The value must be an instance of " . $this->_object);
+        }
+        if (!$value instanceof Model) {
+            throw new \Exception("The value must be an instance of Model");
+        }
         $object_table = ORM::classToTableName($this->_object);
         $query = "UPDATE " . $object_table . " SET " . $this->_relationedBy . " = " . $id . " WHERE id = " . $value->id;
         $result = $msql->prepare($query);
@@ -133,6 +152,12 @@ class OneToMany extends AbstractType implements SqlBasedTypeInterface
      */
     public function deleteToDb(MsQl $msql, string $id, object $value): bool
     {
+        if (!$value instanceof $this->_object) {
+            throw new \Exception("The value must be an instance of " . $this->_object);
+        }
+        if (!$value instanceof Model) {
+            throw new \Exception("The value must be an instance of Model");
+        }
         $object_table = ORM::classToTableName($this->_object);
         $query = "UPDATE " . $object_table . " SET " . $this->_relationedBy . " = NULL WHERE id = " . $value->id;
         $result = $msql->prepare($query);

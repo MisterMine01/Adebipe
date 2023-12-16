@@ -2,6 +2,7 @@
 
 namespace Adebipe\Model\Type;
 
+use Adebipe\Model\Model;
 use Adebipe\Services\MsQl;
 use Adebipe\Services\ORM;
 
@@ -118,6 +119,12 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
      */
     public function addToDb(MsQl $msql, string $id, object $value): bool
     {
+        if (!$value instanceof $this->_object) {
+            throw new \Exception("The value must be an instance of " . $this->_object);
+        }
+        if (!$value instanceof Model) {
+            throw new \Exception("The value must be an instance of Model");
+        }
         $me_object_table = ORM::classToTableName($this->_me_object);
         $query = "UPDATE " . $me_object_table . " SET " . $this->_relationedBy . " = " . $value->id .
             " WHERE id = " . $id;
@@ -137,6 +144,12 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
      */
     public function deleteToDb(MsQl $msql, string $id, object $value): bool
     {
+        if (!$value instanceof $this->_object) {
+            throw new \Exception("The value must be an instance of " . $this->_object);
+        }
+        if (!$value instanceof Model) {
+            throw new \Exception("The value must be an instance of Model");
+        }
         $me_object_table = ORM::classToTableName($this->_me_object);
         $query = "UPDATE " . $me_object_table . " SET " . $this->_relationedBy . " = NULL WHERE id = " . $id;
         $result = $msql->prepare($query);
