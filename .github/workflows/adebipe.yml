@@ -71,15 +71,20 @@ jobs:
 
   deployDoc:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     needs: [buildDoc, test]
     # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
 
       - name: Prepare git repository
+        env:
+          CI_COMMIT_AUTHOR: github-actions[bot]
+          CI_COMMIT_AUTHOR_EMAIL: github-actions[bot]@users.noreply.github.com
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          git config --local user.email "${{ env.CI_COMMIT_AUTHOR_EMAIL }}"
+          git config --local user.name "${{ env.CI_COMMIT_AUTHOR }}"
           git fetch
           git checkout origin/gh-pages
           git pull origin gh-pages --force
@@ -90,13 +95,16 @@ jobs:
           path: ./artifacts
 
       - name: Make gh-pages branch
+        env:
+          CI_COMMIT_MESSAGE: Update github pages
         run: |
           mv ./artifacts/documentation/* .
           rm -rf ./artifacts
           git add .
-          [[ -n $(git status -s) ]] && git commit -m "Update github pages" || echo "No changes to commit"
+          [[ -n $(git status -s) ]] && git commit -m "${{ env.CI_COMMIT_MESSAGE }}" || echo "No changes to commit"
 
       - name: Push changes
         uses: ad-m/github-push-action@v0.8.0
         with:
+          github_token: ${{ env.GH_TOKEN }}
           branch: gh-pages
