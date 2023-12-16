@@ -41,6 +41,9 @@ class MakeClasses
         $injector->addService($logger);
 
         $container = $injector->createClass(new ReflectionClass(Container::class));
+        if (!$container instanceof Container) {
+            throw new \Exception('The container is not a container');
+        }
         MakeClasses::$container = $container;
         $injector->addService($container);
         $injector->addService($injector);
@@ -53,6 +56,9 @@ class MakeClasses
         $all_class = array();
         $atStart = array();
         foreach ($classes as $class) {
+            if (!class_exists($class)) {
+                continue;
+            }
             $reflection = new ReflectionClass($class);
             $all_class[] = $reflection;
             if (strpos($class, 'Adebipe\\Services\\') !== 0) {
@@ -68,10 +74,10 @@ class MakeClasses
             }
             if ($reflection->implementsInterface(CreatorInterface::class)) {
                 $class = $injector->createClass($reflection);
-                if ($reflection->implementsInterface(RegisterServiceInterface::class)) {
+                if ($class instanceof RegisterServiceInterface) {
                     $injector->addService($class);
                 }
-                if ($reflection->implementsInterface(StarterServiceInterface::class)) {
+                if ($class instanceof StarterServiceInterface) {
                     $atStart_function = $reflection->getMethod('atStart');
                     $atStart[] = [$atStart_function, $class];
                 }

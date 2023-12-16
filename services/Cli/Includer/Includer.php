@@ -29,6 +29,9 @@ class Includer implements IncluderInterface
         }
 
         $in_dir = scandir($path);
+        if ($in_dir === false) {
+            throw new \Exception("Can't read the directory: " . $path);
+        }
         if (!in_array("runtime", $in_dir)) { // If it's a directory without runtime
             foreach ($in_dir as $item) {
                 if ($item === "." || $item === "..") {
@@ -66,9 +69,12 @@ class Includer implements IncluderInterface
 
         $already_process = [".", "..", "runtime"];
         $runtime = fopen($path . '/runtime', 'r');
-        $data = fread($runtime, filesize($path . '/runtime'));
+        if ($runtime === false) {
+            throw new \Exception("Can't read the runtime file: " . $path . '/runtime');
+        }
+        $data = fread($runtime, filesize($path . '/runtime') ?: 0);
         fclose($runtime);
-        $runtime_data = explode(PHP_EOL, $data);
+        $runtime_data = explode(PHP_EOL, $data ?: "");
         foreach ($runtime_data as $item) {
             if (strpos($item, '@Not ') !== false) {
                 $filename = str_replace('@Not ', '', $item);
@@ -91,6 +97,10 @@ class Includer implements IncluderInterface
             $decoded_runtime["atStart"] = array_merge($decoded_runtime["atStart"], $new_file["atStart"]);
             $decoded_runtime["atStart"] = array_merge($decoded_runtime["atStart"], $new_file["middle"]);
             $decoded_runtime["atStart"] = array_merge($decoded_runtime["atStart"], $new_file["atEnd"]);
+        }
+
+        if (!is_array($in_dir)) {
+            throw new \Exception("Can't read the directory: " . $path);
         }
 
         foreach ($in_dir as $item) {

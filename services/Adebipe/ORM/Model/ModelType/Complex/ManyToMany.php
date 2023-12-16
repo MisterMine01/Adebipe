@@ -3,6 +3,7 @@
 namespace Adebipe\Model\Type;
 
 use Adebipe\Model\Collection;
+use Adebipe\Model\Model;
 use Adebipe\Services\MsQl;
 use Adebipe\Services\ORM;
 
@@ -169,6 +170,12 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
      */
     public function addToDb(MsQl $msql, string $id, object $value): bool
     {
+        if (!$value instanceof $this->_object_type) {
+            throw new \Exception("The value must be an instance of " . $this->_object_type);
+        }
+        if (!$value instanceof Model) {
+            throw new \Exception("The value must be an instance of Model");
+        }
         $query = ("INSERT INTO " . $this->_middle_table_name .
             " (" . $this->_named_me . "_id, " . $this->_named_object . "_id) VALUES" .
             " (" . $id . ", " . $value->id . ")"
@@ -189,6 +196,12 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
      */
     public function deleteToDb(MsQl $msql, string $id, object $value): bool
     {
+        if (!$value instanceof $this->_object_type) {
+            throw new \Exception("The value must be an instance of " . $this->_object_type);
+        }
+        if (!$value instanceof Model) {
+            throw new \Exception("The value must be an instance of Model");
+        }
         $query = "DELETE FROM " . $this->_middle_table_name . " WHERE " . $this->_named_me . "_id = " . $id .
             " AND " . $this->_named_object . "_id = " . $value->id;
         $result = $msql->prepare($query);

@@ -37,6 +37,6 @@ class JsonResponse extends Response
         array $headers = []
     ) {
         $headers['Content-Type'] = 'application/json';
-        parent::__construct(json_encode($body), $status, $headers);
+        parent::__construct(json_encode($body) ?: "[]", $status, $headers);
     }
 }

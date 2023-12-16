@@ -84,15 +84,18 @@ class MsQl implements RegisterServiceInterface
      *
      * @param string $query The query to prepare
      *
-     * @return PDOStatement|false
+     * @return PDOStatement
      */
-    public function prepare(string $query): PDOStatement|false
+    public function prepare(string $query): PDOStatement
     {
         if ($this->_connection === null) {
-            $this->_logger->error("No connection to database");
-            return false;
+            throw new \Exception("Connection to database not opened");
         }
-        return $this->_connection->prepare($query);
+        $result = $this->_connection->prepare($query);
+        if ($result === false) {
+            throw new \Exception("Error preparing query: " . $this->_connection->errorInfo()[2]);
+        }
+        return $result;
     }
 
     /**
@@ -179,10 +182,6 @@ class MsQl implements RegisterServiceInterface
     {
         $query = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_CATALOG=?";
         $statement = $this->prepare($query);
-        if ($statement === false) {
-            $this->_logger->error("Error preparing getTable query");
-            return [];
-        }
         $data = $this->execute($statement, [$this->_database]);
         return $data;
     }

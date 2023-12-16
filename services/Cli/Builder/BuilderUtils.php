@@ -13,6 +13,9 @@ namespace Adebipe\Cli\Builder;
 function recurseCopy($src, $dst): void
 {
     $dir = opendir($src);
+    if ($dir === false) {
+        throw new \Exception("Can't open the directory: " . $src);
+    }
     @mkdir($dst);
     while (false !== ($file = readdir($dir))) {
         if (($file != '.') && ($file != '..')) {
@@ -36,7 +39,7 @@ function recurseCopy($src, $dst): void
  */
 function removeDir(string $path): void
 {
-    $files = glob($path . '/*');
+    $files = glob($path . '/*') ?: [];
     foreach ($files as $file) {
         is_dir($file) ? removeDir($file) : unlink($file);
     }

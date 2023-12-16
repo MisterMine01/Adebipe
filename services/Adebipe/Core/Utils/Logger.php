@@ -212,8 +212,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     {
         $this->_log('WARNING', $message);
         $backtrace = debug_backtrace();
-        $backtrace[2]["line"] = $backtrace[1]["line"];
-        $backtrace[2]["file"] = $backtrace[1]["file"];
+        $backtrace[2]["line"] = $backtrace[1]["line"]; // @phpstan-ignore-line
+        $backtrace[2]["file"] = $backtrace[1]["file"]; // @phpstan-ignore-line
         $this->_sendError(array_splice($backtrace, 2));
     }
 
@@ -248,8 +248,8 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         $this->_log('CRITICAL', $message);
         if ($backtrace === null) {
             $backtrace = debug_backtrace();
-            $backtrace[2]["line"] = $backtrace[1]["line"];
-            $backtrace[2]["file"] = $backtrace[1]["file"];
+            $backtrace[2]["line"] = $backtrace[1]["line"]; // @phpstan-ignore-line
+            $backtrace[2]["file"] = $backtrace[1]["file"]; // @phpstan-ignore-line
             $backtrace = array_splice($backtrace, 2);
         }
         $this->_sendError($backtrace);

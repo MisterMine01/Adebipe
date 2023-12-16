@@ -3,6 +3,7 @@
 namespace Adebipe\Services;
 
 use Adebipe\Model\Model;
+use Adebipe\Model\ORMTableCreator;
 use Adebipe\Model\Repository;
 use Adebipe\Services\Interfaces\BuilderServiceInterface;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
@@ -52,6 +53,9 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
             }
         }
         $class_init = new $class_creator();
+        if (!($class_init instanceof Model)) {
+            throw new \Exception("The class $class_creator must extends Model");
+        }
         $all_schema = $class_init->getSchema();
         foreach ($all_schema as $table_name => $object_class) {
             $repository = $object_class::$repository;
@@ -117,6 +121,9 @@ class ORM implements RegisterServiceInterface, StarterServiceInterface, BuilderS
         }
         $class_creator = Settings::getConfig("CORE.ORM.TABLE_MODELS");
         $class_init = new $class_creator();
+        if (!($class_init instanceof ORMTableCreator)) {
+            throw new \Exception("The class $class_creator must extends ORMTableCreator");
+        }
         $fixtures = $class_init->getFixtures();
         foreach ($this->_repository as $table_name => $repository) {
             if (!in_array($table_name, $already_table_name)) {
