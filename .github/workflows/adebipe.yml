@@ -44,7 +44,7 @@ jobs:
     needs: [test]
     # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache Composer packages
         id: composer-cache
@@ -64,7 +64,7 @@ jobs:
       - name: Generate documentation
         run: php phpDocumentor.phar run
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: documentation
           path: .documentor/
@@ -74,7 +74,7 @@ jobs:
     needs: [buildDoc, test]
     # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Prepare git repository
         run: |
