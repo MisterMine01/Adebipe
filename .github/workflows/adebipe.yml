@@ -72,13 +72,11 @@ jobs:
   deployDoc:
     runs-on: ubuntu-latest
     needs: [buildDoc, test]
+    permissions:
+      contents: write
     # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        with:
-          token: ${{ env.GH_TOKEN }}
 
       - name: Prepare git repository
         env:
@@ -108,5 +106,4 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@v0.8.0
         with:
-          github_token: ${{ env.GH_TOKEN }}
           branch: gh-pages
