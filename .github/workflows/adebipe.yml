@@ -71,12 +71,14 @@ jobs:
 
   deployDoc:
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     needs: [buildDoc, test]
     # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/cheGH_TOKEN
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          token: ${{ env.GH_TOKEN }}
 
       - name: Prepare git repository
         env:
