@@ -42,7 +42,7 @@ jobs:
   buildDoc:
     runs-on: ubuntu-latest
     needs: [test]
-    # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
 
@@ -74,7 +74,7 @@ jobs:
     needs: [buildDoc, test]
     permissions:
       contents: write
-    # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v3
 
