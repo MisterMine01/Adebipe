@@ -232,11 +232,11 @@ class Repository implements RepositoryInterface
     /**
      * Delete an object in the database
      *
-     * @param object $object The object to delete
+     * @param Model $object The object to delete
      *
      * @return bool
      */
-    public function delete(&$object): bool
+    public function delete(Model &$object): bool
     {
         if (!is_a($object, $this->_class_name)) {
             throw new \Exception(
