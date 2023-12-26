@@ -19,45 +19,33 @@ class ConfigRunner implements StarterServiceInterface, BuilderServiceInterface
      */
     public function __construct()
     {
-        if (is_file('.env')) {
-            $this->_getEnvFile('.env');
-        }
         $env = getenv('ENV');
         if ($env === false) {
-            $env = 'dev';
+            throw new \Exception("The environment variable ENV is not set");
         }
-        if (is_file('.env.' . $env)) {
-            $this->_getEnvFile('.env.' . $env);
-        }
-        foreach ($this->_variable as $key => $value) {
-            Settings::addEnvVariable($key, $value);
+        $files = [
+            ".env",
+            ".env." . $env,
+            ".env.local",
+            ".env." . $env . ".local"
+        ];
+        foreach ($files as $file) {
+            if (is_file($file)) {
+                $this->_readEnvFile($file);
+            }
         }
         // If the config file is set
-        if ($config_name = Settings::getEnvVariable('CONFIG')) {
-            $config_dir = Settings::getEnvVariable('CONFIG_DIR');
+        if ($config_name = $this->_variable['CONFIG'] ?? null) {
+            $config_dir = $this->_variable['CONFIG_DIR'] ?? null;
             if ($config_dir === null) {
                 $config_dir = 'config/';
             }
             $config_path = $config_dir . '/' . $config_name . '.php';
-            if (is_file($config_path)) {
-                $config = include_once $config_path;
-                Settings::addConfigArray($config['config'] ?? [], false);
-                foreach ($config['env_var'] ?? [] as $key => $value) {
-                    Settings::addEnvVariable($key, $value);
-                    $this->_variable[$key] = $value;
-                }
-            }
+            $this->_readConfigFile($config_path);
         }
-    }
-
-    /**
-     * Get Environment variables
-     *
-     * @return array
-     */
-    public function getEnv(): array
-    {
-        return $this->_variable;
+        foreach ($this->_variable as $key => $value) {
+            Settings::addEnvVariable($key, $value);
+        }
     }
 
     /**
@@ -95,20 +83,40 @@ class ConfigRunner implements StarterServiceInterface, BuilderServiceInterface
     }
 
     /**
+     * Get the config
+     *
+     * @param string $config_path The path of the config
+     *
+     * @return void
+     */
+    private function _readConfigFile(string $config_path): void
+    {
+        if (is_file($config_path)) {
+            $config = include_once $config_path;
+            Settings::addConfigArray($config['config'] ?? [], false);
+            foreach ($config['env_var'] ?? [] as $key => $value) {
+                $this->_variable[$key] = $value;
+            }
+        }
+    }
+
+    /**
      * Get the environment variables from a file
      *
      * @param string $name The name of the file
      *
      * @return void
      */
-    private function _getEnvFile(string $name): void
+    private function _readEnvFile(string $name): void
     {
         $file = fopen($name, 'r');
+        // @infection-ignore-all
         if ($file === false) {
             return;
         }
         while (!feof($file)) {
             $line = fgets($file);
+            // @infection-ignore-all
             if ($line === false) {
                 continue;
             }
@@ -116,16 +124,14 @@ class ConfigRunner implements StarterServiceInterface, BuilderServiceInterface
             if (empty($line)) {
                 continue;
             }
-            if (strpos($line, '#') === 0) {
+            if (str_starts_with($line, "#")) {
                 continue;
             }
-            if (strpos($line, '=') !== false) {
-                $line = explode('=', $line);
-                $this->_variable[$line[0]] = $line[1];
+            if (strpos($line, '=') === false) {
+                throw new \Exception("Invalid line in the file " . $name . ": " . $line);
             }
-        }
-        if (is_file($name . '.local')) {
-            $this->_getEnvFile($name . '.local');
+            $line = explode('=', $line);
+            $this->_variable[$line[0]] = $line[1];
         }
     }
 }

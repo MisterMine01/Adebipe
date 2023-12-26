@@ -9,6 +9,7 @@ abstract class AdebipeCoreTestCase extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        putenv('ENV=test');
         $runner = new ConfigRunner();
         if (is_dir("logs_test")) {
             foreach (glob("logs_test/*") as $file) {
