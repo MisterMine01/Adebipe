@@ -32,4 +32,11 @@ class SettingTest extends AdebipeCoreTestCase
         Settings::addConfigArray(["test3" => "test3"], false);
         $this->assertEquals(["test3" => "test3"], Settings::getConfig(null));
     }
+
+    public function testAddConfigNoKey()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("The key must not be empty");
+        Settings::addConfig("", "test");
+    }
 }
