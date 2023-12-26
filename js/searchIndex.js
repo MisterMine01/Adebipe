@@ -21,26 +21,6 @@ Search.appendIndex(
             "summary": "Build\u0020the\u0020classes\u0020and\u0020write\u0020them\u0020in\u0020the\u0020temporary\u0020file",
             "url": "classes/Adebipe-Builder-BuilderInterface.html#method_build"
         },                {
-            "fqsen": "\\Adebipe\\Builder\\CoreBuilderInterface",
-            "name": "CoreBuilderInterface",
-            "summary": "Core\u0020builder\u0020for\u0020the\u0020builder\u0020classes\nKeep\u0020all\u0020function\u0020for\u0020help\u0020the\u0020builder\u0020classes",
-            "url": "classes/Adebipe-Builder-CoreBuilderInterface.html"
-        },                {
-            "fqsen": "\\Adebipe\\Builder\\CoreBuilderInterface\u003A\u003AincludeFolder\u0028\u0029",
-            "name": "includeFolder",
-            "summary": "Include\u0020a\u0020folder\u0020and\u0020return\u0020all\u0020classes\u0020declared",
-            "url": "classes/Adebipe-Builder-CoreBuilderInterface.html#method_includeFolder"
-        },                {
-            "fqsen": "\\Adebipe\\Builder\\CoreBuilderInterface\u003A\u003AgetService\u0028\u0029",
-            "name": "getService",
-            "summary": "Get\u0020a\u0020service\u0020from\u0020the\u0020container",
-            "url": "classes/Adebipe-Builder-CoreBuilderInterface.html#method_getService"
-        },                {
-            "fqsen": "\\Adebipe\\Builder\\CoreBuilderInterface\u003A\u003AgetServiceFunctionName\u0028\u0029",
-            "name": "getServiceFunctionName",
-            "summary": "Get\u0020the\u0020function\u0020name\u0020of\u0020a\u0020service\u0020in\u0020the\u0020build",
-            "url": "classes/Adebipe-Builder-CoreBuilderInterface.html#method_getServiceFunctionName"
-        },                {
             "fqsen": "\\Adebipe\\Services\\ErrorSenderInterface",
             "name": "ErrorSenderInterface",
             "summary": "Interface\u0020for\u0020sending\u0020error\u0020to\u0020a\u0020tierce\u0020service",
@@ -101,11 +81,6 @@ Search.appendIndex(
             "summary": "Load\u0020the\u0020environment\u0020variables",
             "url": "classes/Adebipe-Services-ConfigRunner.html#method___construct"
         },                {
-            "fqsen": "\\Adebipe\\Services\\ConfigRunner\u003A\u003AgetEnv\u0028\u0029",
-            "name": "getEnv",
-            "summary": "Get\u0020Environment\u0020variables",
-            "url": "classes/Adebipe-Services-ConfigRunner.html#method_getEnv"
-        },                {
             "fqsen": "\\Adebipe\\Services\\ConfigRunner\u003A\u003Abuild\u0028\u0029",
             "name": "build",
             "summary": "Get\u0020the\u0020service\u0020builder\u0020name",
@@ -121,10 +96,15 @@ Search.appendIndex(
             "summary": "Function\u0020to\u0020run\u0020at\u0020the\u0020end\u0020of\u0020the\u0020application",
             "url": "classes/Adebipe-Services-ConfigRunner.html#method_atEnd"
         },                {
-            "fqsen": "\\Adebipe\\Services\\ConfigRunner\u003A\u003A_getEnvFile\u0028\u0029",
-            "name": "_getEnvFile",
+            "fqsen": "\\Adebipe\\Services\\ConfigRunner\u003A\u003A_readConfigFile\u0028\u0029",
+            "name": "_readConfigFile",
+            "summary": "Get\u0020the\u0020config",
+            "url": "classes/Adebipe-Services-ConfigRunner.html#method__readConfigFile"
+        },                {
+            "fqsen": "\\Adebipe\\Services\\ConfigRunner\u003A\u003A_readEnvFile\u0028\u0029",
+            "name": "_readEnvFile",
             "summary": "Get\u0020the\u0020environment\u0020variables\u0020from\u0020a\u0020file",
-            "url": "classes/Adebipe-Services-ConfigRunner.html#method__getEnvFile"
+            "url": "classes/Adebipe-Services-ConfigRunner.html#method__readEnvFile"
         },                {
             "fqsen": "\\Adebipe\\Services\\ConfigRunner\u003A\u003A\u0024_variable",
             "name": "_variable",
@@ -340,6 +320,11 @@ Search.appendIndex(
             "name": "addConfigArray",
             "summary": "Add\u0020a\u0020configuration\u0020from\u0020an\u0020array",
             "url": "classes/Adebipe-Services-Settings.html#method_addConfigArray"
+        },                {
+            "fqsen": "\\Adebipe\\Services\\Settings\u003A\u003AaddConfig\u0028\u0029",
+            "name": "addConfig",
+            "summary": "Add\u0020a\u0020configuration\u0020with\u0020a\u0020key\u0020and\u0020a\u0020value",
+            "url": "classes/Adebipe-Services-Settings.html#method_addConfig"
         },                {
             "fqsen": "\\Adebipe\\Services\\Settings\u003A\u003AgetConfig\u0028\u0029",
             "name": "getConfig",
@@ -1521,11 +1506,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Adebipe-Services-Router.html#property__routeKeeper"
         },                {
-            "fqsen": "\\Adebipe\\Cli\\Builder\\requireAll\u0028\u0029",
-            "name": "requireAll",
-            "summary": "Require\u0020all\u0020files\u0020after\u0020include\u0020all\u0020services",
-            "url": "namespaces/adebipe-cli-builder.html#function_requireAll"
-        },                {
             "fqsen": "\\Adebipe\\Cli\\Builder\\Builder",
             "name": "Builder",
             "summary": "Build\u0020all\u0020services",
@@ -1756,6 +1736,11 @@ Search.appendIndex(
             "summary": "Generate\u0020the\u0020part\u0020of\u0020function\u0020to\u0020stop\u0020this\u0020service",
             "url": "classes/Adebipe-Cli-Builder-ServicesBuilder.html#method_atEnd"
         },                {
+            "fqsen": "\\Adebipe\\Cli\\Builder\\ServicesBuilder\u003A\u003A\u0024_starter_service",
+            "name": "_starter_service",
+            "summary": "",
+            "url": "classes/Adebipe-Cli-Builder-ServicesBuilder.html#property__starter_service"
+        },                {
             "fqsen": "\\Adebipe\\Cli\\Builder\\ServicesBuilder\u003A\u003A\u0024_class",
             "name": "_class",
             "summary": "",
@@ -1765,6 +1750,26 @@ Search.appendIndex(
             "name": "_constructor_service_needed",
             "summary": "",
             "url": "classes/Adebipe-Cli-Builder-ServicesBuilder.html#property__constructor_service_needed"
+        },                {
+            "fqsen": "\\Adebipe\\Builder\\CoreBuilderInterface",
+            "name": "CoreBuilderInterface",
+            "summary": "Core\u0020builder\u0020for\u0020the\u0020builder\u0020classes\nKeep\u0020all\u0020function\u0020for\u0020help\u0020the\u0020builder\u0020classes",
+            "url": "classes/Adebipe-Builder-CoreBuilderInterface.html"
+        },                {
+            "fqsen": "\\Adebipe\\Builder\\CoreBuilderInterface\u003A\u003AincludeFolder\u0028\u0029",
+            "name": "includeFolder",
+            "summary": "Include\u0020a\u0020folder\u0020and\u0020return\u0020all\u0020classes\u0020declared",
+            "url": "classes/Adebipe-Builder-CoreBuilderInterface.html#method_includeFolder"
+        },                {
+            "fqsen": "\\Adebipe\\Builder\\CoreBuilderInterface\u003A\u003AgetService\u0028\u0029",
+            "name": "getService",
+            "summary": "Get\u0020a\u0020service\u0020from\u0020the\u0020container",
+            "url": "classes/Adebipe-Builder-CoreBuilderInterface.html#method_getService"
+        },                {
+            "fqsen": "\\Adebipe\\Builder\\CoreBuilderInterface\u003A\u003AgetServiceFunctionName\u0028\u0029",
+            "name": "getServiceFunctionName",
+            "summary": "Get\u0020the\u0020function\u0020name\u0020of\u0020a\u0020service\u0020in\u0020the\u0020build",
+            "url": "classes/Adebipe-Builder-CoreBuilderInterface.html#method_getServiceFunctionName"
         },                {
             "fqsen": "\\Adebipe\\Cli\\Includer\\Includer",
             "name": "Includer",

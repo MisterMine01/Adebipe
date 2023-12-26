@@ -256,15 +256,15 @@ at the start and end of the application</dd>            <dt class="phpdocumentor
 </dt>
 <dd>Get the service builder name</dd>
 
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Adebipe-Services-ConfigRunner.html#method_getEnv">getEnv()</a>
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a href="classes/Adebipe-Services-ConfigRunner.html#method__readConfigFile">_readConfigFile()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: void    </span>
 </dt>
-<dd>Get Environment variables</dd>
+<dd>Get the config</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a href="classes/Adebipe-Services-ConfigRunner.html#method__getEnvFile">_getEnvFile()</a>
+    <a href="classes/Adebipe-Services-ConfigRunner.html#method__readEnvFile">_readEnvFile()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
@@ -371,7 +371,7 @@ at the start and end of the application</dd>            <dt class="phpdocumentor
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="services/Adebipe/Core/Utils/ConfigRunner.php"><a href="files/services-adebipe-core-utils-configrunner.html"><abbr title="services/Adebipe/Core/Utils/ConfigRunner.php">ConfigRunner.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">93</span>
+    <span class="phpdocumentor-element-found-in__line">81</span>
 
     </aside>
 
@@ -403,7 +403,7 @@ at the start and end of the application</dd>            <dt class="phpdocumentor
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="services/Adebipe/Core/Utils/ConfigRunner.php"><a href="files/services-adebipe-core-utils-configrunner.html"><abbr title="services/Adebipe/Core/Utils/ConfigRunner.php">ConfigRunner.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">68</span>
 
     </aside>
 
@@ -447,7 +447,7 @@ at the start and end of the application</dd>            <dt class="phpdocumentor
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="services/Adebipe/Core/Utils/ConfigRunner.php"><a href="files/services-adebipe-core-utils-configrunner.html"><abbr title="services/Adebipe/Core/Utils/ConfigRunner.php">ConfigRunner.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">68</span>
+    <span class="phpdocumentor-element-found-in__line">56</span>
 
     </aside>
 
@@ -476,38 +476,46 @@ at the start and end of the application</dd>            <dt class="phpdocumentor
                     <article
         class="phpdocumentor-element
             -method
-            -public
+            -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_getEnv">
-        getEnv()
-        <a href="classes/Adebipe-Services-ConfigRunner.html#method_getEnv" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method__readConfigFile">
+        _readConfigFile()
+        <a href="classes/Adebipe-Services-ConfigRunner.html#method__readConfigFile" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="services/Adebipe/Core/Utils/ConfigRunner.php"><a href="files/services-adebipe-core-utils-configrunner.html"><abbr title="services/Adebipe/Core/Utils/ConfigRunner.php">ConfigRunner.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">58</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Get Environment variables</p>
+        <p class="phpdocumentor-summary">Get the config</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getEnv</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">_readConfigFile</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$config_path</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
     
-    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$config_path</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>The path of the config</p>
+</section>
+
+            </dd>
+            </dl>
+
     
 
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
-            </section>
-
+    
 </article>
                     <article
         class="phpdocumentor-element
@@ -515,15 +523,15 @@ at the start and end of the application</dd>            <dt class="phpdocumentor
             -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method__getEnvFile">
-        _getEnvFile()
-        <a href="classes/Adebipe-Services-ConfigRunner.html#method__getEnvFile" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method__readEnvFile">
+        _readEnvFile()
+        <a href="classes/Adebipe-Services-ConfigRunner.html#method__readEnvFile" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="services/Adebipe/Core/Utils/ConfigRunner.php"><a href="files/services-adebipe-core-utils-configrunner.html"><abbr title="services/Adebipe/Core/Utils/ConfigRunner.php">ConfigRunner.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">104</span>
+    <span class="phpdocumentor-element-found-in__line">110</span>
 
     </aside>
 
@@ -531,7 +539,7 @@ at the start and end of the application</dd>            <dt class="phpdocumentor
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">_getEnvFile</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$name</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">_readEnvFile</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$name</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -677,8 +685,8 @@ at the start and end of the application</dd>            <dt class="phpdocumentor
                                             <li><a href="classes/Adebipe-Services-ConfigRunner.html#method_atEnd">atEnd()</a></li>
                                             <li><a href="classes/Adebipe-Services-ConfigRunner.html#method_atStart">atStart()</a></li>
                                             <li><a href="classes/Adebipe-Services-ConfigRunner.html#method_build">build()</a></li>
-                                            <li><a href="classes/Adebipe-Services-ConfigRunner.html#method_getEnv">getEnv()</a></li>
-                                            <li><a href="classes/Adebipe-Services-ConfigRunner.html#method__getEnvFile">_getEnvFile()</a></li>
+                                            <li><a href="classes/Adebipe-Services-ConfigRunner.html#method__readConfigFile">_readConfigFile()</a></li>
+                                            <li><a href="classes/Adebipe-Services-ConfigRunner.html#method__readEnvFile">_readEnvFile()</a></li>
                                     </ul>
             </li>
                     </ul>
