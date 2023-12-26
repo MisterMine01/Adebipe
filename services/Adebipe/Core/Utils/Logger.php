@@ -74,7 +74,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     public function atStart(): void
     {
         $class = Settings::getConfig("CORE.LOGGER.ERROR_CLASS");
-        if (class_exists($class)) {
+        if (!empty($class) && class_exists($class)) {
             $instance = new $class();
             if (!$instance instanceof ErrorSenderInterface) {
                 throw new \Exception('The error sender must implement ErrorSenderInterface');

@@ -13,7 +13,7 @@ use ReflectionNamedType;
  */
 class ServicesBuilder
 {
-    private $_starter_service = "Adebipe\Services\Interfaces\StarterServiceInterface";
+    private string $_starter_service = "Adebipe\Services\Interfaces\StarterServiceInterface";
     private ReflectionClass $_class;
     private array $_constructor_service_needed = [];
 

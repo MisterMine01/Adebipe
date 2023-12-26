@@ -72,8 +72,8 @@ class Settings
      */
     public static function addConfig(string $key, mixed $value): void
     {
-        if ($key === null) {
-            return;
+        if (empty($key)) {
+            throw new \Exception("The key must not be empty");
         }
         $keys = explode('.', $key);
         $config = &self::$_config;

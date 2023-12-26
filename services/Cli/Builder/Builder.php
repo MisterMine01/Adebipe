@@ -55,7 +55,6 @@ class Builder
         recurseCopy($getcwd . '/public', $build_dir . '/public');
 
         $get_services_classes = $this->_includer->includeAllFile($getcwd . '/services');
-        requireAll();
         $all_services = MakeClasses::makeClasses($get_services_classes);
 
 
