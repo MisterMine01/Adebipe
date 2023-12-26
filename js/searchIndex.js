@@ -711,6 +711,11 @@ Search.appendIndex(
             "summary": "Delete\u0020the\u0020relation\u0020to\u0020the\u0020database",
             "url": "classes/Adebipe-Model-Type-ManyToMany.html#method_deleteToDb"
         },                {
+            "fqsen": "\\Adebipe\\Model\\Type\\ManyToMany\u003A\u003AupdateDbOnDelete\u0028\u0029",
+            "name": "updateDbOnDelete",
+            "summary": "Update\u0020the\u0020relation\u0020to\u0020the\u0020database\u0020when\u0020an\u0020object\u0020is\u0020about\u0020to\u0020be\u0020deleted",
+            "url": "classes/Adebipe-Model-Type-ManyToMany.html#method_updateDbOnDelete"
+        },                {
             "fqsen": "\\Adebipe\\Model\\Type\\ManyToMany\u003A\u003A\u0024_object_type",
             "name": "_object_type",
             "summary": "The\u0020object\u0020that\u0020is\u0020related",
@@ -776,6 +781,11 @@ Search.appendIndex(
             "summary": "Delete\u0020the\u0020relation\u0020to\u0020the\u0020database",
             "url": "classes/Adebipe-Model-Type-ManyToOne.html#method_deleteToDb"
         },                {
+            "fqsen": "\\Adebipe\\Model\\Type\\ManyToOne\u003A\u003AupdateDbOnDelete\u0028\u0029",
+            "name": "updateDbOnDelete",
+            "summary": "Update\u0020the\u0020relation\u0020to\u0020the\u0020database\u0020when\u0020an\u0020object\u0020is\u0020about\u0020to\u0020be\u0020deleted",
+            "url": "classes/Adebipe-Model-Type-ManyToOne.html#method_updateDbOnDelete"
+        },                {
             "fqsen": "\\Adebipe\\Model\\Type\\ManyToOne\u003A\u003A\u0024_me_object",
             "name": "_me_object",
             "summary": "The\u0020object\u0020that\u0020has\u0020the\u0020relation",
@@ -830,6 +840,11 @@ Search.appendIndex(
             "name": "deleteToDb",
             "summary": "Delete\u0020the\u0020relation\u0020to\u0020the\u0020database",
             "url": "classes/Adebipe-Model-Type-OneToMany.html#method_deleteToDb"
+        },                {
+            "fqsen": "\\Adebipe\\Model\\Type\\OneToMany\u003A\u003AupdateDbOnDelete\u0028\u0029",
+            "name": "updateDbOnDelete",
+            "summary": "Update\u0020the\u0020relation\u0020to\u0020the\u0020database\u0020when\u0020an\u0020object\u0020is\u0020about\u0020to\u0020be\u0020deleted",
+            "url": "classes/Adebipe-Model-Type-OneToMany.html#method_updateDbOnDelete"
         },                {
             "fqsen": "\\Adebipe\\Model\\Type\\OneToMany\u003A\u003A\u0024_me_object",
             "name": "_me_object",
@@ -976,6 +991,11 @@ Search.appendIndex(
             "summary": "Delete\u0020the\u0020relation\u0020to\u0020the\u0020database",
             "url": "classes/Adebipe-Model-Type-SqlBasedTypeInterface.html#method_deleteToDb"
         },                {
+            "fqsen": "\\Adebipe\\Model\\Type\\SqlBasedTypeInterface\u003A\u003AupdateDbOnDelete\u0028\u0029",
+            "name": "updateDbOnDelete",
+            "summary": "Update\u0020the\u0020relation\u0020to\u0020the\u0020database\u0020when\u0020an\u0020object\u0020is\u0020about\u0020to\u0020be\u0020deleted",
+            "url": "classes/Adebipe-Model-Type-SqlBasedTypeInterface.html#method_updateDbOnDelete"
+        },                {
             "fqsen": "\\Adebipe\\Model\\Type\\IntType",
             "name": "IntType",
             "summary": "Int\u0020type",
@@ -1100,6 +1120,11 @@ Search.appendIndex(
             "name": "save",
             "summary": "Save\u0020an\u0020object\u0020in\u0020the\u0020database",
             "url": "classes/Adebipe-Model-Repository.html#method_save"
+        },                {
+            "fqsen": "\\Adebipe\\Model\\Repository\u003A\u003Adelete\u0028\u0029",
+            "name": "delete",
+            "summary": "Delete\u0020an\u0020object\u0020in\u0020the\u0020database",
+            "url": "classes/Adebipe-Model-Repository.html#method_delete"
         },                {
             "fqsen": "\\Adebipe\\Model\\Repository\u003A\u003AcreateTable\u0028\u0029",
             "name": "createTable",
