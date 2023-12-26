@@ -156,4 +156,20 @@ class ManyToOne extends AbstractType implements SqlBasedTypeInterface
         $msql->execute($result);
         return $msql->getLastQuerySuccess();
     }
+
+    /**
+     * Update the relation to the database when an object is about to be deleted
+     *
+     * @param MsQl   $msql The database connection
+     * @param string $id   The id of the object
+     *
+     * @return void
+     */
+    public function updateDbOnDelete(MsQl $msql, string $id): void
+    {
+        $me_object_table = ORM::classToTableName($this->_me_object);
+        $query = "UPDATE " . $me_object_table . " SET " . $this->_relationedBy . " = NULL WHERE id = " . $id;
+        $result = $msql->prepare($query);
+        $msql->execute($result);
+    }
 }

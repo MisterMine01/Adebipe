@@ -208,4 +208,19 @@ class ManyToMany extends AbstractType implements SqlBasedTypeInterface
         $msql->execute($result);
         return $msql->getLastQuerySuccess();
     }
+
+    /**
+     * Update the relation to the database when an object is about to be deleted
+     *
+     * @param MsQl   $msql The database connection
+     * @param string $id   The id of the object
+     *
+     * @return void
+     */
+    public function updateDbOnDelete(MsQl $msql, string $id): void
+    {
+        $query = "DELETE FROM " . $this->_middle_table_name . " WHERE " . $this->_named_me . "_id = " . $id;
+        $result = $msql->prepare($query);
+        $msql->execute($result);
+    }
 }

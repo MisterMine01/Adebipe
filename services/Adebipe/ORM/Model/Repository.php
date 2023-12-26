@@ -168,7 +168,7 @@ class Repository implements RepositoryInterface
 
         foreach ($this->_schema as $key => $type) {
             $model_type = $type;
-            if (is_subclass_of($type, SqlBasedTypeInterface::class)) {
+            if (!$type instanceof SqlBasedTypeInterface) {
                 continue;
             }
             if (!$model_type->canBeNull() && $object->$key === null) {
@@ -226,6 +226,38 @@ class Repository implements RepositoryInterface
             return false;
         }
         $object = $this->findOneById($this->_msql->getLastInsertId());
+        return $succeed;
+    }
+
+    /**
+     * Delete an object in the database
+     *
+     * @param Model $object The object to delete
+     *
+     * @return bool
+     */
+    public function delete(Model &$object): bool
+    {
+        if (!is_a($object, $this->_class_name)) {
+            throw new \Exception(
+                "You can't delete object of class " .
+                    get_class($object) . " as " .
+                    $this->_class_name
+            );
+        }
+        foreach ($this->_schema as $key => $type) {
+            if ($type instanceof SqlBasedTypeInterface) {
+                $type->updateDbOnDelete($this->_msql, $object->id);
+            }
+        }
+        $query = "DELETE FROM " . $this->_table_name . " WHERE id = ?";
+        $result = $this->_msql->prepare($query);
+        $result = $this->_msql->execute($result, [$object->id], [\PDO::PARAM_INT]);
+        $succeed = $this->_msql->getLastQuerySuccess();
+        if ($succeed === false) {
+            return false;
+        }
+        $object = null;
         return $succeed;
     }
 
