@@ -1,6 +1,8 @@
 logs
 builddir
 .env.*
+!.env.test
 vendor
 .phpunit.result.cache
 .phpdoc
+infection.html

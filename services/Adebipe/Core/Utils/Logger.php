@@ -33,12 +33,15 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      */
     public function __construct()
     {
-        if (!is_dir('logs')) {
-            mkdir('logs');
+        $log_folder = Settings::getConfig("CORE.LOGGER.LOG_FOLDER");
+        if (!$log_folder) {
+            $log_folder = 'logs';
+        }
+        if (!is_dir($log_folder)) {
+            mkdir($log_folder);
         }
         $log_level = Settings::getConfig("CORE.LOGGER.LOG_LEVEL");
-        fwrite(STDOUT, "Log level : " . $log_level . PHP_EOL);
-        if ($log_level === false) {
+        if ($log_level === null) {
             $log_level = 1;
         }
         $this->_loglevel = intval($log_level);
@@ -48,7 +51,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         if (!Settings::getConfig("CORE.LOGGER.LOG_IN_FILE")) {
             $this->_logFile = STDOUT;
         } else {
-            $this->_logFile = fopen('logs/' . date('Y-m-d-H-i-s') . '.log', 'wb');
+            $this->_logFile = fopen($log_folder . "/" . date('Y-m-d-H-i-s') . '.log', 'wb');
         }
         $this->info('Starting Logger');
     }
@@ -71,11 +74,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     public function atStart(): void
     {
         $class = Settings::getConfig("CORE.LOGGER.ERROR_CLASS");
-        if (!$class) {
-            $this->debug("No sentry");
-            return;
-        }
-        if (class_exists($class)) {
+        if (!empty($class) && class_exists($class)) {
             $instance = new $class();
             if (!$instance instanceof ErrorSenderInterface) {
                 throw new \Exception('The error sender must implement ErrorSenderInterface');
@@ -89,6 +88,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
         set_error_handler(
             function (int $errno, string $errstr, string $errfile, int $errline): bool {
                 $this->warning($errstr . ' in ' . $errfile . ' on line ' . $errline);
+                /* @infection-ignore-all */
                 return true;
             },
             E_WARNING
@@ -104,7 +104,9 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     {
         $this->info('Stopping Logger');
         restore_error_handler();
-        fclose($this->_logFile);
+        if ($this->_logFile !== STDOUT) {
+            fclose($this->_logFile);
+        }
     }
 
     /**
@@ -120,6 +122,7 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
     {
         $trace = debug_backtrace();
         $call_class = "Main";
+        /* @infection-ignore-all */
         if (isset($trace[3]['class'])) {
             $call_class = $trace[3]['class'];
         }
@@ -159,15 +162,19 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
 
         $this->logTrace[] = $log;
 
+        /* @infection-ignore-all */
         if (defined('STDOUT')) {
             fwrite(STDOUT, $log);
             fflush(STDOUT);
         }
         $log = mb_convert_encoding($log, 'UTF-8');
+        /* @infection-ignore-all */
         if ($this->_logFile === STDOUT) {
             return;
         }
+        /* @infection-ignore-all */
         fwrite($this->_logFile, $log);
+        /* @infection-ignore-all */
         fflush($this->_logFile);
     }
 
@@ -175,8 +182,6 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      * Log a debug message
      *
      * @param string $message The message of the log
-     *
-     * @infection-ignore-all
      *
      * @return void
      */
@@ -189,8 +194,6 @@ class Logger implements StarterServiceInterface, RegisterServiceInterface
      * Log an info message
      *
      * @param string $message The message of the log
-     *
-     * @infection-ignore-all
      *
      * @return void
      */

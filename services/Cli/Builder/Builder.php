@@ -15,19 +15,6 @@ use ReflectionClass;
 use Throwable;
 
 /**
- * Require all files after include all services
- *
- * @return void
- */
-function requireAll()
-{
-    include_once __DIR__ . '/../MakeClasses.php';
-    include_once __DIR__ . '/Constructor/IncludeList.php';
-    include_once __DIR__ . '/Constructor/ServicesBuilder.php';
-    include_once __DIR__ . '/BuilderHelper.php';
-}
-
-/**
  * Build all services
  *
  * @author BOUGET Alexandre <abouget68@gmail.com>
@@ -68,7 +55,6 @@ class Builder
         recurseCopy($getcwd . '/public', $build_dir . '/public');
 
         $get_services_classes = $this->_includer->includeAllFile($getcwd . '/services');
-        requireAll();
         $all_services = MakeClasses::makeClasses($get_services_classes);
 
 

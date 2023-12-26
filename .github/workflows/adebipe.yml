@@ -31,6 +31,11 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
+      - name: Create ENV file
+        run: |
+          cp zlocal.env .env.local
+          cp ztest.env .env.test.local
+
       - name: Check for sniffs
         run: vendor/bin/phpcs src/Builder services --colors --report=summary
 
@@ -38,7 +43,16 @@ jobs:
         run: vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=2G
 
       - name: Check for tests
-        run: vendor/bin/phpunit --colors=always --testdox
+        run: vendor/bin/phpunit --colors=always --testdox --display-warnings --display-errors --display-notices
+
+      - name: Check for infection
+        run: vendor/bin/infection --min-msi=8 --min-covered-msi=90 --threads=4 --show-mutations
+
+      - name: Save infection artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: infection
+          path: ./infection.html
 
   buildDoc:
     runs-on: ubuntu-latest
@@ -101,6 +115,7 @@ jobs:
         run: |
           # mv -f ./artifacts/documentation/* .
           cp -r ./artifacts/documentation/* . && rm -R ./artifacts/documentation/*
+          cp -r ./artifacts/infection/* . && rm -R ./artifacts/infection/*
           rm -rf ./artifacts
           git add .
           [[ -n $(git status -s) ]] && git commit -m "${{ env.CI_COMMIT_MESSAGE }}" || echo "No changes to commit"

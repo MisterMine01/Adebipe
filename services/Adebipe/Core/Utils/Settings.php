@@ -37,7 +37,7 @@ class Settings
     {
         if (!isset(self::$_env_variable[$key])) {
             $env = getenv($key);
-            if ($env === false) {
+            if (empty($env)) {
                 return null;
             }
             self::$_env_variable[$key] = $env;
@@ -60,6 +60,31 @@ class Settings
         } else {
             self::$_config = $config;
         }
+    }
+
+    /**
+     * Add a configuration with a key and a value
+     *
+     * @param string $key   The key of the configuration
+     * @param mixed  $value The value of the configuration
+     *
+     * @return void
+     */
+    public static function addConfig(string $key, mixed $value): void
+    {
+        if (empty($key)) {
+            throw new \Exception("The key must not be empty");
+        }
+        $keys = explode('.', $key);
+        $config = &self::$_config;
+        foreach ($keys as $key) {
+            if (!isset($config[$key])) {
+                $config[$key] = array();
+            }
+            $config = &$config[$key];
+        }
+        $config = $value;
+        return;
     }
 
     /**

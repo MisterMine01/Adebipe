@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
-<phpunit bootstrap="bootstrap.php" executionOrder="default">
+<phpunit bootstrap="tests/bootstrap.php" executionOrder="default">
   <testsuites>
     <testsuite name="Adebipe">
-      <directory suffix=".php">tests</directory>
+      <directory suffix=".php">tests/adebipe</directory>
+      <directory suffix=".php">tests/app</directory>
     </testsuite>
   </testsuites>
 </phpunit>

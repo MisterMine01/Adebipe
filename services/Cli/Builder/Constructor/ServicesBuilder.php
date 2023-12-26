@@ -2,7 +2,6 @@
 
 namespace Adebipe\Cli\Builder;
 
-use Adebipe\Services\Interfaces\StarterServiceInterface;
 use ReflectionClass;
 use ReflectionNamedType;
 
@@ -14,6 +13,7 @@ use ReflectionNamedType;
  */
 class ServicesBuilder
 {
+    private string $_starter_service = "Adebipe\Services\Interfaces\StarterServiceInterface";
     private ReflectionClass $_class;
     private array $_constructor_service_needed = [];
 
@@ -89,7 +89,7 @@ class ServicesBuilder
         }
         $function .= '$GLOBALS[\'' . $class_name . '\'] = ' .
             'new ' . $class_name . '(' . implode(",\n", $parameters) . ");\n";
-        if (in_array(StarterServiceInterface::class, $this->_class->getInterfaceNames())) {
+        if (in_array($this->_starter_service, $this->_class->getInterfaceNames())) {
             $function_start = $this->_class->getMethod('atStart');
             $function_parameters = [];
             foreach ($function_start->getParameters() as $param) {
@@ -115,7 +115,7 @@ class ServicesBuilder
      */
     public function atEnd()
     {
-        if (!in_array(StarterServiceInterface::class, $this->_class->getInterfaceNames())) {
+        if (!in_array($this->_starter_service, $this->_class->getInterfaceNames())) {
             return '';
         }
         $class_name = $this->_class->getName();
