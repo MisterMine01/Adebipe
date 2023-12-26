@@ -42,4 +42,14 @@ interface SqlBasedTypeInterface
      * @return bool
      */
     public function deleteToDb(MsQl $msql, string $id, object $value): bool;
+
+    /**
+     * Update the relation to the database when an object is about to be deleted
+     *
+     * @param MsQl   $msql The database connection
+     * @param string $id   The id of the object
+     *
+     * @return void
+     */
+    public function updateDbOnDelete(MsQl $msql, string $id): void;
 }

@@ -164,4 +164,21 @@ class OneToMany extends AbstractType implements SqlBasedTypeInterface
         $msql->execute($result);
         return $msql->getLastQuerySuccess();
     }
+
+    /**
+     * Update the relation to the database when an object is about to be deleted
+     *
+     * @param MsQl   $msql The database connection
+     * @param string $id   The id of the object
+     *
+     * @return void
+     */
+    public function updateDbOnDelete(MsQl $msql, string $id): void
+    {
+        $object_table = ORM::classToTableName($this->_object);
+        $query = "UPDATE " . $object_table . " SET " .
+            $this->_relationedBy . " = NULL WHERE " . $this->_relationedBy . " = " . $id;
+        $result = $msql->prepare($query);
+        $msql->execute($result);
+    }
 }
