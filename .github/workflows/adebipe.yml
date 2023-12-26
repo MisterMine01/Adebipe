@@ -48,6 +48,12 @@ jobs:
       - name: Check for infection
         run: vendor/bin/infection --min-msi=95 --min-covered-msi=95 --threads=4 --show-mutations
 
+      - name: Save infection artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: infection
+          path: ./infection.html
+
   buildDoc:
     runs-on: ubuntu-latest
     needs: [test]
@@ -109,6 +115,7 @@ jobs:
         run: |
           # mv -f ./artifacts/documentation/* .
           cp -r ./artifacts/documentation/* . && rm -R ./artifacts/documentation/*
+          cp -r ./artifacts/infection/* . && rm -R ./artifacts/infection/*
           rm -rf ./artifacts
           git add .
           [[ -n $(git status -s) ]] && git commit -m "${{ env.CI_COMMIT_MESSAGE }}" || echo "No changes to commit"
