@@ -25,4 +25,4 @@ parameters:
         - src/Views
 
     bootstrapFiles:
-        - bootstrap.php
+        - ./tests/bootstrap.php
