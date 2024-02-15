@@ -90,6 +90,9 @@ class Container implements RegisterServiceInterface
      */
     public function getReflection(string $name): ReflectionClass
     {
+        if (!isset($this->_reflections_classes[$name])) {
+            throw new \Exception('Service not found');
+        }
         return $this->_reflections_classes[$name];
     }
 

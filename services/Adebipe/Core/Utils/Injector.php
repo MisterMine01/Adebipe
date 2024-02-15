@@ -59,7 +59,7 @@ class Injector implements RegisterServiceInterface
      *
      * @return array The params with the injected params
      */
-    public function injectParams(\ReflectionMethod $method, array $params = []): array
+    private function _injectParams(\ReflectionMethod $method, array $params = []): array
     {
         $method_params = $method->getParameters();
         $find_params = [];
@@ -114,7 +114,7 @@ class Injector implements RegisterServiceInterface
      */
     public function execute(\ReflectionMethod $method, ?object $class, array $params = []): mixed
     {
-        $params = $this->injectParams($method, $params);
+        $params = $this->_injectParams($method, $params);
 
         return $method->invokeArgs($class, $params);
     }
@@ -137,7 +137,7 @@ class Injector implements RegisterServiceInterface
         if (!$constructor->isPublic()) {
             throw new \Exception('Constructor of class ' . $class->getName() . ' is not public');
         }
-        $params = $this->injectParams($constructor, $params);
+        $params = $this->_injectParams($constructor, $params);
 
         return $class->newInstanceArgs($params);
     }

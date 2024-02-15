@@ -29,7 +29,7 @@ function invokeMethod(&$object, $methodName, array $parameters = array())
  * 
  * @return mixed Property value.
  */
-function getProperty(&$object, $propertyName)
+function getProperty(&$object, $propertyName): mixed
 {
     $reflection = new \ReflectionClass(get_class($object));
     $property = $reflection->getProperty($propertyName);
@@ -38,4 +38,23 @@ function getProperty(&$object, $propertyName)
     $result = $property->getValue($object);
     $property->setAccessible($access);
     return $result;
+}
+
+/**
+ * Set protected/private property of a class.
+ *
+ * @param object &$object      Instantiated object that we will run method on.
+ * @param string $propertyName Property name to set
+ * @param mixed  $value        Value to set
+ *
+ * @return void
+ */
+function setProperty(&$object, $propertyName, $value): void
+{
+    $reflection = new \ReflectionClass(get_class($object));
+    $property = $reflection->getProperty($propertyName);
+    $access = $property->isPublic() ? true : false;
+    $property->setAccessible(true);
+    $property->setValue($object, $value);
+    $property->setAccessible($access);
 }

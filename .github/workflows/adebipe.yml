@@ -46,7 +46,7 @@ jobs:
         run: vendor/bin/phpunit --colors=always --testdox --display-warnings --display-errors --display-notices
 
       - name: Check for infection
-        run: vendor/bin/infection --min-msi=8 --min-covered-msi=90 --threads=4 --show-mutations
+        run: vendor/bin/infection --min-msi=10 --min-covered-msi=90 --threads=4 --show-mutations
 
       - name: Save infection artifacts
         uses: actions/upload-artifact@v2
