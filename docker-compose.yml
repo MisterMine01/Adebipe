@@ -11,31 +11,31 @@ services:
   php:
     build:
       context: ./docker/build
-      dockerfile: ./docker/buildPHP.Dockerfile
+      dockerfile: PHP.Dockerfile
     volumes:
       - ./:/var/www/html
       - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     extra_hosts:
       - "host.docker.internal:host-gateway"
-  mysql:
-    container_name: mysql
-    image: mysql:latest
+  database:
+    container_name: database
+    image: mariadb:latest
     volumes:
       - ./docker/data/mysql:/var/lib/mysql
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: webapp
-      MYSQL_USER: webapp
-      MYSQL_PASSWORD: root
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: webapp
+      MARIADB_USER: webapp
+      MARIADB_PASSWORD: root
   phpmyadmin:
     container_name: phpmyadmin
     image: phpmyadmin/phpmyadmin
     ports:
       - "8080:80"
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: database
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: webapp
       MYSQL_PASSWORD: root

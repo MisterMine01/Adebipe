@@ -8,7 +8,7 @@
 
 return [
     "env_var" => [
-        "DB_CONNECTION" => "mysql://webapp:root@mysql:3306/webapp",
+        "DB_CONNECTION" => "mysql://webapp:root@database:3306/webapp",
     ],
     "config" => [
         "DIR" => "src/",
