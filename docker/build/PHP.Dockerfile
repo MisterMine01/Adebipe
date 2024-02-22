@@ -10,8 +10,8 @@ RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev lib
     docker-php-ext-install -j$(nproc) gd && \
     apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
 
-RUN if [ $WITH_XDEBUG = "true" ] ; then \
-    apk add --no-cache $PHPIZE_DEPS linux-headers && \
+RUN if [ ${WITH_XDEBUG} = "true" ] ; then \
+    apk add --no-cache ${PHPIZE_DEPS} linux-headers && \
     pecl install xdebug && \
     docker-php-ext-enable xdebug; \
     fi;
