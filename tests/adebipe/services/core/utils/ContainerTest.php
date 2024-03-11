@@ -4,7 +4,6 @@ use Adebipe\Cli\MakeClasses;
 use Adebipe\Services\Container;
 use Adebipe\Services\Injector;
 use Adebipe\Services\Interfaces\RegisterServiceInterface;
-use Adebipe\Services\Interfaces\StarterServiceInterface;
 use Adebipe\Services\Logger;
 use PHPUnit\Framework\AdebipeCoreTestCase;
 

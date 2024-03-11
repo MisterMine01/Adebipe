@@ -74,33 +74,44 @@ class Injector implements RegisterServiceInterface
                         ' in class ' . $method->getDeclaringClass()->getName() . ' has no type'
                 );
             }
-            $not_null = str_replace("?", "", $param_type->__toString());
-            if (in_array($not_null, array_keys($this->_services))) {
-                $find_params[] = $this->_services[$not_null];
-                continue;
-            }
-            if (in_array($not_null, array_keys($params))) {
-                $find_params[] = $params[$not_null];
-                continue;
-            }
-            if (isset($params[$param_name])) {
+            $result = $this->_findParamsWithType($param_type, $params);
+            if ($result !== null) {
+                $find_params[] = $result;
+            } elseif (isset($params[$param_name])) {
                 $find_params[] = $params[$param_name];
-                continue;
-            }
-            if ($param->isDefaultValueAvailable()) {
+            } elseif ($param->isDefaultValueAvailable()) {
                 $find_params[] = $param->getDefaultValue();
-                continue;
-            }
-            if ($param->allowsNull()) {
+            } elseif ($param->allowsNull()) {
                 $find_params[] = null;
-                continue;
+            } else {
+                throw new \Exception(
+                    'Param ' . $param_name . ' in method ' . $method->getName() .
+                        ' in class ' . $method->getDeclaringClass()->getName() . ' can\'t be injected'
+                );
             }
-            throw new \Exception(
-                'Param ' . $param_name . ' in method ' . $method->getName() .
-                    ' in class ' . $method->getDeclaringClass()->getName() . ' can\'t be injected'
-            );
         }
         return $find_params;
+    }
+
+    /**
+     * Find the params with the type, in the services or in the params
+     * if not found, return null
+     *
+     * @param \ReflectionType $type   The type of the param
+     * @param array           $params The params to inject
+     *
+     * @return mixed The param found
+     */
+    private function _findParamsWithType(\ReflectionType $type, array $params = []): mixed
+    {
+        $not_null = str_replace("?", "", $type->__toString());
+        if (in_array($not_null, array_keys($this->_services))) {
+            return $this->_services[$not_null];
+        }
+        if (in_array($not_null, array_keys($params))) {
+            return $params[$not_null];
+        }
+        return null;
     }
 
     /**
