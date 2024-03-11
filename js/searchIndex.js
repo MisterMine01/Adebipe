@@ -186,10 +186,15 @@ Search.appendIndex(
             "summary": "Get\u0020a\u0020service\u0020from\u0020the\u0020injector",
             "url": "classes/Adebipe-Services-Injector.html#method_getService"
         },                {
-            "fqsen": "\\Adebipe\\Services\\Injector\u003A\u003AinjectParams\u0028\u0029",
-            "name": "injectParams",
+            "fqsen": "\\Adebipe\\Services\\Injector\u003A\u003A_injectParams\u0028\u0029",
+            "name": "_injectParams",
             "summary": "Inject\u0020the\u0020params\u0020of\u0020a\u0020method",
-            "url": "classes/Adebipe-Services-Injector.html#method_injectParams"
+            "url": "classes/Adebipe-Services-Injector.html#method__injectParams"
+        },                {
+            "fqsen": "\\Adebipe\\Services\\Injector\u003A\u003A_findParamsWithType\u0028\u0029",
+            "name": "_findParamsWithType",
+            "summary": "Find\u0020the\u0020params\u0020with\u0020the\u0020type,\u0020in\u0020the\u0020services\u0020or\u0020in\u0020the\u0020params\nif\u0020not\u0020found,\u0020return\u0020null",
+            "url": "classes/Adebipe-Services-Injector.html#method__findParamsWithType"
         },                {
             "fqsen": "\\Adebipe\\Services\\Injector\u003A\u003Aexecute\u0028\u0029",
             "name": "execute",
