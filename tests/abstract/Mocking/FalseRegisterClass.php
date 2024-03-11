@@ -9,6 +9,9 @@ class FalseRegisterClass implements RegisterServiceInterface
         return new self();
     }
 
+    /**
+     * Test on a private constructor
+     */
     private function __construct()
     {
     }
@@ -28,7 +31,7 @@ class FalseRegisterClass implements RegisterServiceInterface
     /**
      * A function with type in all parameters and with default value, null and no default value
      */
-    public function otherType(int $not, string $fromName, ?string $wantNull, string $default = "default")
+    public function otherType(int $not, string $fromName, ?string $wantNull, string $default = "default"): string
     {
         return "testOtherType";
     }
