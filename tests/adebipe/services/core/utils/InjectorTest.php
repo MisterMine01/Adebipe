@@ -18,15 +18,67 @@ class InjectorTest extends AdebipeCoreTestCase
 
     public function testAddGetService()
     {
-        Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 0);
         $logger = new Logger();
-        Settings::addConfig("CORE.LOGGER.LOG_LEVEL", 1);
         $loggerProperty = getProperty($logger, "_loglevel");
         setProperty($logger, "_loglevel", 0);
         $injector = new Injector($logger);
-        $injector->addService(new FalseRegisterClass());
+        $injector->addService(FalseRegisterClass::getClass());
         $this->assertMatchesRegularExpression("/\: Add service\: ..*$/", $logger->logTrace[count($logger->logTrace) - 1]);
         $this->assertInstanceOf(FalseRegisterClass::class, $injector->getService(FalseRegisterClass::class));
+        setProperty($logger, "_loglevel", $loggerProperty);
+    }
+
+    public function testInjectParamsNoType()
+    {
+        $this->expectException(Exception::class);
+        // 'Param ' . $param_name . ' in method ' . $method->getName() . ' in class ' . $method->getDeclaringClass()->getName() . ' has no type'
+        $this->expectExceptionMessageMatches("/^Param .+ in method .+ in class .+ has no type$/");
+        $method = new ReflectionMethod(FalseRegisterClass::class, "noType");
+        invokeMethod($this->_injector, "_injectParams", [$method, []]); // $method->getParameters() is empty
+    }
+
+    public function testTypeInjection()
+    {
+        $expected = [1, "name", null, "default"];
+
+        $method = new ReflectionMethod(FalseRegisterClass::class, "otherType");
+
+        $params = invokeMethod($this->_injector, "_injectParams", [$method, ["int" => 1, "fromName" => "name"]]);
+        $this->assertEquals($expected, $params);
+    }
+
+    public function testNoFoundValue()
+    {
+        $this->expectException(Exception::class);
+        # 'Param ' . $param_name . ' in method ' . $method->getName() . ' in class ' . $method->getDeclaringClass()->getName() . ' can\'t be injected'
+        $this->expectExceptionMessageMatches("/^Param .+ in method .+ in class .+ can't be injected$/");
+        $method = new ReflectionMethod(FalseRegisterClass::class, "noParamsValid");
+        invokeMethod($this->_injector, "_injectParams", [$method, []]);
+    }
+
+    public function testExecuteMethod()
+    {
+        $method = new ReflectionMethod(FalseRegisterClass::class, "otherType");
+        $object = FalseRegisterClass::getClass();
+        $result = $this->_injector->execute($method, $object, ["int" => 1, "fromName" => "name"]);
+        $this->assertEquals("testOtherType", $result);
+    }
+
+    public function testCreateClassNoPublic()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageMatches("/^Constructor of class .+ is not public$/");
+        $this->_injector->createClass(new ReflectionClass(FalseRegisterClass::class));
+    }
+
+    public function testCreateClassNoConstructor()
+    {
+        $logger = new Logger();
+        $loggerProperty = getProperty($logger, "_loglevel");
+        setProperty($logger, "_loglevel", 0);
+        $injector = new Injector($logger);
+        $injector->createClass(new ReflectionClass(FalseInjector::class));
+        $this->assertMatchesRegularExpression("/\: Class .+ has no constructor$/", $logger->logTrace[count($logger->logTrace) - 1]);
         setProperty($logger, "_loglevel", $loggerProperty);
     }
 }
