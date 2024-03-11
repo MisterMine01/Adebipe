@@ -13,16 +13,23 @@ class FalseRegisterClass implements RegisterServiceInterface
     {
     }
 
-    public function noType($not)
+
+    /**
+     * A function with no type on the first parameter
+     *
+     * @param $not
+     *
+     * @return void
+     */
+    public function noType($not): void
     {
     }
 
+    /**
+     * A function with type in all parameters and with default value, null and no default value
+     */
     public function otherType(int $not, string $fromName, ?string $wantNull, string $default = "default")
     {
         return "testOtherType";
-    }
-
-    public function noParamsValid(int $not)
-    {
     }
 }

@@ -52,7 +52,7 @@ class InjectorTest extends AdebipeCoreTestCase
         $this->expectException(Exception::class);
         # 'Param ' . $param_name . ' in method ' . $method->getName() . ' in class ' . $method->getDeclaringClass()->getName() . ' can\'t be injected'
         $this->expectExceptionMessageMatches("/^Param .+ in method .+ in class .+ can't be injected$/");
-        $method = new ReflectionMethod(FalseRegisterClass::class, "noParamsValid");
+        $method = new ReflectionMethod(FalseRegisterClass::class, "otherType");
         invokeMethod($this->_injector, "_injectParams", [$method, []]);
     }
 
