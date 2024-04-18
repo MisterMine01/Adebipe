@@ -109,4 +109,14 @@ class Settings
         }
         return $config;
     }
+
+    /**
+     * Reset the configuration
+     *
+     * @return void
+     */
+    public static function resetConfig(): void
+    {
+        self::$_config = [];
+    }
 }

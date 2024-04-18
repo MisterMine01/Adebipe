@@ -25,7 +25,7 @@ class LoggerTest extends AdebipeCoreTestCase
     public function testIfLogFolderExists()
     {
         $logger = new Logger();
-        $isFolder = is_dir("logs");
+        $isFolder = is_dir("logs_test");
         $this->assertTrue($isFolder);
 
         Settings::addConfig("CORE.LOGGER.LOG_FOLDER", "test_logs");
@@ -105,7 +105,7 @@ class LoggerTest extends AdebipeCoreTestCase
         $logger = new Logger();
         $this->assertIsResource(getProperty($logger, "_logFile"));
         $fileName = stream_get_meta_data(getProperty($logger, "_logFile"))['uri'];
-        $this->assertMatchesRegularExpression("/^logs\/\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}.log$/", $fileName);
+        $this->assertMatchesRegularExpression("/^logs_test\/\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}.log$/", $fileName);
     }
 
     public function testNoSentryConnectionDebug()

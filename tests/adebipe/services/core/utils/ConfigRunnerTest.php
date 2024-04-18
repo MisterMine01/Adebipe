@@ -58,4 +58,11 @@ class ConfigRunnerTest extends AdebipeCoreTestCase
         $this->expectExceptionMessageMatches("/^Invalid line in the file .+: .+$/");
         invokeMethod($configRunner, '_readEnvFile', ['tests/other/test.env']);
     }
+
+    public function testNoMerge()
+    {
+        Settings::addConfigArray(['testNoMerge' => 'test']);
+        $configRunner = new ConfigRunner();
+        $this->assertArrayNotHasKey('testNoMerge', Settings::getConfig(null));
+    }
 }

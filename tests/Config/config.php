@@ -12,7 +12,7 @@ return [
         "_CONFIG_TEST" => "test",
     ],
     "config" => [
-        "DIR" => "src/",
+        "DIR" => "tests/other/src/",
         "CORE" => [ // The core configuration
             "LOGGER" => [
                 "LOG_IN_FILE" => false,
@@ -24,7 +24,7 @@ return [
                 "TABLE_MODELS" => "App\Model\TableModel",
             ],
             "RENDERER" => [
-                "VIEW_DIR" => "Views/",
+                "VIEW_DIR" => "templates/",
             ]
         ],
         "ERROR" => [ // The error configuration

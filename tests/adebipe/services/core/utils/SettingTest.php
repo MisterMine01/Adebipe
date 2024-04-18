@@ -23,6 +23,7 @@ class SettingTest extends AdebipeCoreTestCase
 
     public function testAddConfig()
     {
+        Settings::resetConfig();
         Settings::addConfigArray([]);
         $this->assertEquals([], Settings::getConfig(null));
         Settings::addConfigArray(["test" => "test"]);

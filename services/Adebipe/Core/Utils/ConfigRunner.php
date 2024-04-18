@@ -92,7 +92,7 @@ class ConfigRunner implements StarterServiceInterface, BuilderServiceInterface
     private function _readConfigFile(string $config_path): void
     {
         if (is_file($config_path)) {
-            $config = include_once $config_path;
+            $config = include $config_path;
             Settings::addConfigArray($config['config'] ?? [], false);
             foreach ($config['env_var'] ?? [] as $key => $value) {
                 $this->_variable[$key] = $value;
