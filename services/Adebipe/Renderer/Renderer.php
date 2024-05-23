@@ -53,8 +53,12 @@ class Renderer implements RegisterServiceInterface
     private function _getTemplate(string $path, array $environements): string
     {
         extract($environements);
-        ob_start();
-        include $this->_dir . $path;
+        if (file_exists($this->_dir . $path)) {
+            ob_start();
+            include $this->_dir . $path;
+        } else {
+            throw new \Exception("Internal Server Error");
+        }
         return ob_get_clean() ?: '';
     }
 }
